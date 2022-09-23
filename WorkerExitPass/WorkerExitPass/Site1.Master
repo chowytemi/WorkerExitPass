@@ -1,0 +1,22 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1.master.cs" Inherits="WorkerExitPass.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+          <asp:ScriptManager runat="server">
+            <Scripts>
+                <asp:ScriptReference Name="bootstrap" />
+            </Scripts>
+         </asp:ScriptManager>
+        </div>
+    </form>
+</body>
+</html>
