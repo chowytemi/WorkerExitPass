@@ -40,15 +40,6 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label time;
         
         /// <summary>
-        /// timeInput control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl timeInput;
-        
-        /// <summary>
         /// project control.
         /// </summary>
         /// <remarks>
@@ -58,22 +49,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label project;
         
         /// <summary>
-        /// RequiredFieldValidator2 control.
+        /// projectDropdown control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
-        
-        /// <summary>
-        /// projectddl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList projectddl;
+        protected global::System.Web.UI.WebControls.DropDownList projectDropdown;
         
         /// <summary>
         /// name control.
@@ -85,13 +67,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label name;
         
         /// <summary>
-        /// nametb control.
+        /// nameInput control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox nametb;
+        protected global::System.Web.UI.WebControls.TextBox nameInput;
         
         /// <summary>
         /// companyName control.
@@ -103,15 +85,6 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label companyName;
         
         /// <summary>
-        /// companytb control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox companytb;
-        
-        /// <summary>
         /// reason control.
         /// </summary>
         /// <remarks>
@@ -121,49 +94,31 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label reason;
         
         /// <summary>
-        /// RequiredFieldValidator1 control.
+        /// reasonDropdown control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
+        protected global::System.Web.UI.WebControls.DropDownList reasonDropdown;
         
         /// <summary>
-        /// ReasonDropdown control.
+        /// remarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ReasonDropdown;
+        protected global::System.Web.UI.WebControls.Label remarks;
         
         /// <summary>
-        /// lblremarks control.
+        /// remarksInput control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblremarks;
-        
-        /// <summary>
-        /// RequiredFieldValidator3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator3;
-        
-        /// <summary>
-        /// remarkstb control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox remarkstb;
+        protected global::System.Web.UI.WebControls.TextBox remarksInput;
         
         /// <summary>
         /// cancelBtn control.
@@ -182,23 +137,5 @@ namespace WorkerExitPass {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button submitBtn;
-        
-        /// <summary>
-        /// Label1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
-        
-        /// <summary>
-        /// Label2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
     }
 }
