@@ -1,0 +1,115 @@
+﻿body {
+    background-color: #F1FAFF;
+}
+
+.container {
+    height: 50em;
+    width: 79.4375em;
+    background-color: white;
+    margin: auto;
+}
+
+.row {
+    margin-top: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+h1, .label {
+    color: #004B7A;
+    font-family: 'Rubik', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.375em;
+}
+
+.label {
+    font-size: 1.125em;
+    line-height: 1.875em;
+    display: block;
+    margin-top: 1.25em;
+}
+
+.inputFields, .dropdown {
+    height: 2.5em;
+    width: 25em;
+    border-radius: 0.3125em;
+    border: 0.0625em solid #EFF0F6;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    text-indent: 0.5em;
+    box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
+    display: flex;
+    justify-content: center;
+}
+
+.inputFields:hover, .dropdown:hover {
+        border: 0.0625em solid #004B7A;
+}
+
+.inputFields:focus, .dropdown:focus {
+        outline: none;
+}
+
+.button {
+    display: block;
+    border-radius: 0.9375em;
+    border-style: none;
+    color: white;
+    height: 3.5em;
+    width: 11.25em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+    position: absolute;
+    bottom: 10%;
+}
+
+.button:hover {
+    opacity: 0.8;
+}
+
+#submitBtn {
+    right: 20%;
+    background-color: #00AC26;
+}
+
+#cancelBtn {
+    background-color: #E83333;
+}
+
+.rfv {
+    color: red;
+}
+
+
+
+@media only screen and (max-width: 480px) {
+    .container {
+        width: 85%;
+    }
+
+    .button {
+        height: 3.55em;
+        width: 8em;
+        bottom: 3%;
+        font-size: 1em;
+ 
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .inputFields, .dropdown {
+        height: 3em;
+        width: 20em;
+    }
+    .label {
+        font-size: 1em;
+
+    }
+}
