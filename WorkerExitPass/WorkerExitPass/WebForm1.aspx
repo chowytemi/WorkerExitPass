@@ -107,20 +107,20 @@
             <div class="row">
                 <div class="col">
                     <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
-                    <input class="inputFields" id="dateInput" type="date" />
+                    <input class="inputFields" id="dateInput" type="date"/>
                 </div>
           
                 <div class="col2">
                     <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
-                    <input class="inputFields" id="timeInput" type="time" />
+                    <input class="inputFields" id="timeInput" type="time" runat="server"/>
                 </div>
             </div>
             
             <div class="row">
                 <div>
                     <asp:Label class="label" ID="project" runat="server" Text="Project"></asp:Label>
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="*" ControlToValidate="ProjectDropdown" CssClass="rfv"></asp:RequiredFieldValidator>
-                    <asp:DropDownList class="dropdown" ID="ProjectDropdown" runat="server" AutoPostBack="true">
+                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="*" ControlToValidate="projectddl" CssClass="rfv"></asp:RequiredFieldValidator>
+                    <asp:DropDownList class="dropdown" ID="projectddl" runat="server" AutoPostBack="true">
                     </asp:DropDownList>
                 </div>
             </div>
@@ -128,14 +128,14 @@
             <div class="row">
                 <div>
                     <asp:Label class="label" ID="name" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
-                    <asp:TextBox class="inputFields" ID="nameInput" runat="server"></asp:TextBox>
+                    <asp:TextBox class="inputFields" ID="nametb" runat="server" ReadOnly="true"></asp:TextBox>
                 </div>
             </div>
            
             <div class="row">
                 <div>
                     <asp:Label class="label" ID="companyName" runat="server" Text="Name of Company"></asp:Label>
-                    <input class="inputFields" id="Text4" type="text" />
+                    <asp:TextBox class="inputFields" ID="companytb" runat="server" ReadOnly="true"></asp:TextBox>
                 </div>
             </div>
             
@@ -146,21 +146,21 @@
    
                         <asp:DropDownList class="dropdown" ID="ReasonDropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ReasonDropdown_SelectedIndexChanged">
                         <asp:ListItem Text="Select" Value="-1"></asp:ListItem>
-                        <asp:ListItem Text="Medical injury" Value="0"></asp:ListItem>
-                        <asp:ListItem Text="Weather conditions" Value="1"></asp:ListItem>
-                        <asp:ListItem Text="Emergency" Value="2"></asp:ListItem>
-                        <asp:ListItem Text="Go office" Value="3"></asp:ListItem>
-                        <asp:ListItem Text="Others" Value="4"></asp:ListItem>
+                        <asp:ListItem Text="Medical injury" Value="Medical Injury"></asp:ListItem>
+                        <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
+                        <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
+                        <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
+                        <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
                     </asp:DropDownList>
                 </div>
             </div>
             
             <div class="row">
                 <div>
-                   <asp:Label class="label" ID="remarks" runat="server" Text="Remarks" Visible="false"></asp:Label>
-                   <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ErrorMessage="*" ControlToValidate="remarksInput" CssClass="rfv"></asp:RequiredFieldValidator>
+                   <asp:Label class="label" ID="lblremarks" runat="server" Text="Remarks" Visible="false"></asp:Label>
+                   <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ErrorMessage="*" ControlToValidate="remarkstb" CssClass="rfv"></asp:RequiredFieldValidator>
 
-                   <asp:TextBox class="inputFields" ID="remarksInput" runat="server" Visible="false"></asp:TextBox>
+                   <asp:TextBox class="inputFields" ID="remarkstb" runat="server" Visible="false"></asp:TextBox>
                 </div>
             </div>
           
@@ -171,7 +171,31 @@
         </div>
 
 
+
+                    <%--<asp:TextBox class="inputFields" ID="TextBox1" runat="server" ReadOnly="true"></asp:TextBox>
+                    <asp:TextBox class="inputFields" ID="TextBox2" runat="server" ReadOnly="true"></asp:TextBox>
+                    <asp:TextBox class="inputFields" ID="TextBox3" runat="server" ReadOnly="true"></asp:TextBox>
+                    <asp:TextBox class="inputFields" ID="TextBox4" runat="server" ReadOnly="true"></asp:TextBox>
+                    <asp:TextBox class="inputFields" ID="TextBox5" runat="server" ReadOnly="true"></asp:TextBox>--%>
+
+        <asp:Label ID="Label1" runat="server"></asp:Label>
+        <asp:Label ID="Label2" runat="server"></asp:Label>
             
+        <%-- <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"  AllowPaging="True" PageSize="30"  CssClass="auto-style13" DataKeyNames="createddate">
+              <Columns>
+        <asp:BoundField ItemStyle-Width="100px" DataField="createddate" HeaderText="createddate" ReadOnly="True" >
+<ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField> 
+        <asp:BoundField ItemStyle-Width="100px" DataField="exittime" HeaderText="exittime" ReadOnly="True" >
+<ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+        <asp:BoundField ItemStyle-Width="100px" DataField="approve" HeaderText="approve" >
+<ItemStyle Width="100px"></ItemStyle>
+            </asp:BoundField>
+       </Columns>
+       </asp:GridView>--%>
+                    
+         
        
     </form>
 </body>
