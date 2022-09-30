@@ -18,12 +18,14 @@
     left: 20%;
 }
 
-/*
-.col-6 {
-    
-    display: inline-block;
+.rowButtons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
 }
-
+/*
 
 
 .dateCol, .timeCol {
@@ -59,3 +61,5 @@
         width: 7em;
     }
 }
+
+

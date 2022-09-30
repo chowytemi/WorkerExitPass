@@ -1,19 +1,40 @@
 ﻿.submitAs {
-    height: 50em;
-    width: 11.25em;
+    
     box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
     border-radius: 0.625em 0 0 0.625em;
+    /*
     float: left;
+    height: 50em;
+    width: 11.25em;
+    */
+    width: 15%;
+    overflow: auto;
+    
 }
 
 .form {
-    height: 50em;
-    width: 68.1875em;
+    
     box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
     border-radius: 0 0.625em 0.625em 0;
-    float: left;
     text-align: center;
+    width: 85%;
+    /*
+    float: left;
     margin: auto;
+    height: 50em;
+    width: 68.1875em;
+    */
+    
+    
+}
+.button {
+    display: block;
+    position: absolute;
+    bottom: 10%;
+}
+.container {
+    display: flex;
+    flex-direction: row;
 }
 .col {
     display: inline-block;
@@ -46,20 +67,23 @@
     left: 30%;
 }
 
-
 @media only screen and (max-width: 480px) {
-
+    .container {
+        flex-direction: column;
+    }
     .submitAs {
         height: 10%;
         width: 100%;
-        border-radius: 0.625em 0.625em 0 0;
         display: flex;
+        
+        border-radius: 0.625em 0.625em 0 0;
         align-items: center;
         justify-content: center;
     }
     .form {
         height: 90%;
-        width: 100%;   
+        width: 100%;
+          
         border-radius: 0 0 0.625em 0.625em;
     }
     .submitAsButton {

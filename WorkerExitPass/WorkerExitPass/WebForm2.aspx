@@ -28,19 +28,15 @@
                         <asp:View ID="SoloView" runat="server"  >
                             <div class="form">
                                 
-                                    <div class="row">
-                                        <div class="col">
-
+                                    <div class="dateTimeRow">
+                                        <div class="dateCol">
                                                 <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
                                                 <input class="inputFields" id="dateInput" type="date" />
-
                                         </div>
           
-                                        <div class="col">
-
+                                        <div class="timeCol">
                                                 <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
                                                 <input class="inputFields" id="timeInput" type="time" />
-
                                         </div>
                                     </div>
                             
