@@ -5,99 +5,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Early Exit Permit Form</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet" />
-    <style type="text/css">
-    
-        .row {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-           
-        }
-        #dateInput, #timeInput {
-            width: 150px;
-        }
-        body {
-             background-color: #F1FAFF;
-        }
-        h1, .label {
-            color: #004B7A;
-            font-family: 'Rubik', sans-serif;
-        }
-        h1 {
-            text-align: center;
-            font-weight: bolder;
-            font-size: 38px;
-        }
-        .label {
-            font-weight: bold;
-            font-size: 18px;
-            line-height: 30px;
-            display: block;
-            margin-top: 20px;
-        }
-        .container {
-            height: 800px;
-            width: 1271px;
-            background-color: white;
-            margin: auto;
-            box-shadow: 0px 2px 4px rgba(0, 75, 122, 0.25);
-            border-radius: 10px;
-        }
-
-        .inputFields, .dropdown {
-            height: 40px;
-            width: 400px;
-            border-radius: 5px;
-            border: 1px solid #EFF0F6;
-            font-family: 'Open Sans', sans-serif;
-            font-size: 16px;
-            display: flex;
-            justify-content: center;
-            text-indent: 8px;
-            box-shadow: 0px 2px 4px rgba(0, 75, 122, 0.25);
-        }
-        
-        .inputFields:hover, .dropdown:hover {
-            border: 1px solid #004B7A;
-        }
-        .inputFields:focus, .dropdown:focus {
-            outline: none;
-        }
-        .button {
-            display: block;
-            border-radius:15px;
-            border-style: none;
-            color: white;
-            height: 60px;
-            width: 180px;
-            font-family: 'Rubik', sans-serif;
-            font-size: 20px;
-            font-weight: bold;
-
-        }
-        #cancelBtn {
-            margin-left: 84.5px;
-            float: left;
-            background-color: #E83333;
-        }
-      
-        #submitBtn {
-            margin-right: 84.5px;
-            float: right;
-            background-color: #00AC26;
-        }
-
-        .rfv {
-            color: red;
-        }
-
-
-
-    </style>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet" />
+    <link href="Content/main.css" rel="stylesheet" type="text/css" />
+    <link href="Content/StyleSheet1.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <form id="form1" runat="server">
