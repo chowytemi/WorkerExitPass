@@ -19,15 +19,17 @@
         <div class="container">
 
             <div class="dateTimeRow">
-                <div class="dateCol">
-                    <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
-                    <input class="inputFields" id="dateInput" type="date"/>
-                </div>
-          
-                <div class="timeCol">
-                    <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
-                    <input class="inputFields" id="timeInput" type="time" runat="server"/>
-                </div>
+
+                    <div class="dateCol">
+                        <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
+                        <input class="input" id="dateInput" type="date"/>
+                    </div>
+     
+                    <div class="timeCol">
+                        <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
+                        <input class="input" id="timeInput" type="time" runat="server"/>
+                    </div>
+
             </div>
 
             <div class="row">
@@ -37,8 +39,7 @@
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="*" ControlToValidate="projectddl" CssClass="rfv"></asp:RequiredFieldValidator>
                         <asp:DropDownList class="dropdown" ID="projectddl" runat="server" AutoPostBack="true">
                         </asp:DropDownList>
-                    </div>
-                    
+                    </div>        
                 </div>
             </div>
             
@@ -47,6 +48,7 @@
                     <div class="form-group">
                         <asp:Label class="label" ID="name" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
                         <asp:TextBox class="inputFields" ID="nametb" runat="server" ReadOnly="true"></asp:TextBox>
+
                     </div>
                 </div>
             </div>
@@ -65,7 +67,7 @@
                     <div class="form-group">
                         <asp:Label class="label" ID="reason" runat="server" Text="Reason for Leaving Yard"></asp:Label>
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="*" ControlToValidate="ReasonDropdown" InitialValue="-1" CssClass="rfv"></asp:RequiredFieldValidator>
-   
+
                             <asp:DropDownList class="dropdown" ID="ReasonDropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ReasonDropdown_SelectedIndexChanged">
                             <asp:ListItem Text="Select" Value="Select"></asp:ListItem>
                             <asp:ListItem Text="Medical injury" Value="Medical Injury"></asp:ListItem>
@@ -90,11 +92,15 @@
             </div>
           
             <div class="rowButtons">
-                <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
-                <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="SubmitBtn_Click" />
+                <div class="colCancelBtn">
+                    <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
+                </div>
+                <div class="colSubmitBtn">
+                    <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="SubmitBtn_Click" />
+                </div>
             </div>
         </div>
-
+       
 
 
                     <%--<asp:TextBox class="inputFields" ID="TextBox1" runat="server" ReadOnly="true"></asp:TextBox>

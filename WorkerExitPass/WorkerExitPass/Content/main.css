@@ -9,19 +9,6 @@
     margin: auto;
 }
 
-.row {
-    margin-top: 0.5em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-h1, .label {
-    color: #004B7A;
-    font-family: 'Rubik', sans-serif;
-}
-
 h1 {
     text-align: center;
     font-size: 2.375em;
@@ -34,9 +21,53 @@ h1 {
     margin-top: 1.25em;
 }
 
+h1, .label {
+    color: #004B7A;
+    font-family: 'Rubik', sans-serif;
+}
+
+
+.dateTimeRow, .row {
+    margin-left: 33%;
+    margin-right: 33%;
+    display: flex;
+    flex-direction: row;
+    /*justify-content: center;
+    align-items: center;*/
+}
+
+.row {
+    justify-content: center;
+    align-items: center;
+}
+
+.col-12 {
+    width: 100%;
+}
+
+.dateTimeRow {
+    justify-content: space-between;
+}
+
+.dateCol {
+    align-items: flex-start;
+}
+
+.timeCol {
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+#dateInput, #timeInput {
+    width: 11.25em;
+}
+
 .inputFields, .dropdown {
+    width: 100%;
+}
+
+.inputFields, .dropdown, .input {
     height: 2.5em;
-    width: 25em;
     border-radius: 0.3125em;
     border: 0.0625em solid #EFF0F6;
     font-family: 'Open Sans', sans-serif;
@@ -49,11 +80,25 @@ h1 {
 }
 
 .inputFields:hover, .dropdown:hover {
-        border: 0.0625em solid #004B7A;
+     border: 0.0625em solid #004B7A;
 }
 
 .inputFields:focus, .dropdown:focus {
-        outline: none;
+    outline: none;
+}
+
+
+.rfv {
+    color: red;
+}
+
+.rowButtons {
+    margin-left: 10%;
+    margin-right: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /*align-items:center;*/
 }
 
 .button {
@@ -61,7 +106,7 @@ h1 {
     border-style: none;
     color: white;
     height: 3.5em;
-    width: 11.25em;
+    width: 10em;
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
     /*
@@ -75,7 +120,7 @@ h1 {
 }
 
 #submitBtn {
-    right: 20%;
+    /*right: 20%;*/
     background-color: #00AC26;
 }
 
@@ -83,32 +128,13 @@ h1 {
     background-color: #E83333;
 }
 
-.dateTimeRow {
-    margin-left: 33%;
-    margin-right: 33%;
-    display: flex;
-    flex-direction: row;
-}
-.dateCol {
-    align-items: flex-start;
-    margin: auto;
-}
-.timeCol {
-    justify-content: flex-end;
-    align-items: flex-end;
-    margin: auto;
-}
-/**/
-
-.rfv {
-    color: red;
-}
-
-
-
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 992px) {
     .container {
         width: 85%;
+    }
+
+    h1 {
+        font-size: 1.5em;
     }
 
     .button {
@@ -117,40 +143,20 @@ h1 {
         bottom: 3%;
         font-size: 1em;
     }
-
-    h1 {
-        font-size: 1.5em;
-    }
-    /*
-    .inputFields, .dropdown {
-        height: 3em;
-        width: 20em;
-
-    }
-    */
-    
-    .label {
-        font-size: 1em;
-
-    }
-    .inputFields, .dropdown {
-        width: 20em;
-        resize: vertical;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-    /*
-
-    */
-    .dateTimeRow {
-        justify-content: center;
-        align-items: center;
-        margin-left: 0;
-        margin-right: 0;
-    }
-    .dateCol, .timeCol {
-        display: inline-block;
-    }
 }
 
+@media only screen and (max-width: 320px) {
+    .dateTimeRow {
+        display: block;
+    }
+
+    .dateCol, .timeCol, .input {
+        width: 100%;
+    }
+
+    .rowButtons {
+        display: block;
+        justify-content: center;
+        align-items: center;
+    }
+}

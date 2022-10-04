@@ -3,30 +3,61 @@
     border-radius: 0.0625em;
 }
 
+/*
+.row {
+    margin-top: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+*/
+
+/*
+.rowButtons { 
+    margin-top: 10%;
+    
+}*/
+
+/*
+    476px
+    768px
+    992px
+*/
+/*
 .col-6 {
     display: inline-block;
     margin: auto;
  }
+*/
 
-
-
-#dateInput, #timeInput {
-    width: 9.375em;
-}
-
+/*
 #cancelBtn {
     left: 20%;
 }
-
-.rowButtons {
+*/
+/*.rowButtons {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    
+    justify-content: center;
+    align-items: center;
+   
+    
+    width: 100%; 
+}*/
+/*
+.colBtn {
+    width: 50%;
+    justify-content: center;
     align-items: center;
 }
-/*
 
+*/
+/*
+.button {
+    width: 70%;
+}
 
 .dateCol, .timeCol {
     display: inline-block;
@@ -46,9 +77,27 @@
 }
 */
 
+@media only screen and (max-width: 992px) {
+
+    .label {
+        font-size: 1em;
+    }
+
+    .dateTimeRow, .row /*, .rowButtons*/ {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    /*.timeCol {
+        justify-content: flex-end;
+        align-items: flex-end;
+    }*/
+
+}
 
 
-@media only screen and (max-width: 480px) {
+
+/*@media only screen and (max-width: 480px) {
     .label {
         margin-top: 0.5em;
     }
@@ -56,10 +105,12 @@
     .inputFields, .dropdown {
         margin-top: 0.2em;
     }
-
-    #dateInput, #timeInput {
+    
+ #dateInput, #timeInput {
         width: 7em;
     }
+    
+   
 }
 
-
+*/

@@ -1,5 +1,9 @@
-﻿.submitAs {
-    
+﻿.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.submitAs { 
     box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
     border-radius: 0.625em 0 0 0.625em;
     /*
@@ -9,11 +13,9 @@
     */
     width: 15%;
     overflow: auto;
-    
 }
 
-.form {
-    
+.form { 
     box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
     border-radius: 0 0.625em 0.625em 0;
     text-align: center;
@@ -24,34 +26,35 @@
     height: 50em;
     width: 68.1875em;
     */
-    
-    
 }
-.button {
+
+/*.row {
+    margin-top: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 33%;
+    margin-right: 33%;
+}
+*/
+
+
+/*.button {
     display: block;
     position: absolute;
     bottom: 10%;
-}
-.container {
-    display: flex;
-    flex-direction: row;
-}
-.col {
-    display: inline-block;
-    margin: auto;
-}
+}*/
+
+
 
 .label {
     text-align: left;
 }
 
-#dateInput, #timeInput {
-    width: 11.25em;
-}
 
 .submitAsButton {
     display: block;
-    width: 8em;
+    width: 75%;
     height: 3.125em;
     border-radius: 0.625em;
     font-family: 'Rubik', sans-serif;
@@ -63,29 +66,31 @@
     margin-top: 1.25em;
 }
 
-#cancelBtn {
+/*#cancelBtn {
     left: 30%;
-}
+}*/
 
-@media only screen and (max-width: 480px) {
+
+@media only screen and (max-width: 992px) {
     .container {
         flex-direction: column;
     }
+
     .submitAs {
         height: 10%;
         width: 100%;
         display: flex;
-        
         border-radius: 0.625em 0.625em 0 0;
         align-items: center;
         justify-content: center;
     }
+
     .form {
         height: 90%;
         width: 100%;
-          
         border-radius: 0 0 0.625em 0.625em;
     }
+
     .submitAsButton {
         display: inline-block;
         width: 7em;
@@ -93,13 +98,16 @@
         border-radius: 0.9375em;
         margin-top: auto;
     }
-    #cancelBtn {
+
+    /*#cancelBtn {
         left: 20%;
-    }
+    }*/
 
     .label {
         margin-top: 0.2em;
+        font-size: 1em;
     }
+
     .inputFields, .dropdown {
         margin-top: 0.5em;
     }
@@ -107,5 +115,16 @@
     #dateInput, #timeInput {
         width: 7em;
     }
+    .dateTimeRow, .row /*, .rowButtons*/ {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+    .col-12 {
+        width: 85%;
+    }
+
 
 }
+
+
+    
