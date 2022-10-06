@@ -15,8 +15,8 @@ namespace WorkerExitPass
     public partial class WebForm3 : System.Web.UI.Page
     {
         //Get login id
-        string empID = "PXE6563";
-        //string empID = "T202";
+        //string empID = "PXE6563";
+        string empID = "MB638";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -39,8 +39,6 @@ namespace WorkerExitPass
                 da.Fill(dt);
                 GridView1.DataSource = dt;
                 GridView1.DataBind();
-
-                //if approve == null, pending
 
             }
         }

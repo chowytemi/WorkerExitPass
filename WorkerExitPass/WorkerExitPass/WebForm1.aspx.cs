@@ -47,44 +47,45 @@ namespace WorkerExitPass
 
         protected void SubmitBtn_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    var time = Request["timeInput"];
-            //    var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-            //    DateTime dateinput = DateTime.Parse(date);
-            //    var currentdate = DateTime.Now;
-            //    string projectInput = projectddl.Text;
-            //    string nameInput = nametb.Text;
-            //    string companyInput = companytb.Text;
-            //    string reasonInput = ReasonDropdown.Text;
-            //    string remarksInput = remarkstb.Text;
+            try
+            {
+                var time = Request["timeInput"];
+                var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                DateTime dateinput = DateTime.Parse(date);
+                var currentdate = DateTime.Now;
+                string projectInput = projectddl.Text;
+                string nameInput = nametb.Text;
+                string companyInput = companytb.Text;
+                string reasonInput = ReasonDropdown.Text;
+                string remarksInput = remarkstb.Text;
 
-            //    if (projectInput != "" || nameInput != "" || companyInput != "")
-            //    {
-            //        int compare = DateTime.Compare(dateinput, currentdate);
-            //        if (compare > 0)
-            //        {
-            //            submitForm();
-            //            Response.Redirect("Webform3.aspx");
-            //        }
-            //        else if (compare <= 0)
-            //        {
-            //            ScriptManager.RegisterClientScriptBlock
-            //              (this, this.GetType(), "alertMessage", "alert" +
-            //              "('Please choose a time after the current time')", true);
-            //            return;
-            //        }
-            //    }
+                if (projectInput != "" || nameInput != "" || companyInput != "")
+                {
+                    int compare = DateTime.Compare(dateinput, currentdate);
+                    if (compare > 0)
+                    {
+                        submitForm();
+                        Response.Redirect("Webform3.aspx");
+                        //sendEmailForApproval();
+                    }
+                    else if (compare <= 0)
+                    {
+                        ScriptManager.RegisterClientScriptBlock
+                          (this, this.GetType(), "alertMessage", "alert" +
+                          "('Please choose a time after the current time')", true);
+                        return;
+                    }
+                }
 
-            //}
-            //catch(Exception ex)
-            //{
-            //    throw ex;
-            //}
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             //submitForm();
 
-            sendEmailForApproval();
+            //sendEmailForApproval();
             //approveForm();
             //formStatus();
             //CheckFormInputs();
@@ -246,17 +247,18 @@ namespace WorkerExitPass
                 string exitquery = "select exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
                 SqlCommand exitcmd = new SqlCommand(exitquery, conn);
                 exitcmd.Parameters.AddWithValue("@empID", empID);
-                exitcmd.Parameters.AddWithValue("@company", companytb.ToString());
+                exitcmd.Parameters.AddWithValue("@company", companytb.Text);
                 exitcmd.Parameters.AddWithValue("@time", dateInput);
                 SqlDataReader exitdr = exitcmd.ExecuteReader();
+                Label1.Text = empID + companytb.Text + dateInput;
 
 
 
                 while (exitdr.Read())
                 {
                     string exitid = exitdr[0].ToString();
-                    Label1.Text = empID + companytb.ToString() + dateInput;
-                    Label2.Text = "WebForm3.aspx?exitid=" + exitid;
+                    //Label1.Text = empID + companytb.ToString() + dateInput;
+                    Label2.Text = "          WebForm3.aspx?exitid=" + exitid;
 
                     //check if worker or subcon
                     if (dr[2].ToString() == "WK")
@@ -271,10 +273,11 @@ namespace WorkerExitPass
                             SqlDataReader hoddr = hodcmd.ExecuteReader();
                             while (hoddr.Read())
                             {
-                                string ROcemail = dr[0].ToString();
+                                string ROcemail = hoddr[0].ToString();
                                 //Label2.Text = ROname;
 
-
+                                
+                                //link format
                                 Label2.Text = "WebForm3.aspx?exitid=" + exitid + "       cemail is " + ROcemail;
 
 
@@ -350,23 +353,23 @@ namespace WorkerExitPass
             }
         }
 
-        protected void formStatus()
-        {
-            //Connect to database
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection conn = new SqlConnection(cs);
-            conn.Open();
-            string statussql = "select createddate, exittime, approve from exitapproval where createdby = '" + empID + "'";
-            SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
-            using (DataTable dt = new DataTable())
-            {
-                da.Fill(dt);
-                //GridView1.DataSource = dt;
-                //GridView1.DataBind();
+        //protected void formStatus()
+        //{
+        //    //Connect to database
+        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+        //    SqlConnection conn = new SqlConnection(cs);
+        //    conn.Open();
+        //    string statussql = "select createddate, exittime, approve from exitapproval where createdby = '" + empID + "'";
+        //    SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
+        //    using (DataTable dt = new DataTable())
+        //    {
+        //        da.Fill(dt);
+        //        //GridView1.DataSource = dt;
+        //        //GridView1.DataBind();
 
-                //if approve == null, pending
+        //        //if approve == null, pending
 
-            }
-        }
+        //    }
+        //}
     }
 }
