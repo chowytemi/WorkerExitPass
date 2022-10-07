@@ -59,6 +59,24 @@
     border-radius: 0.625em;
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
+    /*background-color: #E9F4FB;
+    color: #004B7A;*/
+    border: none;
+    margin: auto;
+    margin-top: 1.25em;
+}
+.submitAsButton:active {
+    background-color: #E9F4FB;
+    color: #004B7A;
+}
+
+.activeBtn {
+    display: block;
+    width: 75%;
+    height: 3.125em;
+    border-radius: 0.625em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
     background-color: #E9F4FB;
     color: #004B7A;
     border: none;
@@ -66,6 +84,10 @@
     margin-top: 1.25em;
 }
 
+.inactiveBtn {
+    background-color: #FFFFFF;
+    color: #7C7C7C;
+}
 /*#cancelBtn {
     left: 30%;
 }*/

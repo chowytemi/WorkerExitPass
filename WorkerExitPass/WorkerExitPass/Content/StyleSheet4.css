@@ -1,0 +1,134 @@
+﻿.btnRows {
+    margin: 1% 0 1% 5%;
+}
+.btnActive {
+    background-color: #004B7A;
+    color: white;
+    border-radius: 0.25em;
+    border-style: none;
+    height: 2.5em;
+    width: 6em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+    margin: auto;
+}
+.dropdown {
+    height: 2.5em;
+    border-radius: 0.3125em;
+    border: 0.0625em solid #EFF0F6;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    text-indent: 0.5em;
+    margin-right: 5%;
+    float:right;
+    margin-bottom: 1%;
+    width: 10%;
+}
+
+.label {
+    margin-bottom: 0.5em;
+}
+
+.textbox {
+    height: 2.5em;
+    border-radius: 0.3125em;
+    border: 0.0625em solid #EFF0F6;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    text-indent: 1em;
+    /*display: flex;
+    justify-content: center;
+    overflow: auto;
+    background-color: #FFFFFF;
+    width: 100%;*/
+    background-color: #FCFCFC;
+    width: 100%;
+    
+}
+
+
+.btnRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2em;
+}
+.button {
+    border-radius: 0.25em;
+    border-style: none;
+    height: 2.5em;
+    width: 6em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+    margin: auto;
+}
+
+#btnApprove {
+    background-color: #00AC26;
+    color: white;
+}
+
+#btnReject {
+    background-color: #E83333;
+    color: white;
+}
+
+.dateTimeRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 2em;
+}
+.dateCol, .timeCol {
+    width: 30%;
+}
+
+@media only screen and (min-width: 992px) {
+    #Panel1 {
+        width: 30%;
+        height: 80%;
+    }
+}
+@media only screen and (max-width: 992px) {
+    #Panel1 {
+        width: 40%;
+        height: 80%;
+    }
+}
+@media only screen and (max-width: 768px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .table tbody {
+        font-size: 0.625em;
+        margin: auto;
+    }
+
+    #Panel1 {
+        width: 70%;
+        height: 80%;
+    }
+    .dropdown {
+        font-size: 0.625em;
+        width: 20%;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    #Panel1 {
+        width: 90%;
+        height: 80%;
+        margin: auto;
+    }
+
+    #lblexitID {
+        font-size: 1.1em;
+    }
+
+    .label, .labelData, .textbox {
+        font-size: 0.8em;
+    }
+}

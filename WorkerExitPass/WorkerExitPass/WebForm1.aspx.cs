@@ -329,7 +329,6 @@ namespace WorkerExitPass
         }
         protected void approveForm()
         {
-            //string datetime = DateTime.Now.ToString();
 
             //get approverID
             //get formID

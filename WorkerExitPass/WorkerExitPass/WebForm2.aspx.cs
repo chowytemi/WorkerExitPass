@@ -9,36 +9,33 @@ namespace WorkerExitPass
 {
     public partial class WebForm2 : System.Web.UI.Page
     {
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             //if (!IsPostBack)
             //{
-            //    MultiView1.SetActiveView(SoloView);
+                //SoloBtn.Attributes.Add("class", "activeBtn");
             //}
+
         }
 
         protected void SoloBtn_Click(object sender, EventArgs e)
         {
             namesddl.Visible = false;
             nametb.Visible = true;
-            //    MultiView1.ActiveViewIndex = 0;
+            //SoloBtn.Attributes.Add("class", "activeBtn");
         }
 
         protected void TeamBtn_Click(object sender, EventArgs e)
         {
             namesddl.Visible = true;
             nametb.Visible = false;
-            //    MultiView1.ActiveViewIndex = 1;
+            //TeamBtn.Attributes.Add("class", "activeBtn");
         }
-
-        //protected void MultiView1_ActiveViewChanged(object sender, EventArgs e)
-        //{
-
-        //}
 
         protected void ReasonDropdown_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ReasonDropdown.SelectedValue == "4")
+            if (ReasonDropdown.SelectedValue == "Others")
             {
                 lblremarks.Visible = true;
                 remarkstb.Visible = true;
