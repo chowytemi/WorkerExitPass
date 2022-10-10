@@ -47,41 +47,43 @@ namespace WorkerExitPass
 
         protected void SubmitBtn_Click(object sender, EventArgs e)
         {
-            try
-            {
-                var time = Request["timeInput"];
-                var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-                DateTime dateinput = DateTime.Parse(date);
-                var currentdate = DateTime.Now;
-                string projectInput = projectddl.Text;
-                string nameInput = nametb.Text;
-                string companyInput = companytb.Text;
-                string reasonInput = ReasonDropdown.Text;
-                string remarksInput = remarkstb.Text;
+            //try
+            //{
+            //    var time = Request["timeInput"];
+            //    var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            //    DateTime dateinput = DateTime.Parse(date);
+            //    var currentdate = DateTime.Now;
+            //    string projectInput = projectddl.Text;
+            //    string nameInput = nametb.Text;
+            //    string companyInput = companytb.Text;
+            //    string reasonInput = ReasonDropdown.Text;
+            //    string remarksInput = remarkstb.Text;
 
-                if (projectInput != "" || nameInput != "" || companyInput != "")
-                {
-                    int compare = DateTime.Compare(dateinput, currentdate);
-                    if (compare > 0)
-                    {
-                        submitForm();
-                        Response.Redirect("Webform3.aspx");
-                        //sendEmailForApproval();
-                    }
-                    else if (compare <= 0)
-                    {
-                        ScriptManager.RegisterClientScriptBlock
-                          (this, this.GetType(), "alertMessage", "alert" +
-                          "('Please choose a time after the current time')", true);
-                        return;
-                    }
-                }
+            //    if (projectInput != "" || nameInput != "" || companyInput != "")
+            //    {
+            //        int compare = DateTime.Compare(dateinput, currentdate);
+            //        if (compare > 0)
+            //        {
+            //            submitForm();
+            //            //Response.Redirect("Webform3.aspx");
+            //            sendEmailForApproval();
+            //        }
+            //        else if (compare <= 0)
+            //        {
+            //            ScriptManager.RegisterClientScriptBlock
+            //              (this, this.GetType(), "alertMessage", "alert" +
+            //              "('Please choose a time after the current time')", true);
+            //            return;
+            //        }
+            //    }
 
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
+
+            GetGridDataEmail();
 
             //submitForm();
 
@@ -233,77 +235,133 @@ namespace WorkerExitPass
 
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection conn = new SqlConnection(cs);
-            conn.Open();
-
-            string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1";
-            SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
-            SqlDataReader dr = cmdlineno.ExecuteReader();
-            while (dr.Read())
+            using (SqlConnection conn = new SqlConnection(cs))
             {
 
-                //get exitid
-
-                string exitquery = "select exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
-                SqlCommand exitcmd = new SqlCommand(exitquery, conn);
-                exitcmd.Parameters.AddWithValue("@empID", empID);
-                exitcmd.Parameters.AddWithValue("@company", companytb.Text);
-                exitcmd.Parameters.AddWithValue("@time", dateInput);
-                SqlDataReader exitdr = exitcmd.ExecuteReader();
-                Label1.Text = empID + companytb.Text + dateInput;
-
-
-
-                while (exitdr.Read())
+                string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1";
+                using (SqlCommand cmdlineno = new SqlCommand(sqlquery, conn))
                 {
-                    string exitid = exitdr[0].ToString();
-                    //Label1.Text = empID + companytb.ToString() + dateInput;
-                    Label2.Text = "          WebForm3.aspx?exitid=" + exitid;
 
-                    //check if worker or subcon
-                    if (dr[2].ToString() == "WK")
+                    using (SqlDataReader dr = cmdlineno.ExecuteReader())
                     {
-                        if (!string.IsNullOrEmpty(dr[5].ToString()))
+
+                        while (dr.Read())
                         {
-                            //worker - email to HOD
-                            string ROname = dr[5].ToString();
 
-                            string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
-                            SqlCommand hodcmd = new SqlCommand(hodquery, conn);
-                            SqlDataReader hoddr = hodcmd.ExecuteReader();
-                            while (hoddr.Read())
+                            //get exitid
+
+                            string exitquery = "select exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
+                            using (SqlCommand exitcmd = new SqlCommand(exitquery, conn))
                             {
-                                string ROcemail = hoddr[0].ToString();
-                                //Label2.Text = ROname;
+                                exitcmd.Parameters.AddWithValue("@empID", empID);
+                                exitcmd.Parameters.AddWithValue("@company", companytb.Text);
+                                exitcmd.Parameters.AddWithValue("@time", dateInput);
+                                using (SqlDataReader exitdr = exitcmd.ExecuteReader())
+                                {
 
-                                
-                                //link format
-                                Label2.Text = "WebForm3.aspx?exitid=" + exitid + "       cemail is " + ROcemail;
+                                    while (exitdr.Read())
+                                    {
+                                        string exitid = exitdr[0].ToString();
+
+                                        //check if worker or subcon
+                                        if (dr[2].ToString() == "WK")
+                                        {
+                                            if (!string.IsNullOrEmpty(dr[5].ToString()))
+                                            {
+                                                //worker - email to HOD
+                                                string ROname = dr[5].ToString();
+
+                                                string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
+                                                {
+                                                    using (SqlDataReader hoddr = hodcmd.ExecuteReader())
+                                                    {
+                                                        while (hoddr.Read())
+                                                        {
+                                                            string ROcemail = hoddr[0].ToString();
+                                                            Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm3.aspx?exitid=" + exitid);
+
+                                                            //using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
+                                                            //{
+                                                            //    mm.Subject = "Account Activation";
+                                                            //    string body = "Hello,";
+                                                            //    body += "<br /><br />Please click the following link to approve or reject the application";
+                                                            //    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm3.aspx?exitid=" + exitid) + "'>Click here to approve or deny applications.</a>";
+                                                            //    body += "<br /><br />Thanks";
+                                                            //    mm.Body = body;
+                                                            //    mm.IsBodyHtml = true;
+                                                            //    SmtpClient smtp = new SmtpClient();
+                                                            //    smtp.Host = "smtp-mail.outlook.com";
+                                                            //    smtp.EnableSsl = true;
+                                                            //    NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "<password>");
+                                                            //    smtp.UseDefaultCredentials = false;
+                                                            //    smtp.Credentials = NetworkCred;
+                                                            //    smtp.Port = 587;
+                                                            //    smtp.Send(mm);
+                                                            //}
+
+                                                            //link format
+                                                            //Label2.Text = "WebForm3.aspx?exitid=" + exitid + "       cemail is " + ROcemail;
+                                                        }
+                                                    }
+                                                    
+                                                }
+                                            }
+                                            
+                                        }
+                                        else if (dr[2].ToString() == "SUBCON")
+                                        {
+                                            //subcon - email to project managers
+                                            Label2.Text = "subcon";
+
+                                        }
+
+
+                                    }
+                                }
 
 
 
                             }
 
                         }
-                    }
-                    else if (dr[2].ToString() == "SUBCON")
-                    {
-                        //subcon - email to project managers
-                        Label2.Text = "subcon";
 
                     }
+
+
 
                 }
 
-                
+            }
 
 
-                
+        }
 
+        protected void GetGridDataEmail()
+        {
+
+            int exitID = 24;
+
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection conn = new SqlConnection(cs);
+            conn.Open();
+            string emailquery = "select exitapproval.exitID, exitapproval.toexit, exitapproval.createdby, exitapproval.createddate, " +
+            "exitapproval.reason, exitapproval.exittime, exitapproval.projcode, EmpList.Employee_Name " +
+            "from exitapproval inner join EmpList ON exitapproval.toexit = EmpList.EmpID " +
+            "where exitapproval.exitID = " + exitID;
+
+            SqlCommand emailcmd = new SqlCommand(emailquery, conn);
+
+            SqlDataAdapter sda = new SqlDataAdapter(emailquery, conn);
+            using (DataTable dt = new DataTable())
+            {
+                sda.Fill(dt);
+                GridView1.DataSource = dt;
+                GridView1.DataBind();
 
             }
-            dr.Close();
         }
+
 
 
         protected void checkForAccess()
