@@ -47,52 +47,52 @@ namespace WorkerExitPass
 
         protected void SubmitBtn_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    var time = Request["timeInput"];
-            //    var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-            //    DateTime dateinput = DateTime.Parse(date);
-            //    var currentdate = DateTime.Now;
-            //    string projectInput = projectddl.Text;
-            //    string nameInput = nametb.Text;
-            //    string companyInput = companytb.Text;
-            //    string reasonInput = ReasonDropdown.Text;
-            //    string remarksInput = remarkstb.Text;
+            try
+            {
+                var time = Request["timeInput"];
+                var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                DateTime dateinput = DateTime.Parse(date);
+                var currentdate = DateTime.Now;
+                string projectInput = projectddl.Text;
+                string nameInput = nametb.Text;
+                string companyInput = companytb.Text;
+                string reasonInput = ReasonDropdown.Text;
+                string remarksInput = remarkstb.Text;
 
-            //    if (projectInput != "" || nameInput != "" || companyInput != "")
-            //    {
-            //        int compare = DateTime.Compare(dateinput, currentdate);
-            //        if (compare > 0)
-            //        {
-            //            submitForm();
-            //            //Response.Redirect("Webform3.aspx");
-            //            sendEmailForApproval();
-            //        }
-            //        else if (compare <= 0)
-            //        {
-            //            ScriptManager.RegisterClientScriptBlock
-            //              (this, this.GetType(), "alertMessage", "alert" +
-            //              "('Please choose a time after the current time')", true);
-            //            return;
-            //        }
-            //    }
+                if (projectInput != "" || nameInput != "" || companyInput != "")
+                {
+                    int compare = DateTime.Compare(dateinput, currentdate);
+                    if (compare > 0)
+                    {
+                        submitForm();
+                        Response.Redirect("Webform3.aspx");
+                        sendEmailForApproval();
+                    }
+                    else if (compare <= 0)
+                    {
+                        ScriptManager.RegisterClientScriptBlock
+                          (this, this.GetType(), "alertMessage", "alert" +
+                          "('Please choose a time after the current time')", true);
+                        return;
+                    }
+                }
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
 
-            GetGridDataEmail();
+                //GetGridDataEmail();
 
-            //submitForm();
+                //submitForm();
 
-            //sendEmailForApproval();
-            //approveForm();
-            //formStatus();
-            //CheckFormInputs();
-            //checkForAccess();
-        }
+                //sendEmailForApproval();
+                //approveForm();
+                //formStatus();
+                //CheckFormInputs();
+                //checkForAccess();
+            }
 
         //Fill Project Dropdown with data
         protected void BindDataSetDataProjects()
@@ -237,7 +237,7 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(cs))
             {
-
+                conn.Open();
                 string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1";
                 using (SqlCommand cmdlineno = new SqlCommand(sqlquery, conn))
                 {
@@ -278,30 +278,29 @@ namespace WorkerExitPass
                                                     {
                                                         while (hoddr.Read())
                                                         {
-                                                            string ROcemail = hoddr[0].ToString();
-                                                            Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm3.aspx?exitid=" + exitid);
+                                                            //string ROcemail = hoddr[0].ToString();
+                                                            
+                                                            //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
-                                                            //using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
-                                                            //{
-                                                            //    mm.Subject = "Account Activation";
-                                                            //    string body = "Hello,";
-                                                            //    body += "<br /><br />Please click the following link to approve or reject the application";
-                                                            //    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm3.aspx?exitid=" + exitid) + "'>Click here to approve or deny applications.</a>";
-                                                            //    body += "<br /><br />Thanks";
-                                                            //    mm.Body = body;
-                                                            //    mm.IsBodyHtml = true;
-                                                            //    SmtpClient smtp = new SmtpClient();
-                                                            //    smtp.Host = "smtp-mail.outlook.com";
-                                                            //    smtp.EnableSsl = true;
-                                                            //    NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "<password>");
-                                                            //    smtp.UseDefaultCredentials = false;
-                                                            //    smtp.Credentials = NetworkCred;
-                                                            //    smtp.Port = 587;
-                                                            //    smtp.Send(mm);
-                                                            //}
-
-                                                            //link format
-                                                            //Label2.Text = "WebForm3.aspx?exitid=" + exitid + "       cemail is " + ROcemail;
+                                                            using (MailMessage mm = new MailMessage("chowwwwder@outlook.com", ROcemail))
+                                                            {
+                                                                mm.Subject = "Account Activation";
+                                                                string body = "Hello,";
+                                                                body += "<br /><br />Please click the following link to approve or reject the application";
+                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>Click here to approve or deny applications.</a>";
+                                                                body += "<br /><br />Thanks";
+                                                                mm.Body = body;
+                                                                mm.IsBodyHtml = true;
+                                                                SmtpClient smtp = new SmtpClient();
+                                                                smtp.Host = "smtp-mail.outlook.com";
+                                                                smtp.EnableSsl = true;
+                                                                NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
+                                                                smtp.UseDefaultCredentials = false;
+                                                                smtp.Credentials = NetworkCred;
+                                                                smtp.Port = 587;
+                                                                smtp.Send(mm);
+                                                            }
+                                                            
                                                         }
                                                     }
                                                     

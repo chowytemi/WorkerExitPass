@@ -20,6 +20,9 @@ namespace WorkerExitPass
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            var exitid = Request.QueryString["exitid"];
+            Label1.Text = exitid;
+
             if (!IsPostBack)
             {
                 //CheckForAccess();
