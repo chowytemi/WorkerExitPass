@@ -65,8 +65,8 @@ namespace WorkerExitPass
                     if (compare > 0)
                     {
                         submitForm();
-                        Response.Redirect("Webform3.aspx");
                         sendEmailForApproval();
+                        Response.Redirect("Webform3.aspx");
                     }
                     else if (compare <= 0)
                     {
@@ -225,7 +225,6 @@ namespace WorkerExitPass
 
 
 
-        //get in charge to send email to 
         protected void sendEmailForApproval()
         {
 
@@ -279,10 +278,10 @@ namespace WorkerExitPass
                                                         while (hoddr.Read())
                                                         {
                                                             //string ROcemail = hoddr[0].ToString();
-                                                            
-                                                            //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
+                                                            //string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
+                                                            Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
-                                                            using (MailMessage mm = new MailMessage("chowwwwder@outlook.com", ROcemail))
+                                                            using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
                                                             {
                                                                 mm.Subject = "Account Activation";
                                                                 string body = "Hello,";
