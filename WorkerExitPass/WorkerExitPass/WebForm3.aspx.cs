@@ -15,8 +15,8 @@ namespace WorkerExitPass
     public partial class WebForm3 : System.Web.UI.Page
     {
         //Get login id
-        //string empID = "PXE6563";
-        string empID = "MB638";
+        string empID = "PXE6563";
+        //string empID = "MB638";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -84,19 +84,26 @@ namespace WorkerExitPass
         protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             GridView1.PageIndex = e.NewPageIndex;
-            //FormStatus();
+            FormStatus();
         }
 
         protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            try
-            {
-                int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
-
                 string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
                 SqlConnection conn = new SqlConnection(cs);
                 conn.Open();
+            try
+            {
+                int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
+                string status = GridView1.SelectedRow.Cells[3].Text;
+
+                if (status == "Pending")
+                {
+                    lblStatus.Text = "Pending";
+                    lblWhen.Text = "Pending";
+                    lblApprover.Text = "Pending";
+                } else
+                {
 
                 string statussql = "select exitapproval.approve, EmpList.Employee_Name, exitapproval.approveddate from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
                 SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
@@ -104,7 +111,7 @@ namespace WorkerExitPass
                 DataSet ds = new DataSet();
                 da.Fill(ds);
                 DataTable dt = ds.Tables[0];
-                lblexitID.Text = "Early Exit Permit ID - #" + exitID + " Details";
+                lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
 
                 if (dt.Rows[0]["approve"].ToString() == "True")
                 {
@@ -123,10 +130,7 @@ namespace WorkerExitPass
                 lblWhen.Text = when.ToString("dd/MM/yyyy hh:mm tt");
                 lblApprover.Text = dt.Rows[0]["Employee_Name"].ToString();
 
-                //string cs2 = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-                //SqlConnection conn2 = new SqlConnection(cs2);
-                //conn2.Open();
-
+                }
                 string statussql2 = "select exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, EmpList.Employee_Name, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
                 SqlDataAdapter da2 = new SqlDataAdapter(statussql2, conn);
 
@@ -159,6 +163,7 @@ namespace WorkerExitPass
                     tbRemarks.Text = dt2.Rows[0]["remarks"].ToString();
                 }
                 mpePopUp.Show();
+                conn.Close();
 
             }
             catch (Exception)

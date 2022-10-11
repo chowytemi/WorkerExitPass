@@ -49,14 +49,14 @@
                         </div>
                         <div id="approval">                                
                             <asp:Label class="label" ID="lblApproval" runat="server" Text="Approval Details"></asp:Label>
-                                <div class="statusWhenRow">
+                                <div id="statusWhenRow">
                                         <div class="col">
-                                            <asp:Label class="label" ID="Label1" runat="server" Text="Status"></asp:Label>
+                                            <asp:Label class="label" runat="server" Text="Status"></asp:Label>
         <%--                                    <asp:TextBox class="textbox" ID="tbStatus" runat="server" ReadOnly="True"></asp:TextBox>--%>
                                             <asp:Label class="labelData" ID="lblStatus" runat="server" />
                                         </div>
                                         <div class="col">
-                                            <asp:Label class="label" ID="Label2" runat="server" Text="When"></asp:Label>
+                                            <asp:Label class="label" runat="server" Text="When"></asp:Label>
         <%--                                    <asp:TextBox class="textbox" ID="tbWhen" runat="server" ReadOnly="True"></asp:TextBox>--%>
                                             <asp:Label class="labelData" ID="lblWhen" runat="server" />
                                         </div> 
@@ -70,7 +70,7 @@
 
                         <div id="details">
                             <asp:Label class="label" ID="lblDetails" runat="server" Text="Form Details"></asp:Label>
-                            <div class="dateTimeRow">
+                            <div id="dateTimeRow">
                                 <div class="col">
                                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
                                         <asp:TextBox class="textbox" ID="tbDate" runat="server" ReadOnly="True"></asp:TextBox>

@@ -19,13 +19,13 @@
     <form id="form1" runat="server">
         <h1>Early Exit Permit Approval</h1>
         <div class="container">
-            <div class="btnRows">
+<%--            <div class="btnRows">
                 <asp:Button ID="btnShowAll" class="button" runat="server" Text="All" OnClick="btnShowAll_Click" />
                 <asp:Button ID="btnShowPending" class="button" runat="server" Text="Pending" OnClick="btnShowPending_Click" />
                 <asp:Button ID="btnShowApproved" class="button" runat="server" Text="Approved" OnClick="btnShowApproved_Click" />
                 <asp:Button ID="btnShowRejected" class="button" runat="server" Text="Rejected" OnClick="btnShowRejected_Click" />
-            </div>
-            <asp:MultiView ID="MultiView1" runat="server" OnActiveViewChanged="MultiView1_ActiveViewChanged">
+            </div>--%>
+<%--            <asp:MultiView ID="MultiView1" runat="server" OnActiveViewChanged="MultiView1_ActiveViewChanged">
                 <asp:View ID="View1" runat="server">
                     <asp:GridView ID="GridView2" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" BackColor="#EBF6FE" OnRowDataBound="GridView2_RowDataBound">
                         <Columns>
@@ -37,8 +37,8 @@
                         </Columns>
                     </asp:GridView>
                 </asp:View>
-                <asp:View ID="View2" runat="server">
-<%--                    <div class="row">            
+                <asp:View ID="View2" runat="server">--%>
+                    <div class="row">            
                         <asp:DropDownList ID="ddlReason" class="dropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlReason_SelectedIndexChanged">
                             <asp:ListItem Text="Reason" Value=""></asp:ListItem>
                             <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
@@ -46,28 +46,17 @@
                             <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
                             <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
                         </asp:DropDownList>
-                    </div>--%>
-                    <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" BackColor="#EBF6FE">
+                    </div>
+                    <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" BackColor="#EBF6FE" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging">
                         <Columns>
                             <asp:BoundField DataField="exitID" HeaderText="ID" />
                             <asp:BoundField DataField="createddate" HeaderText="Requested Date" />
                             <asp:BoundField DataField="exittime" HeaderText="Requested Time" />
-        <%--                    <asp:BoundField DataField="createdby" HeaderText="Requested By" />
-                            <asp:BoundField DataField="projcode" HeaderText="Project" />
-                            <asp:BoundField DataField="company" HeaderText="Company" />--%>
                             <asp:BoundField DataField="reason" HeaderText="Reason" />
-        <%--                    <asp:BoundField DataField="remarks" HeaderText="Remarks" />--%>
-        <%--                    <asp:ButtonField ItemStyle-CssClass="button" Text="View" runat="server" CommandName="ViewBtn" />--%>
-
-                            <%--<asp:TemplateField>
-                                <ItemTemplate>
-                                    <asp:Button class="Approve" Text="Approve" runat="server" OnClick="ApproveBtn_Click" />
-                                    <asp:Button class="Reject" Text="Reject" runat="server" OnClick="RejectBtn_Click" />
-                                </ItemTemplate>
-                            </asp:TemplateField>--%>
                         </Columns>
+                        <PagerStyle HorizontalAlign = "Right" CssClass = "GridPager" />
                     </asp:GridView>
-                </asp:View>
+                <%--</asp:View>
                 <asp:View ID="View3" runat="server">
                     <asp:GridView ID="GridView3" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" BackColor="#EBF6FE">
                         <Columns>
@@ -88,7 +77,7 @@
                         </Columns>
                     </asp:GridView>
                 </asp:View>
-            </asp:MultiView>
+            </asp:MultiView>--%>
             
     <%--        <asp:LinkButton ID="LinkButton1" runat="server">LinkButton</asp:LinkButton>--%>
             
@@ -105,15 +94,15 @@
                 </span>
                </div>     
                 <div class="content">
-                        <div class="row">
+                        <div class="rowModal">
                             <asp:Label ID="lblexitID" runat="server"></asp:Label>
                         </div>
                         <div class="dateTimeRow">
-                            <div class="dateCol">
+                            <div class="col">
                                     <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
                                     <asp:TextBox class="textbox" ID="tbDate" runat="server" ReadOnly="True"></asp:TextBox>
                             </div>
-                            <div class="timeCol">
+                            <div class="col">
                                     <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
                                     <asp:TextBox class="textbox" ID="tbTime" runat="server"></asp:TextBox>
                             </div>
@@ -146,19 +135,6 @@
                     </div>
                 </div>   
             </asp:Panel>
-<%--        <ajaxToolkit:ModalPopupExtender ID="mpeConfirmation" runat="server" TargetControlID="lblHidden" PopupControlID="Panel2" BackgroundCssClass="modalBackground1">
-            </ajaxToolkit:ModalPopupExtender>
-        <asp:Panel ID="Panel2" runat="server">
-            <div class="content">
-                <div class="row">
-                    <asp:Label class="label" ID="lblConfirmation" runat="server"></asp:Label>
-                </div> 
-                <div class="btnRow">
-                    <asp:Button id="btnConfirm" class="button" runat="server" text="Confirm" />
-                    <asp:Button id="btnCancel" class="button" runat="server" text="Cancel" />
-                </div>
-            </div>
-        </asp:Panel>--%>
 
         <asp:Label ID="Label1" runat="server"></asp:Label>
     </form>

@@ -27,55 +27,61 @@ h1, .label {
 }
 
 
-.dateTimeRow, .row {
+.dateTimeRow {
     margin-left: 33%;
     margin-right: 33%;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     /*justify-content: center;
     align-items: center;*/
 }
 
 .row {
+    display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.col-12 {
     width: 100%;
 }
 
-.dateTimeRow {
-    justify-content: space-between;
+.col-12 {
+    /*width: 100%;*/
+    width: 33%;
+}
+
+.inputtest {
+    width: 50%;
 }
 
 .dateCol {
     align-items: flex-start;
+    /*width: 50%;*/
 }
 
 .timeCol {
     justify-content: flex-end;
     align-items: flex-end;
+    /*width: 50%;*/
 }
 
-#dateInput, #timeInput {
-    width: 11.25em;
-}
+/*#dateInput, #timeInput {
+    width: 100%;
+}*/
 
 .inputFields, .dropdown {
     width: 100%;
 }
 
 .inputFields, .dropdown, .input {
-    height: 2.5em;
-    border-radius: 0.3125em;
-    border: 0.0625em solid #EFF0F6;
+    height: 2.5em !important;
+    border-radius: 0.3125em !important;
+    border: 0.0625em solid #EFF0F6 !important;
     font-family: 'Open Sans', sans-serif;
-    font-size: 1em;
-    text-indent: 0.5em;
-    box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
+    font-size: 1em !important;
+    text-indent: 0.5em !important;
+    box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25) !important;
     display: flex;
-    justify-content: center;
+    justify-content: center !important;
     overflow: auto;
 }
 
@@ -92,13 +98,22 @@ h1, .label {
     color: red;
 }
 
-.rowButtons {
+/*.rowButtons {
     margin-left: 10%;
     margin-right: 10%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    /*align-items:center;*/
+    align-items:center;
+}*/
+
+.rowButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 2em; 
+    width: 100%;
 }
 
 .button {
@@ -106,7 +121,7 @@ h1, .label {
     border-style: none;
     color: white;
     height: 3.5em;
-    width: 10em;
+    width: 15%;
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
     /*margin-top: 1em;
@@ -120,7 +135,6 @@ h1, .label {
 }
 
 #submitBtn {
-    /*right: 20%;*/
     background-color: #00AC26;
 }
 
@@ -128,6 +142,7 @@ h1, .label {
     background-color: #E83333;
 }
 
+/* Medium devices (landscape tablets, 992px and down) */
 @media only screen and (max-width: 992px) {
     .container {
         width: 85%;
@@ -137,17 +152,40 @@ h1, .label {
         font-size: 1.5em;
     }
 
+    .col-12 {
+        width: 80%;
+    }
+
+    .dateTimeRow {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
     .button {
         height: 3.55em;
-        width: 8em;
+        /*width: 8em;*/
         bottom: 3%;
+        font-size: 1em;
+    }
+
+    .label {
         font-size: 1em;
     }
 }
 
+/* Medium devices (landscape tablets, 768px and down) */
+@media only screen and (max-width: 768px) {
+    .button {
+        width: 30%;
+    }
+}
+
+/* Medium devices (landscape tablets, 320px and down) */
 @media only screen and (max-width: 320px) {
     .dateTimeRow {
-        display: block;
+        /*display: block;*/
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .dateCol, .timeCol, .input {
@@ -155,8 +193,13 @@ h1, .label {
     }
 
     .rowButtons {
-        display: block;
+        /*display: block;*/
+        flex-direction: column;
         justify-content: center;
         align-items: center;
+    }
+    .button { 
+        width: 50%;
+        margin-top: 2%;
     }
 }

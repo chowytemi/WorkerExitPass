@@ -42,6 +42,42 @@ namespace WorkerExitPass
             namesddl.Visible = true;
             nametb.Visible = false;
             //TeamBtn.Attributes.Add("class", "activeBtn");
+            GetListOfEmployees();
+
+
+        }
+        protected void BindDataSetDataProjects()
+        {
+            string cs = ConfigurationManager.ConnectionStrings["service"].ConnectionString;
+            SqlConnection con = new SqlConnection(cs);
+            SqlDataAdapter da = new SqlDataAdapter("select ID, code, description from PROJECT where isActive = 1 and Type = 'PR'", con);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            ds.Tables[0].Columns.Add("Description", typeof(string), "description");
+
+            projectddl.DataTextField = "Description";
+            projectddl.DataValueField = "description";
+            projectddl.DataSource = ds;
+            projectddl.DataBind();
+        }
+
+        protected void GetListOfEmployees()
+        {
+            string constr = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd = new SqlCommand("select Employee_Name, EmpID from EmpList where Department = 'SUBCON' AND IsActive = 1;"))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    namesddl.DataSource = cmd.ExecuteReader();
+                    namesddl.DataTextField = "Employee_Name";
+                    namesddl.DataValueField = "EmpID";
+                    namesddl.DataBind();
+                    con.Close();
+                }
+            }
         }
 
         protected void ReasonDropdown_SelectedIndexChanged(object sender, EventArgs e)
@@ -160,12 +196,36 @@ namespace WorkerExitPass
 
         }
 
+        
+        protected void namesddl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<String> empNamesList = new List<string>();
+            foreach (ListItem item in namesddl.Items)
+            {
+                if (item.Selected)
+                {
+                    empNamesList.Add(item.Text);
+                    empNamesList.Add(item.Value);
+                }
+            }
+            namesddl.Texts.SelectBoxCaption = String.Join(", ", empNamesList.ToArray());
+            namesddl.DataValueField = String.Join(", ", empNamesList.ToArray());
+
+        }
+
+        protected void Submit(object sender, EventArgs e)
+        {
+
+            string projectInput = projectddl.Text;
+            //string empNames = namesddl.Texts.SelectBoxCaption;
+            string empID = namesddl.DataValueField;
+
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection conn = new SqlConnection(cs);
+            conn.Open();
 
 
-
-
-
-
+        }
 
     }
 }

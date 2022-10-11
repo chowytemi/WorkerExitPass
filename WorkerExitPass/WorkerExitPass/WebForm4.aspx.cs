@@ -26,7 +26,7 @@ namespace WorkerExitPass
             if (!IsPostBack)
             {
                 //CheckForAccess();
-                MultiView1.SetActiveView(View2);
+                //MultiView1.SetActiveView(View2);
                 //btnShowPending.Attributes.Add("class", "btnActive");
                 DataTable dt = this.GetPending();
                 GridView1.DataSource = dt;
@@ -59,7 +59,7 @@ namespace WorkerExitPass
         {
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exittime;";
+            string statussql = "select exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exittime desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -75,78 +75,78 @@ namespace WorkerExitPass
             return dt;
         }
 
-        private DataTable GetAll()
-        {
-            DataTable dt = new DataTable();
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select exitID, createddate, exittime, reason, approve from exitapproval";
-            using (SqlConnection conn = new SqlConnection(cs))
-            {
-                using (SqlCommand cmd = new SqlCommand(statussql))
-                {
-                    cmd.Connection = conn;
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                    {
-                        sda.Fill(dt);
-                    }
-                }
-            }
-
-            return dt;
-        }
-
-        private DataTable GetApproved()
-        {
-            DataTable dt = new DataTable();
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select exitID, createddate, exittime, reason from exitapproval where approve = 1 order by createddate, exittime;";
-            using (SqlConnection conn = new SqlConnection(cs))
-            {
-                using (SqlCommand cmd = new SqlCommand(statussql))
-                {
-                    cmd.Connection = conn;
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                    {
-                        sda.Fill(dt);
-                    }
-                }
-            }
-
-            return dt;
-        }
-
-        private DataTable GetRejected()
-        {
-            DataTable dt = new DataTable();
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select exitID, createddate, exittime, reason from exitapproval where approve = 0 order by createddate, exittime;";
-            using (SqlConnection conn = new SqlConnection(cs))
-            {
-                using (SqlCommand cmd = new SqlCommand(statussql))
-                {
-                    cmd.Connection = conn;
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                    {
-                        sda.Fill(dt);
-                    }
-                }
-            }
-
-            return dt;
-        }
-
-        //protected void ddlReason_SelectedIndexChanged(object sender, EventArgs e)
+        //private DataTable GetAll()
         //{
-        //    string reason = ddlReason.SelectedItem.Value;
-        //    DataTable dt = this.GetPending();
-        //    DataView dataView = dt.DefaultView;
-        //    if (!string.IsNullOrEmpty(reason))
+        //    DataTable dt = new DataTable();
+        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+        //    string statussql = "select exitID, createddate, exittime, reason, approve from exitapproval";
+        //    using (SqlConnection conn = new SqlConnection(cs))
         //    {
-        //        dataView.RowFilter = "Reason = '" + reason + "'";
+        //        using (SqlCommand cmd = new SqlCommand(statussql))
+        //        {
+        //            cmd.Connection = conn;
+        //            using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+        //            {
+        //                sda.Fill(dt);
+        //            }
+        //        }
         //    }
-        //    GridView1.DataSource = dataView;
-        //    GridView1.DataBind();
+
+        //    return dt;
         //}
+
+        //private DataTable GetApproved()
+        //{
+        //    DataTable dt = new DataTable();
+        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+        //    string statussql = "select exitID, createddate, exittime, reason from exitapproval where approve = 1 order by createddate, exittime;";
+        //    using (SqlConnection conn = new SqlConnection(cs))
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand(statussql))
+        //        {
+        //            cmd.Connection = conn;
+        //            using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+        //            {
+        //                sda.Fill(dt);
+        //            }
+        //        }
+        //    }
+
+        //    return dt;
+        //}
+
+        //private DataTable GetRejected()
+        //{
+        //    DataTable dt = new DataTable();
+        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+        //    string statussql = "select exitID, createddate, exittime, reason from exitapproval where approve = 0 order by createddate, exittime;";
+        //    using (SqlConnection conn = new SqlConnection(cs))
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand(statussql))
+        //        {
+        //            cmd.Connection = conn;
+        //            using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+        //            {
+        //                sda.Fill(dt);
+        //            }
+        //        }
+        //    }
+
+        //    return dt;
+        //}
+
+        protected void ddlReason_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string reason = ddlReason.SelectedItem.Value;
+            DataTable dt = this.GetPending();
+            DataView dataView = dt.DefaultView;
+            if (!string.IsNullOrEmpty(reason))
+            {
+                dataView.RowFilter = "Reason = '" + reason + "'";
+            }
+            GridView1.DataSource = dataView;
+            GridView1.DataBind();
+        }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -199,7 +199,7 @@ namespace WorkerExitPass
                 DateTime time = Convert.ToDateTime(dt.Rows[0]["exittime"]);
 
                 //Binding TextBox From dataTable    
-                lblexitID.Text = "Early Exit Permit ID - #" + exitID + " Details";
+                lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
                 tbDate.Text = date.ToString("dd/MM/yyyy");
                 tbTime.Text = time.ToString("hh:mm tt");
                 tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
@@ -274,57 +274,57 @@ namespace WorkerExitPass
             //Response.Redirect(Request.RawUrl);
         }
 
-        protected void btnShowAll_Click(object sender, EventArgs e)
-        {
-            MultiView1.ActiveViewIndex = 0;
-            DataTable dt = this.GetAll();
-            GridView2.DataSource = dt;
-            GridView2.DataBind();
-        }
+        //protected void btnShowAll_Click(object sender, EventArgs e)
+        //{
+        //    MultiView1.ActiveViewIndex = 0;
+        //    DataTable dt = this.GetAll();
+        //    GridView2.DataSource = dt;
+        //    GridView2.DataBind();
+        //}
 
-        protected void btnShowPending_Click(object sender, EventArgs e)
-        {
-            MultiView1.ActiveViewIndex = 1;
-            GetPending();
-        }
+        //protected void btnShowPending_Click(object sender, EventArgs e)
+        //{
+        //    MultiView1.ActiveViewIndex = 1;
+        //    GetPending();
+        //}
 
-        protected void btnShowApproved_Click(object sender, EventArgs e)
-        {
-            MultiView1.ActiveViewIndex = 2;
-            DataTable dt = this.GetApproved();
-            GridView3.DataSource = dt;
-            GridView3.DataBind();
-        }
+        //protected void btnShowApproved_Click(object sender, EventArgs e)
+        //{
+        //    MultiView1.ActiveViewIndex = 2;
+        //    DataTable dt = this.GetApproved();
+        //    GridView3.DataSource = dt;
+        //    GridView3.DataBind();
+        //}
 
-        protected void btnShowRejected_Click(object sender, EventArgs e)
-        {
-            MultiView1.ActiveViewIndex = 3;
-            DataTable dt = this.GetRejected();
-            GridView4.DataSource = dt;
-            GridView4.DataBind();
-        }
+        //protected void btnShowRejected_Click(object sender, EventArgs e)
+        //{
+        //    MultiView1.ActiveViewIndex = 3;
+        //    DataTable dt = this.GetRejected();
+        //    GridView4.DataSource = dt;
+        //    GridView4.DataBind();
+        //}
 
-        protected void GridView2_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if ((e.Row.Cells[4].Text) == "True")
-            {
-                e.Row.Cells[4].Text = "Approved";
+        //protected void GridView2_RowDataBound(object sender, GridViewRowEventArgs e)
+        //{
+        //    if ((e.Row.Cells[4].Text) == "True")
+        //    {
+        //        e.Row.Cells[4].Text = "Approved";
 
-            }
-            else if ((e.Row.Cells[4].Text) == "&nbsp;")
-            {
+        //    }
+        //    else if ((e.Row.Cells[4].Text) == "&nbsp;")
+        //    {
 
-                e.Row.Cells[4].Text = "Pending";
+        //        e.Row.Cells[4].Text = "Pending";
 
-            }
-            else
-            {
-                e.Row.Cells[4].Text = "Rejected";
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        e.Row.Cells[4].Text = "Rejected";
+        //    }
+        //}
 
-        protected void MultiView1_ActiveViewChanged(object sender, EventArgs e)
-        {
+        //protected void MultiView1_ActiveViewChanged(object sender, EventArgs e)
+        //{
             //int activeView;
             //activeView = MultiView1.ActiveViewIndex;
 
@@ -345,6 +345,15 @@ namespace WorkerExitPass
             //    btnShowRejected.Attributes.Add("class", "btnActive");
             //}
 
+        //}
+
+        protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridView1.PageIndex = e.NewPageIndex;
+            GetPending();
+            DataTable dt = this.GetPending();
+            GridView1.DataSource = dt;
+            GridView1.DataBind();
         }
     }
 }

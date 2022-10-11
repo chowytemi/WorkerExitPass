@@ -12,6 +12,7 @@
         <link href="Content/main.css" rel="stylesheet" type="text/css" />
         <link href="Content/StyleSheet2.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
     <form id="form1" runat="server">
         <h1>Early Exit Permit Form</h1>
@@ -39,38 +40,42 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="form-group">
                             <asp:Label class="label" ID="project" runat="server" Text="Project"></asp:Label>
     <%--                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ErrorMessage="*" ControlToValidate="projectddl" CssClass="rfv"></asp:RequiredFieldValidator>--%>
                             <asp:DropDownList class="dropdown" ID="projectddl" runat="server" AutoPostBack="true">
-                            </asp:DropDownList>
-                        </div>        
+                            </asp:DropDownList>       
                     </div>
                 </div>
             
                 <div class="row">
                     <div class="col-12">
-                        <div class="form-group">
                             <asp:Label class="label" ID="name" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
                             <asp:TextBox class="inputFields" ID="nametb" runat="server" ReadOnly="true"></asp:TextBox>
-                            <asp:DropDownList class="dropdown" ID="namesddl" runat="server" Visible="false">
+                            <%--<asp:DropDownList class="dropdown" ID="namesddl" runat="server" Visible="false">
 
-                            </asp:DropDownList></div>
+                            </asp:DropDownList>--%>
+                        <%--<asp:ListBox ID="lstNames" runat="server" SelectionMode="Multiple"></asp:ListBox>--%>
+                        <asp:DropDownCheckBoxes ID="namesddl" runat="server" Visible="false" CssClass="dropdown" UseButtons="True" OnSelectedIndexChanged="namesddl_SelectedIndexChanged">
+       
+                            <Style SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style>
+
+                            <Style2 SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style2>
+                             
+                            <Texts SelectAllNode="Select all"></Texts>
+       
+                        </asp:DropDownCheckBoxes>
                     </div>
                 </div>
            
                 <div class="row">
                     <div class="col-12">
-                        <div class="form-group">
                             <asp:Label class="label" ID="companyName" runat="server" Text="Name of Company"></asp:Label>
                             <asp:TextBox class="inputFields" ID="companytb" runat="server" ReadOnly="true"></asp:TextBox>
-                        </div>
                     </div>
                 </div>
             
                 <div class="row">
                     <div class="col-12">
-                        <div class="form-group">
                             <asp:Label class="label" ID="reason" runat="server" Text="Reason for Leaving Yard"></asp:Label>
     <%--                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="*" ControlToValidate="ReasonDropdown" InitialValue="-1" CssClass="rfv"></asp:RequiredFieldValidator>--%>
 
@@ -82,18 +87,15 @@
                                 <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
                                 <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
                             </asp:DropDownList>
-                        </div>
                     </div>
                 </div>
             
                 <div class="row">
                     <div class="col-12">
-                        <div class="form-group">
                             <asp:Label class="label" ID="lblremarks" runat="server" Text="Remarks" Visible="false"></asp:Label>
     <%--                       <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ErrorMessage="*" ControlToValidate="remarkstb" CssClass="rfv"></asp:RequiredFieldValidator>--%>
 
                            <asp:TextBox class="inputFields" ID="remarkstb" runat="server" Visible="false"></asp:TextBox>
-                        </div>
                     </div>
                 </div>
             
@@ -102,12 +104,12 @@
                    <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" />
                 </div>--%>
                 <div class="rowButtons">
-                    <div class="colCancelBtn">
+<%--                    <div class="colCancelBtn">--%>
                         <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
-                    </div>
-                    <div class="colSubmitBtn">
-                        <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" />
-                    </div>
+<%--                    </div>
+                    <div class="colSubmitBtn">--%>
+                        <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="Submit" />
+<%--                    </div>--%>
                 </div>
             </div>   
         </div>

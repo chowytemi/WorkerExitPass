@@ -6,11 +6,6 @@
 .submitAs { 
     box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
     border-radius: 0.625em 0 0 0.625em;
-    /*
-    float: left;
-    height: 50em;
-    width: 11.25em;
-    */
     width: 15%;
     overflow: auto;
 }
@@ -20,37 +15,11 @@
     border-radius: 0 0.625em 0.625em 0;
     text-align: center;
     width: 85%;
-    /*
-    float: left;
-    margin: auto;
-    height: 50em;
-    width: 68.1875em;
-    */
 }
-
-/*.row {
-    margin-top: 0.5em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 33%;
-    margin-right: 33%;
-}
-*/
-
-
-/*.button {
-    display: block;
-    position: absolute;
-    bottom: 10%;
-}*/
-
-
 
 .label {
     text-align: left;
 }
-
 
 .submitAsButton {
     display: block;
@@ -88,11 +57,16 @@
     background-color: #FFFFFF;
     color: #7C7C7C;
 }
-/*#cancelBtn {
-    left: 30%;
-}*/
 
+#caption {
+    overflow: visible !important;
+    height: 2.5em !important;
+}
 
+.dd_chk_drop {
+    top: 2.75em !important;
+}
+/* Medium devices (landscape tablets, 992px and down) */
 @media only screen and (max-width: 992px) {
     .container {
         flex-direction: column;
@@ -115,15 +89,11 @@
 
     .submitAsButton {
         display: inline-block;
-        width: 7em;
+        width: 40%;
         font-size: 1.25em;
         border-radius: 0.9375em;
         margin-top: auto;
     }
-
-    /*#cancelBtn {
-        left: 20%;
-    }*/
 
     .label {
         margin-top: 0.2em;
@@ -137,10 +107,10 @@
     #dateInput, #timeInput {
         width: 7em;
     }
-    .dateTimeRow, .row /*, .rowButtons*/ {
+    /*.dateTimeRow, .row {
         margin-left: 10%;
         margin-right: 10%;
-    }
+    }*/
     .col-12 {
         width: 85%;
     }
@@ -148,5 +118,16 @@
 
 }
 
+/* Medium devices (landscape tablets, 768px and down) */
+@media only screen and (max-width: 768px) {
+    .submitAsButton {
+        width: 30%;
+    }
+}
 
-    
+/* Medium devices (landscape tablets, 320px and down) */
+@media only screen and (max-width: 320px) {
+    .submitAsButton {
+        width: 40%;
+    }
+}
