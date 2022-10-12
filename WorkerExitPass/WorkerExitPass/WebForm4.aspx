@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-     <meta charset="utf-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Early Exit Permit Approval</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet"/>
@@ -47,7 +47,7 @@
                             <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
                         </asp:DropDownList>
                     </div>
-                    <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" BackColor="#EBF6FE" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging">
+                    <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnSelectedIndexChanged="GridView1_SelectedIndexChanged" BackColor="#EBF6FE" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" DataKeyNames="exitID">
                         <Columns>
                             <asp:BoundField DataField="exitID" HeaderText="ID" />
                             <asp:BoundField DataField="createddate" HeaderText="Requested Date" />
@@ -81,11 +81,11 @@
             
     <%--        <asp:LinkButton ID="LinkButton1" runat="server">LinkButton</asp:LinkButton>--%>
             
-            <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
-            <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+<%--            <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
+            <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>--%>
             
         </div>
-        <ajaxToolkit:ModalPopupExtender ID="mpeApproval" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground" CancelControlID="btnBack">
+<%--        <ajaxToolkit:ModalPopupExtender ID="mpeApproval" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground" CancelControlID="btnBack">
             </ajaxToolkit:ModalPopupExtender>
             <asp:Panel ID="Panel1" runat="server">
                <div class="rowIcon">
@@ -134,7 +134,7 @@
                         <asp:Button id="btnReject" class="button" runat="server" text="Reject" />
                     </div>
                 </div>   
-            </asp:Panel>
+            </asp:Panel>--%>
 
         <asp:Label ID="Label1" runat="server"></asp:Label>
     </form>

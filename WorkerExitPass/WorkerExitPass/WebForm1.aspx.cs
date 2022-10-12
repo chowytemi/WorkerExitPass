@@ -314,17 +314,18 @@ namespace WorkerExitPass
                                                         while (hoddr.Read())
                                                         {
                                                             //string ROcemail = hoddr[0].ToString();
+                                                            string ROcemail = "jihanshafitri.18@ichat.sp.edu.sg";
 
-                                                      
-                                                            //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
-                                                            
-                                                            using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
+                                                            Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx?exitid=" + exitid);
+
+                                                            //using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
+                                                            using (MailMessage mm = new MailMessage("jihanshafitri.18@ichat.sp.edu.sg", ROcemail))
                                                             {
                                                                 //mm.Subject = "Account Activation";
                                                                 mm.Subject = "Early Exit Permit Pending for Approval";
                                                                 string body = "Hello,";
                                                                 body += "<br /><br />The following application was submitted:";
-                                                                body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 100%;\">";
                                                                 body += "<tr style=\text-align:center; height: 0.5em;\">";
                                                                 body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
                                                                 body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
@@ -338,15 +339,16 @@ namespace WorkerExitPass
                                                                 body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                                 body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                                 body += "<br />Please click the following link to approve or reject the application:";
-                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx?exitid=" + exitid) + "'>View Application</a>";
                                                                 body += "<br /><br />Thank you";
                                                                 mm.Body = body;
                                                                 mm.IsBodyHtml = true;
                                                                 SmtpClient smtp = new SmtpClient();
                                                                 smtp.Host = "smtp-mail.outlook.com";
                                                                 smtp.EnableSsl = true;
-                                                                NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
-                                                                
+                                                                //NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
+                                                                NetworkCredential NetworkCred = new NetworkCredential("jihanshafitri.18@ichat.sp.edu.sg", "YCT_4Y_$DhgfM9Y");
+
                                                                 smtp.UseDefaultCredentials = false;
                                                                 smtp.Credentials = NetworkCred;
                                                                 smtp.Port = 587;

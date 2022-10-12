@@ -61,7 +61,7 @@
                                     </div>
                                 <div class="row">
                                         <asp:Label class="label" ID="name" runat="server" Text="Approver"></asp:Label>
-                                        <asp:Label class="labelData" ID="lblApprover" runat="server" Text="Label"></asp:Label>
+                                        <asp:Label class="labelData" ID="lblApprover" runat="server"></asp:Label>
                                     </div>     
                         </div>
 

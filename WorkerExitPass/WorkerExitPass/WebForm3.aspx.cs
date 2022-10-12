@@ -15,8 +15,8 @@ namespace WorkerExitPass
     public partial class WebForm3 : System.Web.UI.Page
     {
         //Get login id
-        string empID = "PXE6563";
-        //string empID = "MB638";
+        //string empID = "PXE6563";
+        string empID = "MB638";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -89,35 +89,32 @@ namespace WorkerExitPass
 
         protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-                string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-                SqlConnection conn = new SqlConnection(cs);
-                conn.Open();
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection conn = new SqlConnection(cs);
+            conn.Open();
+
             try
             {
                 int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
-                string status = GridView1.SelectedRow.Cells[3].Text;
+                //string status = GridView1.SelectedRow.Cells[3].Text;
 
-                if (status == "Pending")
-                {
-                    lblStatus.Text = "Pending";
-                    lblWhen.Text = "Pending";
-                    lblApprover.Text = "Pending";
-                } else
-                {
-
-                string statussql = "select exitapproval.approve, EmpList.Employee_Name, exitapproval.approveddate from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
-                SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
-
+                string sql = "select exitapproval.approve, (select EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, EmpList.Employee_Name, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
                 DataTable dt = ds.Tables[0];
-                lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
 
-                if (dt.Rows[0]["approve"].ToString() == "True")
+                lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";                
+
+                if (string.IsNullOrEmpty(dt.Rows[0]["approve"].ToString()))
+                {
+                    lblStatus.Text = "Pending";     
+
+                }
+                else if (dt.Rows[0][0].ToString() == "True")
                 {
                     lblStatus.Text = "Approved";
                     lblStatus.ForeColor = System.Drawing.Color.Green;
-
                 }
                 else
                 {
@@ -126,31 +123,29 @@ namespace WorkerExitPass
 
                 }
 
-                DateTime when = Convert.ToDateTime(dt.Rows[0]["approveddate"]);
-                lblWhen.Text = when.ToString("dd/MM/yyyy hh:mm tt");
-                lblApprover.Text = dt.Rows[0]["Employee_Name"].ToString();
-
+                if (!string.IsNullOrEmpty(dt.Rows[0]["approveddate"].ToString()) && !string.IsNullOrEmpty(dt.Rows[0]["approver"].ToString()))
+                {
+                    DateTime when = Convert.ToDateTime(dt.Rows[0]["approveddate"]);
+                    lblWhen.Text = when.ToString("dd/MM/yyyy hh:mm tt");
+                    lblApprover.Text = dt.Rows[0]["approver"].ToString();
                 }
-                string statussql2 = "select exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, EmpList.Employee_Name, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
-                SqlDataAdapter da2 = new SqlDataAdapter(statussql2, conn);
+                else
+                {
+                    lblWhen.Text = "NULL";
+                    lblApprover.Text = "NULL";
+                }
 
-                DataSet ds2 = new DataSet();
-                da2.Fill(ds2);
-                DataTable dt2 = ds2.Tables[0];
+                DateTime date = Convert.ToDateTime(dt.Rows[0]["createddate"]);
+                DateTime time = Convert.ToDateTime(dt.Rows[0]["exittime"]);
 
-                DateTime date = Convert.ToDateTime(dt2.Rows[0]["createddate"]);
-
-                DateTime time = Convert.ToDateTime(dt2.Rows[0]["exittime"]);
-   
-                lblexitID.Text = "Early Exit Permit ID - #" + exitID + " Details";
                 tbDate.Text = date.ToString("dd/MM/yyyy");
                 tbTime.Text = time.ToString("hh:mm tt");
-                tbProject.Text = dt2.Rows[0]["projectdesc"].ToString();
-                tbName.Text = dt2.Rows[0]["Employee_Name"].ToString();
-                tbCompany.Text = dt2.Rows[0]["company"].ToString();
-                tbReason.Text = dt2.Rows[0]["reason"].ToString();
+                tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
+                tbName.Text = dt.Rows[0]["Employee_Name"].ToString();
+                tbCompany.Text = dt.Rows[0]["company"].ToString();
+                tbReason.Text = dt.Rows[0]["reason"].ToString();
 
-                if (dt2.Rows[0]["remarks"].ToString() == "")
+                if (dt.Rows[0]["remarks"].ToString() == "")
                 {
                     tbRemarks.Text = "N.A";
                     lblRemarks.Attributes.Add("class", "hide");
@@ -160,8 +155,9 @@ namespace WorkerExitPass
                 {
                     lblRemarks.Attributes.Add("class", "label");
                     tbRemarks.Attributes.Add("class", "textbox");
-                    tbRemarks.Text = dt2.Rows[0]["remarks"].ToString();
+                    tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
+               
                 mpePopUp.Show();
                 conn.Close();
 
