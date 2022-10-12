@@ -310,7 +310,7 @@ namespace WorkerExitPass
                                                             string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
                                                             Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
-                                                            using (MailMessage mm = new MailMessage("chowwwwder@outlook.com", ROcemail))
+                                                            using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
                                                             {
                                                                 mm.Subject = "Account Activation";
                                                                 string body = "Hello,";
@@ -322,7 +322,7 @@ namespace WorkerExitPass
                                                                 SmtpClient smtp = new SmtpClient();
                                                                 smtp.Host = "smtp-mail.outlook.com";
                                                                 smtp.EnableSsl = true;
-                                                                NetworkCredential NetworkCred = new NetworkCredential("chowwwwder@outlook.com", "chowchow711");
+                                                                NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
                                                                 smtp.UseDefaultCredentials = false;
                                                                 smtp.Credentials = NetworkCred;
                                                                 smtp.Port = 587;
