@@ -32,7 +32,7 @@
                 <RowStyle CssClass="tr" />
                 <PagerStyle HorizontalAlign = "Right" CssClass = "GridPager" />
             </asp:GridView>
-            
+
             <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
             <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground" CancelControlID="btnBack">
@@ -52,18 +52,15 @@
                                 <div id="statusWhenRow">
                                         <div class="col">
                                             <asp:Label class="label" runat="server" Text="Status"></asp:Label>
-        <%--                                    <asp:TextBox class="textbox" ID="tbStatus" runat="server" ReadOnly="True"></asp:TextBox>--%>
                                             <asp:Label class="labelData" ID="lblStatus" runat="server" />
                                         </div>
                                         <div class="col">
                                             <asp:Label class="label" runat="server" Text="When"></asp:Label>
-        <%--                                    <asp:TextBox class="textbox" ID="tbWhen" runat="server" ReadOnly="True"></asp:TextBox>--%>
                                             <asp:Label class="labelData" ID="lblWhen" runat="server" />
                                         </div> 
                                     </div>
                                 <div class="row">
                                         <asp:Label class="label" ID="name" runat="server" Text="Approver"></asp:Label>
-    <%--                                    <asp:TextBox class="textbox" ID="tbApprover" runat="server" ReadOnly="True"></asp:TextBox>--%>
                                         <asp:Label class="labelData" ID="lblApprover" runat="server" Text="Label"></asp:Label>
                                     </div>     
                         </div>
@@ -74,41 +71,33 @@
                                 <div class="col">
                                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
                                         <asp:TextBox class="textbox" ID="tbDate" runat="server" ReadOnly="True"></asp:TextBox>
-                                        <%--<asp:Label class="labelData" ID="lblDate" runat="server" />--%>
                                 </div>
                                 <div class="col">
                                         <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
                                         <asp:TextBox class="textbox" ID="tbTime" runat="server"></asp:TextBox>
-                                        <%--<asp:Label class="labelData" ID="lblTime" runat="server" />--%>
                                 </div>
                             </div>
                         <div class="row">
                                 <asp:Label class="label" ID="project" runat="server" Text="Project"></asp:Label>
                                 <asp:TextBox class="textbox" ID="tbProject" runat="server" ReadOnly="True"></asp:TextBox>
-                                <%--<asp:Label class="labelData" ID="lblProject" runat="server" />--%>
                         </div> 
                         <div class="row">
                                 <asp:Label class="label" ID="Label3" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
                                 <asp:TextBox class="textbox" ID="tbName" runat="server" ReadOnly="True"></asp:TextBox>
-                                <%--<asp:Label class="labelData" ID="lblName" runat="server" />--%>
                         </div>
                         <div class="row">
                                 <asp:Label class="label" ID="companyName" runat="server" Text="Name of Company"></asp:Label>
                                 <asp:TextBox class="textbox" ID="tbCompany" runat="server" ReadOnly="True"></asp:TextBox>
-                                <%--<asp:Label class="labelData" ID="lblCompany" runat="server" />--%>
                         </div>
                         <div class="row">
                                 <asp:Label class="label" ID="reason" runat="server" Text="Reason for Leaving Yard"></asp:Label>
                                 <asp:TextBox class="textbox" ID="tbReason" runat="server" ReadOnly="True"></asp:TextBox>
-                                <%--<asp:Label class="labelData" ID="lblReason" runat="server" />--%>
                         </div>
                         <div class="row">
                                 <asp:Label class="label" ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
                                 <asp:TextBox class="textbox" ID="tbRemarks" runat="server" ReadOnly="True"></asp:TextBox>
-                                <%--<asp:Label class="labelData" ID="lblRemarks" runat="server" />--%>
                         </div>
-                        </div>
-                         
+                        </div>  
                 </div> 
             </asp:Panel>
         </div>

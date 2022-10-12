@@ -11,6 +11,19 @@
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet" />
     <link href="Content/main.css" rel="stylesheet" type="text/css" />
     <link href="Content/StyleSheet1.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready( function() {
+            var now = new Date();
+ 
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+            $('#dateInput').val(today);
+        });
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -21,7 +34,7 @@
 
                     <div class="dateCol">
                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
-                        <input class="input" id="dateInput" type="date"/>
+                        <input class="input" id="dateInput" type="date" />
                     </div>
      
                     <div class="timeCol">
@@ -86,11 +99,20 @@
 <%--                </div>--%>
             </div>
         </div>
-      
+
         <asp:Label ID="Label1" runat="server"></asp:Label>
         <asp:Label ID="Label2" runat="server"></asp:Label>
             
-         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"  AllowPaging="True" PageSize="30"  CssClass="auto-style13" DataKeyNames="EXITID">
+         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"  AllowPaging="True" PageSize="30"  CssClass="auto-style13">
+              <Columns>
+                <asp:BoundField DataField="exitID" HeaderText="Exit ID" />
+                <asp:BoundField DataField="Employee_Name" HeaderText="Requested by" />
+                <asp:BoundField DataField="exittime" HeaderText="Requested time" />
+                <asp:BoundField DataField="reason" HeaderText="Reason" />
+            </Columns>
+       </asp:GridView>
+                    
+<%--          <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False"  AllowPaging="True" PageSize="30"  CssClass="auto-style13" DataKeyNames="EXITID">
               <Columns>
         <asp:BoundField ItemStyle-Width="100px" DataField="exitID" HeaderText="exitID" ReadOnly="True" >
 <ItemStyle Width="100px"></ItemStyle>
@@ -117,9 +139,7 @@
 <ItemStyle Width="100px"></ItemStyle>
             </asp:BoundField>
        </Columns>
-       </asp:GridView>
-                    
-         
+       </asp:GridView>--%>
        
     </form>
 </body>

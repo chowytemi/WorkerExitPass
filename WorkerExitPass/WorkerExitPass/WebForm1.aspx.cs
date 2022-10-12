@@ -22,7 +22,7 @@ namespace WorkerExitPass
 
 
         protected void Page_Load(object sender, EventArgs e)
-        {
+        {   
             if (!IsPostBack)
             {
                 BindDataSetDataProjects();
@@ -77,22 +77,22 @@ namespace WorkerExitPass
                     }
                 }
 
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-
-                //GetGridDataEmail();
-
-                //submitForm();
-
-                //sendEmailForApproval();
-                //approveForm();
-                //formStatus();
-                //CheckFormInputs();
-                //checkForAccess();
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            //GetGridDataEmail();
+
+            //submitForm();
+
+            //sendEmailForApproval();
+            //approveForm();
+            //formStatus();
+            //CheckFormInputs();
+            //checkForAccess();
+        }
 
         //Fill Project Dropdown with data
         protected void BindDataSetDataProjects()
@@ -277,8 +277,8 @@ namespace WorkerExitPass
                         {
 
                             //get exitid
-
-                            string exitquery = "select exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
+                            string exitquery = "select exitID, createdby, exittime, toexit, reason from exitapproval where createdby = @empID and company = @company and exittime = @time";
+                            //string exitquery = "select exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
                             using (SqlCommand exitcmd = new SqlCommand(exitquery, conn))
                             {
                                 exitcmd.Parameters.AddWithValue("@empID", empID);
@@ -290,6 +290,12 @@ namespace WorkerExitPass
                                     while (exitdr.Read())
                                     {
                                         string exitid = exitdr[0].ToString();
+                                        string createdby = exitdr[1].ToString();
+                                        //string exittime = exitdr[2].ToString();
+                                        DateTime date = Convert.ToDateTime(exitdr[2]);
+                                        string exittime = date.ToString("dd/MM/yyyy hh:mm tt");
+                                        string toexit = exitdr[3].ToString();
+                                        string reason = exitdr[4].ToString();
 
                                         //check if worker or subcon
                                         if (dr[2].ToString() == "WK")
@@ -307,34 +313,51 @@ namespace WorkerExitPass
                                                         while (hoddr.Read())
                                                         {
                                                             //string ROcemail = hoddr[0].ToString();
-                                                            string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
-                                                            Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
+                                                      
+                                                            //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
+                                                            
                                                             using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
                                                             {
-                                                                mm.Subject = "Account Activation";
+                                                                //mm.Subject = "Account Activation";
+                                                                mm.Subject = "Early Exit Permit Pending for Approval";
                                                                 string body = "Hello,";
-                                                                body += "<br /><br />Please click the following link to approve or reject the application";
-                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>Click here to approve or deny applications.</a>";
-                                                                body += "<br /><br />Thanks";
+                                                                body += "<br /><br />The following application was submitted:";
+                                                                body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                body += "<tr style=\text-align:center; height: 0.5em;\">";
+                                                                body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
+                                                                body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
+                                                                body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
+                                                                body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
+                                                                body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
+                                                                body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
+                                                                body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
+                                                                body += "<td style=\" border: 1px solid\">" + createdby + "</td>";
+                                                                body += "<td style=\" border: 1px solid\">" + toexit + "</td>";
+                                                                body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                                                body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
+                                                                body += "<br />Please click the following link to approve or reject the application:";
+                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                                body += "<br /><br />Thank you";
                                                                 mm.Body = body;
                                                                 mm.IsBodyHtml = true;
                                                                 SmtpClient smtp = new SmtpClient();
                                                                 smtp.Host = "smtp-mail.outlook.com";
                                                                 smtp.EnableSsl = true;
                                                                 NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
+                                                                
                                                                 smtp.UseDefaultCredentials = false;
                                                                 smtp.Credentials = NetworkCred;
                                                                 smtp.Port = 587;
                                                                 smtp.Send(mm);
                                                             }
-                                                            
+
                                                         }
                                                     }
-                                                    
+
                                                 }
                                             }
-                                            
+
                                         }
                                         else if (dr[2].ToString() == "SUBCON")
                                         {
@@ -363,33 +386,6 @@ namespace WorkerExitPass
 
 
         }
-
-        protected void GetGridDataEmail()
-        {
-
-            int exitID = 24;
-
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection conn = new SqlConnection(cs);
-            conn.Open();
-            string emailquery = "select exitapproval.exitID, exitapproval.toexit, exitapproval.createdby, exitapproval.createddate, " +
-            "exitapproval.reason, exitapproval.exittime, exitapproval.projcode, EmpList.Employee_Name " +
-            "from exitapproval inner join EmpList ON exitapproval.toexit = EmpList.EmpID " +
-            "where exitapproval.exitID = " + exitID;
-
-            SqlCommand emailcmd = new SqlCommand(emailquery, conn);
-
-            SqlDataAdapter sda = new SqlDataAdapter(emailquery, conn);
-            using (DataTable dt = new DataTable())
-            {
-                sda.Fill(dt);
-                GridView1.DataSource = dt;
-                GridView1.DataBind();
-
-            }
-        }
-
-
 
         protected void checkForAccess()
         {

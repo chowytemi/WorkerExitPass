@@ -11,6 +11,19 @@
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet" />
         <link href="Content/main.css" rel="stylesheet" type="text/css" />
         <link href="Content/StyleSheet2.css" rel="stylesheet" type="text/css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready( function() {
+            var now = new Date();
+ 
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+            $('#dateInput').val(today);
+        });
+    </script>
 </head>
 
 <body>
@@ -98,18 +111,10 @@
                            <asp:TextBox class="inputFields" ID="remarkstb" runat="server" Visible="false"></asp:TextBox>
                     </div>
                 </div>
-            
-                <%--<div class="row">
-                   <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
-                   <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" />
-                </div>--%>
+
                 <div class="rowButtons">
-<%--                    <div class="colCancelBtn">--%>
                         <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
-<%--                    </div>
-                    <div class="colSubmitBtn">--%>
                         <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="Submit" />
-<%--                    </div>--%>
                 </div>
             </div>   
         </div>

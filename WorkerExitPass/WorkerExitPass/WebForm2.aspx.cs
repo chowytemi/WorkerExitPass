@@ -20,11 +20,11 @@ namespace WorkerExitPass
         {
             //if (!IsPostBack)
             //{
-            //SoloBtn.Attributes.Add("class", "activeBtn");
+            SoloBtn.Attributes.Add("class", "activeBtn");
             //}
             if (!IsPostBack)
             {
-                BindDataSetDataProjects();
+                //BindDataSetDataProjects();
                 RetrieveDataFromLogin();
             }
 
@@ -34,14 +34,12 @@ namespace WorkerExitPass
         {
             namesddl.Visible = false;
             nametb.Visible = true;
-            //SoloBtn.Attributes.Add("class", "activeBtn");
         }
 
         protected void TeamBtn_Click(object sender, EventArgs e)
         {
             namesddl.Visible = true;
             nametb.Visible = false;
-            //TeamBtn.Attributes.Add("class", "activeBtn");
             GetListOfEmployees();
 
 
