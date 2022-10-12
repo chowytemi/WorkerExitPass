@@ -210,7 +210,8 @@ namespace WorkerExitPass
 
                             insert.ExecuteNonQuery();
                         }
-                    } else
+                    }
+                    else
                     {
                         //insert request
                         string sqlinsertquery = "insert into exitapproval(createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
@@ -236,7 +237,7 @@ namespace WorkerExitPass
                             insert.ExecuteNonQuery();
                         }
                     }
-                   
+
 
                     appcon.Close();
 
@@ -362,8 +363,46 @@ namespace WorkerExitPass
                                         else if (dr[2].ToString() == "SUBCON")
                                         {
                                             //subcon - email to project managers
-                                            Label2.Text = "subcon";
+                                            //Label2.Text = "subcon";
 
+                                            //string hodquery = "select distinct   EmpList.EmpID,EmpList.designation,EmpList.Employee_Name,EmpList.CEmail " +
+                                            //                  "from Access, UserAccess, ARole, EmpList " +
+                                            //                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                            //                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                            //                  "and Access.id = 83";
+                                            //using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
+                                            //{
+                                            //    using (SqlDataReader hoddr = hodcmd.ExecuteReader())
+                                            //    {
+                                            //        while (hoddr.Read())
+                                            //        {
+                                            //            //string ROcemail = hoddr[0].ToString();
+                                            //            string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
+                                            //            Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
+
+                                            //            using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
+                                            //            {
+                                            //                mm.Subject = "Account Activation";
+                                            //                string body = "Hello,";
+                                            //                body += "<br /><br />Please click the following link to approve or reject the application";
+                                            //                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>Click here to approve or deny applications.</a>";
+                                            //                body += "<br /><br />Thanks";
+                                            //                mm.Body = body;
+                                            //                mm.IsBodyHtml = true;
+                                            //                SmtpClient smtp = new SmtpClient();
+                                            //                smtp.Host = "smtp-mail.outlook.com";
+                                            //                smtp.EnableSsl = true;
+                                            //                NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
+                                            //                smtp.UseDefaultCredentials = false;
+                                            //                smtp.Credentials = NetworkCred;
+                                            //                smtp.Port = 587;
+                                            //                smtp.Send(mm);
+                                            //            }
+
+                                            //        }
+                                            //    }
+
+                                            //}
                                         }
 
 
