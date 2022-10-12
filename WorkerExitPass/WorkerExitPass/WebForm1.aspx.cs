@@ -185,29 +185,58 @@ namespace WorkerExitPass
                 {
                     string projectcode = dr[0].ToString();
 
-                    //insert request
-                    string sqlinsertquery = "insert into exitapproval(createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-
-                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                    if (ReasonDropdown.Text == "Medical Injury")
                     {
+                        //insert request
+                        string sqlinsertapprovequery = "insert into exitapproval(approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values(1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
-                        var time = Request["timeInput"];
-                        var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                        using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
+                        {
+
+                            var time = Request["timeInput"];
+                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
 
-                        insert.CommandType = CommandType.Text;
-                        insert.Parameters.AddWithValue("@createdby", empID);
-                        insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                        insert.Parameters.AddWithValue("@toexit", empID);
-                        insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
-                        insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
-                        insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
-                        insert.Parameters.AddWithValue("@exittime", dateInput);
-                        insert.Parameters.AddWithValue("@projectdesc", projectInput);
-                        insert.Parameters.AddWithValue("@projectcode", projectcode);
+                            insert.CommandType = CommandType.Text;
+                            insert.Parameters.AddWithValue("@createdby", empID);
+                            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                            insert.Parameters.AddWithValue("@toexit", empID);
+                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                            insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                            insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                            insert.Parameters.AddWithValue("@exittime", dateInput);
+                            insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                            insert.Parameters.AddWithValue("@projectcode", projectcode);
 
-                        insert.ExecuteNonQuery();
+                            insert.ExecuteNonQuery();
+                        }
+                    } else
+                    {
+                        //insert request
+                        string sqlinsertquery = "insert into exitapproval(createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+
+                        using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                        {
+
+                            var time = Request["timeInput"];
+                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+
+
+                            insert.CommandType = CommandType.Text;
+                            insert.Parameters.AddWithValue("@createdby", empID);
+                            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                            insert.Parameters.AddWithValue("@toexit", empID);
+                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                            insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                            insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                            insert.Parameters.AddWithValue("@exittime", dateInput);
+                            insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                            insert.Parameters.AddWithValue("@projectcode", projectcode);
+
+                            insert.ExecuteNonQuery();
+                        }
                     }
+                   
 
                     appcon.Close();
 
@@ -278,10 +307,10 @@ namespace WorkerExitPass
                                                         while (hoddr.Read())
                                                         {
                                                             //string ROcemail = hoddr[0].ToString();
-                                                            //string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
+                                                            string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
                                                             Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
-                                                            using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
+                                                            using (MailMessage mm = new MailMessage("chowwwwder@outlook.com", ROcemail))
                                                             {
                                                                 mm.Subject = "Account Activation";
                                                                 string body = "Hello,";
@@ -293,7 +322,7 @@ namespace WorkerExitPass
                                                                 SmtpClient smtp = new SmtpClient();
                                                                 smtp.Host = "smtp-mail.outlook.com";
                                                                 smtp.EnableSsl = true;
-                                                                NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
+                                                                NetworkCredential NetworkCred = new NetworkCredential("chowwwwder@outlook.com", "chowchow711");
                                                                 smtp.UseDefaultCredentials = false;
                                                                 smtp.Credentials = NetworkCred;
                                                                 smtp.Port = 587;
