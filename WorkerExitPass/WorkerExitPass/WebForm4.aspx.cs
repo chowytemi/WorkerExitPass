@@ -210,18 +210,19 @@ namespace WorkerExitPass
                 if (dt.Rows[0]["remarks"].ToString() == "")
                 {
                     tbRemarks.Text = "N.A";
-                } else
+                }
+                else
                 {
                     tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
-                
+
 
                 mpeApproval.Show();
 
             }
             catch (Exception)
             {
-                throw;    
+                throw;
             }
         }
 
@@ -325,25 +326,25 @@ namespace WorkerExitPass
 
         //protected void MultiView1_ActiveViewChanged(object sender, EventArgs e)
         //{
-            //int activeView;
-            //activeView = MultiView1.ActiveViewIndex;
+        //int activeView;
+        //activeView = MultiView1.ActiveViewIndex;
 
-            //if (activeView == 0)
-            //{
-            //    btnShowAll.Attributes.Add("class", "btnActive");
-            //}
-            //else if (activeView == 1)
-            //{
-            //    btnShowPending.Attributes.Add("class", "btnActive");
-            //}
-            //else if (activeView == 2)
-            //{
-            //    btnShowApproved.Attributes.Add("class", "btnActive");
-            //}
-            //else
-            //{
-            //    btnShowRejected.Attributes.Add("class", "btnActive");
-            //}
+        //if (activeView == 0)
+        //{
+        //    btnShowAll.Attributes.Add("class", "btnActive");
+        //}
+        //else if (activeView == 1)
+        //{
+        //    btnShowPending.Attributes.Add("class", "btnActive");
+        //}
+        //else if (activeView == 2)
+        //{
+        //    btnShowApproved.Attributes.Add("class", "btnActive");
+        //}
+        //else
+        //{
+        //    btnShowRejected.Attributes.Add("class", "btnActive");
+        //}
 
         //}
 
