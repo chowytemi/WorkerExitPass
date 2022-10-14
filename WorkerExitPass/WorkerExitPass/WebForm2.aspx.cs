@@ -15,17 +15,28 @@ namespace WorkerExitPass
     public partial class WebForm2 : System.Web.UI.Page
     {
 
-        string empID = "MB638";
+        //string empID = "BOB-2008";
+        //string empID = "MIZU ENGRGW0100";
+        //string firstId = "G";
+        //string lastFiveId = "9574R";
         protected void Page_Load(object sender, EventArgs e)
         {
             //if (!IsPostBack)
             //{
-            SoloBtn.Attributes.Add("class", "activeBtn");
+            //SoloBtn.Attributes.Add("class", "activeBtn");
             //}
             if (!IsPostBack)
             {
-                BindDataSetDataProjects();
-                RetrieveDataFromLogin();
+                if ((Request.QueryString["exprmit"] != null))
+                {
+
+                    string myempno = Request.QueryString["exprmit"];
+                    Session["empID"] = myempno;
+
+                }
+                //BindDataSetDataProjects();
+                //RetrieveDataFromLogin();
+                CheckAccess();
             }
 
         }
@@ -44,6 +55,7 @@ namespace WorkerExitPass
 
 
         }
+
         protected void BindDataSetDataProjects()
         {
             string cs = ConfigurationManager.ConnectionStrings["service"].ConnectionString;
@@ -62,16 +74,18 @@ namespace WorkerExitPass
         protected void GetListOfEmployees()
         {
             string constr = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            string company = companytb.Text;
             using (SqlConnection con = new SqlConnection(constr))
             {
-                using (SqlCommand cmd = new SqlCommand("select Employee_Name, EmpID from EmpList where Department = 'SUBCON' AND IsActive = 1;"))
+                //using (SqlCommand cmd = new SqlCommand("select Employee_Name, EmpID from EmpList where Department = 'SUBCON' AND IsActive = 1 AND company = '" + company + "';"))
+                using (SqlCommand cmd = new SqlCommand("select CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where Department = 'SUBCON' AND IsActive = 1 AND company = '" + company + "' order by EmpID;"))
                 {
                     cmd.CommandType = CommandType.Text;
                     cmd.Connection = con;
                     con.Open();
                     namesddl.DataSource = cmd.ExecuteReader();
-                    namesddl.DataTextField = "Employee_Name";
-                    namesddl.DataValueField = "EmpID";
+                    namesddl.DataTextField = "empNameID";
+                    //namesddl.DataValueField = "EmpID";
                     namesddl.DataBind();
                     con.Close();
                 }
@@ -97,10 +111,13 @@ namespace WorkerExitPass
         //Get data from Login - currently hardcoded
         protected void RetrieveDataFromLogin()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             string sqlquery = "select ID, IDType, IDNo, EmpID, Employee_Name, Department, Section, Company, designation, JobCode from Emplist where isActive = 1 and EmpID = '" + empID + "' ; ";
+            //string sqlquery = "select ID, IDType, IDNo, EmpID, Employee_Name, Department, Section, Company, designation, JobCode from Emplist where isActive = 1 and ((IDNo like CONCAT('" + firstId + "', '%')) and (IDNo like CONCAT('%', '" + lastFiveId + "')));";
             conn.Open();
             SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
             SqlDataReader dr = cmdlineno.ExecuteReader();
@@ -113,12 +130,41 @@ namespace WorkerExitPass
             dr.Close();
             conn.Close();
         }
+        protected void CheckAccess()
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
 
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection con = new SqlConnection(cs);
+            con.Open();
+            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85 and EmpList.EmpID = '" + empID + "' ; ";
+            //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85 and ((IDNo like CONCAT('" + firstId + "', '%')) and (IDNo like CONCAT('%', '" + lastFiveId + "')));";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            if (dr.HasRows)
+            {
+                RetrieveDataFromLogin();
+                BindDataSetDataProjects();
+                GetListOfEmployees();
+            }
+            else
+            {
+                Response.Redirect("http://eservices.dyna-mac.com/error");
+            }
+
+            dr.Close();
+            con.Close();
+
+        }
 
         protected void submitForm()
         {
             try
             {
+                string empID = Session["empID"].ToString();
+                Session["empID"] = empID;
                 string description = projectddl.Text;
                 string projectInput = projectddl.Text;
 
@@ -180,17 +226,21 @@ namespace WorkerExitPass
 
         protected void namesddl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<String> empNamesList = new List<string>();
-            foreach (ListItem item in namesddl.Items)
+
+            int empCount = 0;
+            //string empName = "";
+            for (int i = 0; i < namesddl.Items.Count; i++)
             {
-                if (item.Selected)
+                if (namesddl.Items[i].Selected)
                 {
-                    empNamesList.Add(item.Text);
-                    empNamesList.Add(item.Value);
+                    empCount++;
+                    //empName += namesddl.Items[i].Text + ",";
+                    namesddl.SelectedItem.Selected = true;
+
                 }
             }
-            namesddl.Texts.SelectBoxCaption = String.Join(", ", empNamesList.ToArray());
-            namesddl.DataValueField = String.Join(", ", empNamesList.ToArray());
+            //empName = empName.TrimEnd(',');
+            namesddl.Texts.SelectBoxCaption = empCount + " selected";
 
         }
 
@@ -433,6 +483,8 @@ namespace WorkerExitPass
 
         protected void sendEmailForApproval()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
             string FromEmail = ConfigurationManager.AppSettings["FromMail"].ToString();
             string EmailPassword = ConfigurationManager.AppSettings["Password"].ToString();
 

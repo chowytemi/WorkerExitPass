@@ -15,8 +15,8 @@ namespace WorkerExitPass
     public partial class WebForm3 : System.Web.UI.Page
     {
         //Get login id
-        //string empID = "PXE6563";
-        string empID = "MB638";
+        string empID = "PXE6563";
+        //string empID = "MB638";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -32,7 +32,9 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-            string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by createddate desc;";
+            //string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by exitID desc;";
+            string statussql = "select exitID, createddate, exittime, approve from exitapproval where toexit = '" + empID + "' order by exitID desc;";
+
             SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
             using (DataTable dt = new DataTable())
             {
@@ -96,19 +98,19 @@ namespace WorkerExitPass
             try
             {
                 int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
-                //string status = GridView1.SelectedRow.Cells[3].Text;
 
-                string sql = "select exitapproval.approve, (select EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, EmpList.Employee_Name, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
+                string sql = "select distinct exitapproval.approve, (select EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "' and exitapproval.toexit = '" + empID + "';";
+                //string sql = "select distinct exitapproval.approve, (select EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID) AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.exitID = '" + exitID + "';";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
                 DataTable dt = ds.Tables[0];
 
-                lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";                
+                lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
 
                 if (string.IsNullOrEmpty(dt.Rows[0]["approve"].ToString()))
                 {
-                    lblStatus.Text = "Pending";     
+                    lblStatus.Text = "Pending";
 
                 }
                 else if (dt.Rows[0][0].ToString() == "True")
@@ -141,7 +143,7 @@ namespace WorkerExitPass
                 tbDate.Text = date.ToString("dd/MM/yyyy");
                 tbTime.Text = time.ToString("hh:mm tt");
                 tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
-                tbName.Text = dt.Rows[0]["Employee_Name"].ToString();
+                //tbName.Text = dt.Rows[0]["Employee_Name"].ToString();
                 tbCompany.Text = dt.Rows[0]["company"].ToString();
                 tbReason.Text = dt.Rows[0]["reason"].ToString();
 
@@ -157,7 +159,24 @@ namespace WorkerExitPass
                     tbRemarks.Attributes.Add("class", "textbox");
                     tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
-               
+
+                string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.toexit;";
+                SqlDataAdapter da2 = new SqlDataAdapter(sql2, conn);
+                DataSet ds2 = new DataSet();
+                da2.Fill(ds2);
+                DataTable dt2 = ds2.Tables[0];
+
+                string empName = "";
+                for (int i = 0; i < dt2.Rows.Count; i++)
+                {
+                    //tbName.Text += dt2.Rows[i]["Employee_Name"].ToString() + ", ";
+                    //tbName.Text = String.Join(", ", dt2.Rows[i]["Employee_Name"].ToString());
+                    empName += dt2.Rows[i]["Employee_Name"].ToString() + ",";
+                    
+                }
+                empName = empName.TrimEnd(',');
+                tbName.Text = empName;
+
                 mpePopUp.Show();
                 conn.Close();
 

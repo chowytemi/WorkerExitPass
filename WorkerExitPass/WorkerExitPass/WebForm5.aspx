@@ -19,7 +19,16 @@
     <form id="form1" runat="server">
     <h1>Early Exit Permit Approval</h1>
         <div class="container">
-            <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" BackColor="#EBF6FE" AllowPaging="True" DataKeyNames="exitID">
+            <div class="row">            
+               <asp:DropDownList ID="ddlReason" class="dropdown" runat="server" AutoPostBack="true">
+                    <asp:ListItem Text="Reason" Value=""></asp:ListItem>
+                    <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
+                    <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
+                    <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
+                    <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
+                </asp:DropDownList>
+            </div>
+            <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" BackColor="#EBF6FE" AllowPaging="True" DataKeyNames="exitID" OnRowDataBound="GridView1_RowDataBound">
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />
                     <asp:BoundField DataField="createddate" HeaderText="Requested Date" />
@@ -32,13 +41,11 @@
             <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
             
-        <ajaxToolkit:ModalPopupExtender ID="mpeApproval" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground" CancelControlID="btnBack">
+        <ajaxToolkit:ModalPopupExtender ID="mpeApproval" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground">
             </ajaxToolkit:ModalPopupExtender>
             <asp:Panel ID="Panel1" runat="server">
                <div class="rowIcon">
-                <span id="btnBack">
-                    <i class="fa fa-times fa-2x" aria-hidden="true"></i>
-                </span>
+                    <asp:LinkButton ID="btnBack" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>" OnClick="btnBack_Click"/>
                </div>     
                 <div class="content">
                         <div class="rowModal">
@@ -78,7 +85,7 @@
 
                     <div class="btnRow">
                         <asp:Button id="btnApprove" class="button" runat="server" text="Approve" OnClick="ApproveBtn_Click"/>
-                        <asp:Button id="btnReject" class="button" runat="server" text="Reject" />
+                        <asp:Button id="btnReject" class="button" runat="server" text="Reject" OnClick="RejectBtn_Click" />
                     </div>
                 </div>   
             </asp:Panel>

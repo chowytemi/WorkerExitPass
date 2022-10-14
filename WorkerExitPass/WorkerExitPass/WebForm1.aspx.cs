@@ -17,14 +17,20 @@ namespace WorkerExitPass
     {
 
         //Get login id
-        string empID = "MB638";
-        //string empID = "PXE6563";
-
+       //  string empID = "MB638";
 
         protected void Page_Load(object sender, EventArgs e)
-        {
+        { 
+
             if (!IsPostBack)
             {
+                if ((Request.QueryString["exprmit"] != null))
+                {
+
+                    string myempno = Request.QueryString["exprmit"];
+                    Session["empID"] = myempno;
+
+                }
                 BindDataSetDataProjects();
                 RetrieveDataFromLogin();
             }
@@ -105,6 +111,10 @@ namespace WorkerExitPass
         protected void RetrieveDataFromLogin()
         {
             //Connect to database
+
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             string sqlquery = "select ID, IDType, IDNo, EmpID, Employee_Name, Department, Section, Company, designation, JobCode from Emplist where isActive = 1 and EmpID = '" + empID + "' ; ";
@@ -157,6 +167,8 @@ namespace WorkerExitPass
                 string description = projectddl.Text;
                 string projectInput = projectddl.Text;
 
+                string empID = Session["empID"].ToString();
+                Session["empID"] = empID;
 
                 //Connect to database
                 string cs = ConfigurationManager.ConnectionStrings["service"].ConnectionString;
@@ -179,6 +191,7 @@ namespace WorkerExitPass
                     if (ReasonDropdown.Text == "Medical Injury")
                     {
                         //insert request
+                        //string sqlinsertapprovequery = "insert into exitapproval(approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values(1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                         string sqlinsertapprovequery = "insert into exitapproval(exitID, approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
@@ -205,8 +218,8 @@ namespace WorkerExitPass
                     else
                     {
                         //insert request
+                        //string sqlinsertquery = "insert into exitapproval(createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                         string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-
                         using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                         {
 
@@ -251,6 +264,8 @@ namespace WorkerExitPass
 
             var time = Request["timeInput"];
             var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
 
             string FromEmail = ConfigurationManager.AppSettings["FromMail"].ToString();
             string EmailPassword = ConfigurationManager.AppSettings["Password"].ToString();

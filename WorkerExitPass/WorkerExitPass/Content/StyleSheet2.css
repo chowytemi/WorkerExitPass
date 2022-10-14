@@ -59,12 +59,22 @@
 }
 
 #caption {
+    /*
     overflow: visible !important;
+    */
     height: 2.5em !important;
 }
 
 .dd_chk_drop {
     top: 2.75em !important;
+    border-radius: 0.3125em !important;
+    border: 0.0625em solid #EFF0F6 !important;
+}
+
+#namesddl label {
+    margin-left: 0.5em;
+    /*color: red !important;*/
+    line-height: 2em;
 }
 /* Medium devices (landscape tablets, 992px and down) */
 @media only screen and (max-width: 992px) {

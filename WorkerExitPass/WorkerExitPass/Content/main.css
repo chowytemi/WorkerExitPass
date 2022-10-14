@@ -49,24 +49,25 @@ h1, .label {
     width: 33%;
 }
 
-.inputtest {
+/*.inputtest {
     width: 50%;
 }
 
 .dateCol {
     align-items: flex-start;
-    /*width: 50%;*/
+    width: 100%;
 }
 
 .timeCol {
     justify-content: flex-end;
     align-items: flex-end;
-    /*width: 50%;*/
-}
-
-/*#dateInput, #timeInput {
     width: 100%;
-}*/
+}
+*/
+/**/
+#dateInput, #timeInput {
+    width: 100%;
+}
 
 .inputFields, .dropdown {
     width: 100%;
@@ -98,21 +99,12 @@ h1, .label {
     color: red;
 }
 
-/*.rowButtons {
-    margin-left: 10%;
-    margin-right: 10%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items:center;
-}*/
-
 .rowButtons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    margin-top: 2em; 
+    margin-top: 2em;
     width: 100%;
 }
 

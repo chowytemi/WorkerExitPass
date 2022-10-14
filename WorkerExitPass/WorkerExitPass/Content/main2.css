@@ -163,6 +163,7 @@
     text-indent: 1em;
     background-color: #FCFCFC;
     width: 100%;
+    /*overflow: auto;*/
 }
 
 .row {

@@ -20,38 +20,48 @@ namespace WorkerExitPass
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            var exitid = Request.QueryString["exitid"];
-            //Label1.Text = exitid;
+            var exitID = Request.QueryString["exitid"];
+            //Label1.Text = exitID;
 
             if (!IsPostBack)
             {
-                //CheckForAccess();
+                
                 //MultiView1.SetActiveView(View2);
                 //btnShowPending.Attributes.Add("class", "btnActive");
-                DataTable dt = this.GetPending();
-                GridView1.DataSource = dt;
-                GridView1.DataBind();
+                if ((Request.QueryString["approval"] != null))
+                {
+
+                    string myempno = Request.QueryString["approval"];
+                    Session["empID"] = myempno;
+                    var exitID = Request.QueryString["exitid"];
+                }
+                CheckAccess();
             }
         }
 
-        protected void CheckForAccess()
+        protected void CheckAccess()
         {
-
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection conn = new SqlConnection(cs);
-            conn.Open();
-            string sqlquery = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
-            "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-            "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85";
-            SqlDataAdapter sda = new SqlDataAdapter(sqlquery, conn);
-            using (DataTable dt = new DataTable())
-            {
-                sda.Fill(dt);
-                //GridView1.DataSource = dt;
-                //GridView1.DataBind();
+            SqlConnection con = new SqlConnection(cs);
+            con.Open();
+            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 83  and EmpList.EmpID = '" + empID + "' ; ";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            SqlDataReader dr = cmd.ExecuteReader();
 
+            if (dr.HasRows)
+            {
+                GetPending();
             }
+            else
+            {
+                Response.Redirect("http://eservices.dyna-mac.com/error");
+            }
+
+            dr.Close();
+            con.Close();
 
         }
 
@@ -59,7 +69,7 @@ namespace WorkerExitPass
         {
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exittime desc;";
+            string statussql = "select distinct exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -68,11 +78,14 @@ namespace WorkerExitPass
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                     {
                         sda.Fill(dt);
+                        GridView1.DataSource = dt;
+                        GridView1.DataBind();
                     }
                 }
             }
-
             return dt;
+            
+            
         }
 
         //private DataTable GetAll()
@@ -167,7 +180,8 @@ namespace WorkerExitPass
                     e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
                 }
 
-                e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridView1, "Select$" + e.Row.RowIndex);
+                e.Row.Attributes["onclick"] = $"location.href = 'WebForm5.aspx?exitid={GridView1.DataKeys[e.Row.RowIndex]["exitID"]}'";
+                //e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridView1, "Select$" + e.Row.RowIndex);
                 e.Row.ToolTip = "Click to select this row.";
 
             }
