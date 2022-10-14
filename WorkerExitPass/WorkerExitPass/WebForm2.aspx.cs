@@ -24,7 +24,7 @@ namespace WorkerExitPass
             //}
             if (!IsPostBack)
             {
-                //BindDataSetDataProjects();
+                BindDataSetDataProjects();
                 RetrieveDataFromLogin();
             }
 
@@ -194,7 +194,102 @@ namespace WorkerExitPass
 
         }
 
-        protected void GetSelected()
+        protected void SoloSubmit()
+        {
+            try
+            {
+                string description = projectddl.Text;
+                string projectInput = projectddl.Text;
+
+
+                //Connect to database
+                string cs = ConfigurationManager.ConnectionStrings["service"].ConnectionString;
+                SqlConnection conn = new SqlConnection(cs);
+                conn.Open();
+
+                string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+                SqlConnection appcon = new SqlConnection(connectionstring);
+                appcon.Open();
+
+                //get code
+                string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
+                SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
+                SqlDataReader dr = cmdlineno.ExecuteReader();
+
+                while (dr.Read())
+                {
+                    string projectcode = dr[0].ToString();
+
+                    if (ReasonDropdown.Text == "Medical Injury")
+                    {
+                        //insert request
+                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+
+                        using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
+                        {
+
+                            var time = Request["timeInput"];
+                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+
+
+                            insert.CommandType = CommandType.Text;
+                            insert.Parameters.AddWithValue("@createdby", empID);
+                            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                            insert.Parameters.AddWithValue("@toexit", empID);
+                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                            insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                            insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                            insert.Parameters.AddWithValue("@exittime", dateInput);
+                            insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                            insert.Parameters.AddWithValue("@projectcode", projectcode);
+
+                            insert.ExecuteNonQuery();
+                        }
+                    }
+                    else
+                    {
+                        //insert request
+                        string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+
+                        using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                        {
+
+                            var time = Request["timeInput"];
+                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+
+
+                            insert.CommandType = CommandType.Text;
+                            insert.Parameters.AddWithValue("@createdby", empID);
+                            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                            insert.Parameters.AddWithValue("@toexit", empID);
+                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                            insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                            insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                            insert.Parameters.AddWithValue("@exittime", dateInput);
+                            insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                            insert.Parameters.AddWithValue("@projectcode", projectcode);
+
+                            insert.ExecuteNonQuery();
+                        }
+                    }
+
+
+                    appcon.Close();
+
+                }
+                dr.Close();
+                conn.Close();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        protected void TeamSubmit()
         {
             string description = projectddl.Text;
             string projectInput = projectddl.Text;
@@ -207,66 +302,132 @@ namespace WorkerExitPass
             string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection appcon = new SqlConnection(connectionstring);
             appcon.Open();
-            
 
-            //get code
-            string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
-            SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
-            using (SqlDataReader dr = cmdlineno.ExecuteReader())
+            try
             {
-                while (dr.Read())
+
+                //get code
+                string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
+                SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
+                using (SqlDataReader dr = cmdlineno.ExecuteReader())
                 {
-                    string projectcode = dr[0].ToString();
-
-                    //insert request
-                    string sqlinsertquery = "insert into exitapproval(createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-
-                    for (int i = 0; i < namesddl.Items.Count; i++)
+                    while (dr.Read())
                     {
-                        if (namesddl.Items[i].Selected)
+                        string projectcode = dr[0].ToString();
+
+                        //insert request
+
+                        int counter = 0;
+
+                        for (int i = 0; i < namesddl.Items.Count; i++)
                         {
+                           
 
-                            //get EmpID
-                            string empquery = " select empID from EmpList where Employee_Name = '" + namesddl.Items[i].Text + "' and IsActive = 1";
-                            SqlCommand empcmd = new SqlCommand(empquery, appcon);
-                            using (SqlDataReader empdr = empcmd.ExecuteReader())
+                            if (namesddl.Items[i].Selected)
                             {
-                                while (empdr.Read())
+                                
+
+                                //get EmpID
+                                string empquery = " select empID from EmpList where Employee_Name = '" + namesddl.Items[i].Text + "' and IsActive = 1";
+                                SqlCommand empcmd = new SqlCommand(empquery, appcon);
+                                using (SqlDataReader empdr = empcmd.ExecuteReader())
                                 {
-                                    string employeeIDToExit = empdr[0].ToString();
-                                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                                    while (empdr.Read())
                                     {
+                                        if (counter == 0)
+                                        {
+                                            string insertsinglequery = "";
+                                            if (ReasonDropdown.Text == "Medical Injury")
+                                            {
+                                                insertsinglequery = "insert into exitapproval(exitID, approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            } else 
+                                            {
+                                                insertsinglequery = "insert into exitapproval(exitID, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            }
+                                                
+                                         
+                                            string employeeIDToExit = empdr[0].ToString();
+                                            using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
+                                            {
 
-                                        var time = Request["timeInput"];
-                                        var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                                                var time = Request["timeInput"];
+                                                var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
 
-                                        insert.CommandType = CommandType.Text;
-                                        insert.Parameters.AddWithValue("@createdby", empID);
-                                        insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                                        insert.Parameters.AddWithValue("@toexit", employeeIDToExit);
-                                        insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
-                                        insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
-                                        insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
-                                        insert.Parameters.AddWithValue("@exittime", dateInput);
-                                        insert.Parameters.AddWithValue("@projectdesc", projectInput);
-                                        insert.Parameters.AddWithValue("@projectcode", projectcode);
+                                                insert.CommandType = CommandType.Text;
+                                                insert.Parameters.AddWithValue("@createdby", empID);
+                                                insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                                                insert.Parameters.AddWithValue("@toexit", employeeIDToExit);
+                                                insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                                insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                                                insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                                                insert.Parameters.AddWithValue("@exittime", dateInput);
+                                                insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                                                insert.Parameters.AddWithValue("@projectcode", projectcode);
 
-                                        insert.ExecuteNonQuery();
+                                                insert.ExecuteNonQuery();
+
+                                                counter += 1;
+                                            }
+                                        }
+                                        else if (counter > 0)
+                                        {
+                                            string insertmultiplequery = "";
+                                            if (ReasonDropdown.Text == "Medical Injury")
+                                            {
+                                                insertmultiplequery = "insert into exitapproval(exitID, approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), 1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            }
+                                            else
+                                            {
+                                                insertmultiplequery = "insert into exitapproval(exitID, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            }
+                                            
+
+                                            string employeeIDToExit = empdr[0].ToString();
+                                            using (SqlCommand insert = new SqlCommand(insertmultiplequery, appcon))
+                                            {
+
+                                                var time = Request["timeInput"];
+                                                var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+
+
+                                                insert.CommandType = CommandType.Text;
+                                                insert.Parameters.AddWithValue("@createdby", empID);
+                                                insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                                                insert.Parameters.AddWithValue("@toexit", employeeIDToExit);
+                                                insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                                insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                                                insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                                                insert.Parameters.AddWithValue("@exittime", dateInput);
+                                                insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                                                insert.Parameters.AddWithValue("@projectcode", projectcode);
+
+                                                insert.ExecuteNonQuery();
+
+                                                counter += 1;
+                                            }
+                                        }
+
+                                        
                                     }
                                 }
+
+
+
                             }
-
+                            
                         }
-
-                      
-
                     }
+
+
+
                 }
 
-
-
+            } catch (Exception ex)
+            {
+                throw ex;
             }
+            
 
         }
 
@@ -276,114 +437,145 @@ namespace WorkerExitPass
             var time = Request["timeInput"];
             var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
-
-            //Connect to database
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(cs))
+            try
             {
-                conn.Open();
-                string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1";
-                using (SqlCommand cmdlineno = new SqlCommand(sqlquery, conn))
+                //Connect to database
+                string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(cs))
                 {
-
-                    using (SqlDataReader dr = cmdlineno.ExecuteReader())
+                    conn.Open();
+                    string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1";
+                    using (SqlCommand cmdlineno = new SqlCommand(sqlquery, conn))
                     {
 
-                        while (dr.Read())
+                        using (SqlDataReader dr = cmdlineno.ExecuteReader())
                         {
 
-                            //get exitid
-
-                            string exitquery = "select exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
-                            using (SqlCommand exitcmd = new SqlCommand(exitquery, conn))
+                            while (dr.Read())
                             {
-                                exitcmd.Parameters.AddWithValue("@empID", empID);
-                                exitcmd.Parameters.AddWithValue("@company", companytb.Text);
-                                exitcmd.Parameters.AddWithValue("@time", dateInput);
-                                using (SqlDataReader exitdr = exitcmd.ExecuteReader())
+
+                                //get exitid
+
+                                string exitquery = "select exitID, createdby, exittime, toexit, reason from exitapproval where createdby = @empID and company = @company and exittime = @time";
+                                using (SqlCommand exitcmd = new SqlCommand(exitquery, conn))
                                 {
-
-                                    while (exitdr.Read())
+                                    exitcmd.Parameters.AddWithValue("@empID", empID);
+                                    exitcmd.Parameters.AddWithValue("@company", companytb.Text);
+                                    exitcmd.Parameters.AddWithValue("@time", dateInput);
+                                    using (SqlDataReader exitdr = exitcmd.ExecuteReader())
                                     {
-                                        string exitid = exitdr[0].ToString();
 
-                                        //check if worker or subcon
-                                        if (dr[2].ToString() == "WK")
+                                        while (exitdr.Read())
                                         {
-                                            if (!string.IsNullOrEmpty(dr[5].ToString()))
+                                            string exitid = exitdr[0].ToString();
+                                            string createdby = exitdr[1].ToString();
+                                            //string exittime = exitdr[2].ToString();
+                                            DateTime date = Convert.ToDateTime(exitdr[2]);
+                                            string exittime = date.ToString("dd/MM/yyyy hh:mm tt");
+                                            string toexit = exitdr[3].ToString();
+                                            string reason = exitdr[4].ToString();
+
+                                            //check if worker or subcon
+                                            if (dr[2].ToString() == "WK")
                                             {
-                                                //worker - email to HOD
-                                                string ROname = dr[5].ToString();
-
-                                                string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
-                                                using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
+                                                if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                 {
-                                                    using (SqlDataReader hoddr = hodcmd.ExecuteReader())
+                                                    //worker - email to HOD
+                                                    string ROname = dr[5].ToString();
+
+                                                    string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                    using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
                                                     {
-                                                        while (hoddr.Read())
+                                                        using (SqlDataReader hoddr = hodcmd.ExecuteReader())
                                                         {
-                                                            //string ROcemail = hoddr[0].ToString();
-                                                            string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
-                                                            //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
-
-                                                            using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
+                                                            while (hoddr.Read())
                                                             {
-                                                                mm.Subject = "Account Activation";
-                                                                string body = "Hello,";
-                                                                body += "<br /><br />Please click the following link to approve or reject the application";
-                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>Click here to approve or deny applications.</a>";
-                                                                body += "<br /><br />Thanks";
-                                                                mm.Body = body;
-                                                                mm.IsBodyHtml = true;
-                                                                SmtpClient smtp = new SmtpClient();
-                                                                smtp.Host = "smtp-mail.outlook.com";
-                                                                smtp.EnableSsl = true;
-                                                                NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
-                                                                smtp.UseDefaultCredentials = false;
-                                                                smtp.Credentials = NetworkCred;
-                                                                smtp.Port = 587;
-                                                                smtp.Send(mm);
+
+                                                                //string ROcemail = hoddr[0].ToString();
+                                                                string ROcemail = "chowytemi07.20@ichat.sp.edu.sg";
+
+
+                                                                //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
+
+                                                                using (MailMessage mm = new MailMessage("@outlook.com", ROcemail))
+                                                                {
+                                                                    mm.Subject = "Early Exit Permit Pending for Approval";
+                                                                    string body = "Hello,";
+                                                                    body += "<br /><br />The following application was submitted:";
+                                                                    body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                    body += "<tr style=\text-align:center; height: 0.5em;\">";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
+                                                                    body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
+                                                                    body += "<td style=\" border: 1px solid\">" + createdby + "</td>";
+                                                                    body += "<td style=\" border: 1px solid\">" + toexit + "</td>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                                                    body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
+                                                                    body += "<br />Please click the following link to approve or reject the application:";
+                                                                    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                                    body += "<br /><br />Thank you";
+                                                                    mm.Body = body;
+                                                                    mm.IsBodyHtml = true;
+                                                                    SmtpClient smtp = new SmtpClient();
+                                                                    smtp.Host = "smtp-mail.outlook.com";
+                                                                    smtp.EnableSsl = true;
+                                                                    NetworkCredential NetworkCred = new NetworkCredential("@outlook.com", "");
+
+                                                                    smtp.UseDefaultCredentials = false;
+                                                                    smtp.Credentials = NetworkCred;
+                                                                    smtp.Port = 587;
+                                                                    smtp.Send(mm);
+                                                                }
+
                                                             }
-
                                                         }
-                                                    }
 
+                                                    }
                                                 }
+
+                                            }
+                                            else if (dr[2].ToString() == "SUBCON")
+                                            {
+                                                //subcon - email to project managers
+                                                //Label2.Text = "subcon";
+
                                             }
 
-                                        }
-                                        else if (dr[2].ToString() == "SUBCON")
-                                        {
-                                            //subcon - email to project managers
-                                            //Label2.Text = "subcon";
 
                                         }
-
-
                                     }
+
+
+
                                 }
-
-
 
                             }
 
                         }
 
+
+
                     }
-
-
 
                 }
 
+            } catch (Exception ex)
+            {
+                throw ex;
             }
-
-
+            
+            
         }
 
+        
 
         protected void Submit(object sender, EventArgs e)
         {
-
+            int counter = 0;
             try
             {
                 var time = Request["timeInput"];
@@ -401,7 +593,28 @@ namespace WorkerExitPass
                     int compare = DateTime.Compare(dateinput, currentdate);
                     if (compare > 0)
                     {
-                        GetSelected();
+                        for (int i = 0; i < namesddl.Items.Count; i++)
+                        {
+                            if (namesddl.Items[i].Selected)
+                            {
+                                counter += 1;
+                            }
+                            if (counter > 1)
+                            {
+                                TeamSubmit();
+                                sendEmailForApproval();
+                                Response.Redirect("Webform3.aspx");
+
+                            }
+                            else if (counter == 1)
+                            {
+                                SoloSubmit();
+                                sendEmailForApproval();
+                                Response.Redirect("Webform3.aspx");
+                            }
+                        }
+
+                        SoloSubmit();
                         sendEmailForApproval();
                         Response.Redirect("Webform3.aspx");
                     }
