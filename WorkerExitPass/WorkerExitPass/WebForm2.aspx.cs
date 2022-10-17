@@ -217,8 +217,6 @@ namespace WorkerExitPass
 
 
                 }
-
-                sendEmailForApproval();
             }
             catch (Exception ex)
             {
@@ -250,8 +248,6 @@ namespace WorkerExitPass
 
         protected void SoloSubmit()
         {
-            string empID = Session["empID"].ToString();
-            Session["empID"] = empID;
 
             try
             {
@@ -333,12 +329,7 @@ namespace WorkerExitPass
                         }
                     }
 
-
-                    appcon.Close();
-
                 }
-                dr.Close();
-                conn.Close();
 
             }
             catch (Exception ex)
@@ -388,10 +379,10 @@ namespace WorkerExitPass
 
                             if (namesddl.Items[i].Selected)
                             {
-
+                                namesddl.Items[i].Text.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
 
                                 //get EmpID
-                                string empquery = " select empID from EmpList where Employee_Name = '" + namesddl.Items[i].Text + "' and IsActive = 1";
+                                string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1; ";
                                 SqlCommand empcmd = new SqlCommand(empquery, appcon);
                                 using (SqlDataReader empdr = empcmd.ExecuteReader())
                                 {
@@ -564,15 +555,18 @@ namespace WorkerExitPass
                                                                 //worker - email to HOD
                                                                 string ROname = dr[5].ToString();
 
-                                                                string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                                //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                                string hodquery = "select approveremail from testtable";
+
+
                                                                 using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
                                                                 {
                                                                     using (SqlDataReader hoddr = hodcmd.ExecuteReader())
                                                                     {
                                                                         while (hoddr.Read())
                                                                         {
-                                                                            //string ROcemail = hoddr[0].ToString();
-                                                                            string ROcemail = "jihanshafitri.18@ichat.sp.edu.sg";
+                                                                            string ROcemail = hoddr[0].ToString();
+                                                                            //string ROcemail = "jihanshafitri.18@ichat.sp.edu.sg";
 
                                                                             MailMessage mm = new MailMessage();
                                                                             mm.From = new MailAddress(FromEmail);
@@ -622,13 +616,14 @@ namespace WorkerExitPass
                                                         else if (dr[2].ToString() == "SUBCON")
                                                         {
                                                             //subcon - email to project managers
-                                                            Label2.Text = "subcon";
+                                                            //Label2.Text = "subcon";
 
-                                                            string pjmquery = "select distinct   EmpList.EmpID,EmpList.CEmail " +
-                                                                              "from Access, UserAccess, ARole, EmpList " +
-                                                                              "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                                              "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                              "and Access.id = 83";
+                                                            //string pjmquery = "select distinct   EmpList.EmpID,EmpList.CEmail " +
+                                                            //                  "from Access, UserAccess, ARole, EmpList " +
+                                                            //                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                            //                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                            //                  "and Access.id = 83";
+                                                            string pjmquery = "select approveremail from testtable";
                                                             using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                             {
                                                                 using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
@@ -660,8 +655,7 @@ namespace WorkerExitPass
                                                                         body += "<br /><br />Thank you";
                                                                         mm.Body = body;
                                                                         mm.IsBodyHtml = true;
-
-                                                                        mm.From = new MailAddress(FromEmail);
+                                                                        
                                                                         SmtpClient smtp = new SmtpClient();
                                                                         smtp.Host = "smtp-mail.outlook.com";
                                                                         smtp.EnableSsl = true;
@@ -669,17 +663,16 @@ namespace WorkerExitPass
 
 
                                                                         string pjmID = "";
-                                                                        if (!pjmdr.IsDBNull(1))
+                                                                        if (!pjmdr.IsDBNull(0))
                                                                         {
-                                                                            //pjmID = pjmdr.GetString(1);
-                                                                            Label1.Text += pjmID;
-                                                                            pjmID = "jihanshafitri.18@ichat.sp.edu.sg";
-                                                                            mm.Bcc.Add(new MailAddress("jihanshafitri.18@ichat.sp.edu.sg"));
-
+                                                                            pjmID = pjmdr.GetString(0);
+                                                                            //Label1.Text += pjmID;
+                                                                            //pjmID = "jihanshafitri.18@ichat.sp.edu.sg";
+                                                                            //mm.Bcc.Add(new MailAddress("jihanshafitri.18@ichat.sp.edu.sg"));
+                                                                            //mm.Bcc.Add(new MailAddress(pjmID));
                                                                         }
 
-                                                                        //  mm.Bcc.Add(new MailAddress("@outlook.com"));
-
+                                                                        mm.Bcc.Add(new MailAddress("chowytemi07.20@ichat.sp.edu.sg"));
 
                                                                         smtp.UseDefaultCredentials = false;
                                                                         smtp.Credentials = NetworkCred;
@@ -785,12 +778,88 @@ namespace WorkerExitPass
 
         protected void SubmitAsTeam_Click(object sender, EventArgs e)
         {
+            int counter = 0;
+            try
+            {
+                var time = Request["timeInput"];
+                var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                DateTime dateinput = DateTime.Parse(date);
+                var currentdate = DateTime.Now;
+                string projectInput = projectddl.Text;
+                string nameInput = nametb.Text;
+                string companyInput = companytb.Text;
+                string reasonInput = ReasonDropdown.Text;
+                string remarksInput = remarkstb.Text;
 
+                if (projectInput != "" || nameInput != "" || companyInput != "")
+                {
+                    int compare = DateTime.Compare(dateinput, currentdate);
+                    if (compare > 0)
+                    {
+                        //for (int i = 0; i < namesddl.Items.Count; i++)
+                        //{
+                        //    if (namesddl.Items[i].Selected)
+                        //    {
+                        //        counter += 1;
+                        //    }
+                           
+                        //}
+
+                        //if (counter > 0)
+                        //{
+                            TeamSubmit();
+                            //sendEmailForApproval();
+                            Response.Redirect("Webform3.aspx");
+
+                        //}
+
+                    }
+                    else if (compare <= 0)
+                    {
+                        ScriptManager.RegisterClientScriptBlock
+                          (this, this.GetType(), "alertMessage", "alert" +
+                          "('Please choose a time after the current time')", true);
+                        return;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         protected void SubmitAsSolo_Click(object sender, EventArgs e)
         {
+            try
+            {
+                var time = Request["timeInput"];
+                var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                DateTime dateinput = DateTime.Parse(date);
+                var currentdate = DateTime.Now;
+                string projectInput = projectddl.Text;
+                string nameInput = nametb.Text;
+                string companyInput = companytb.Text;
+                string reasonInput = ReasonDropdown.Text;
+                string remarksInput = remarkstb.Text;
 
+                if (projectInput != "" || nameInput != "" || companyInput != "")
+                {
+                    int compare = DateTime.Compare(dateinput, currentdate);
+                    if (compare > 0)
+                    {
+                        SoloSubmit();
+                        sendEmailForApproval();
+                        Response.Redirect("Webform3.aspx");
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
