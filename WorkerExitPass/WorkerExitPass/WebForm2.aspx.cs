@@ -246,6 +246,9 @@ namespace WorkerExitPass
 
         protected void SoloSubmit()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
             try
             {
                 string empID = Session["empID"].ToString();
