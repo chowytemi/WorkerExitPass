@@ -84,6 +84,7 @@
                         <div class="row">
                                 <asp:Label class="label" ID="Label3" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
                                 <asp:TextBox class="textbox" ID="tbName" runat="server" ReadOnly="True"></asp:TextBox>
+<%--                                <asp:Label class="label" ID="lblName" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>--%>
                         </div>
                         <div class="row">
                                 <asp:Label class="label" ID="companyName" runat="server" Text="Name of Company"></asp:Label>

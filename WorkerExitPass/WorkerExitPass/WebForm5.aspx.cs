@@ -28,7 +28,8 @@ namespace WorkerExitPass
                     Session["empID"] = myempno;
                     
                 }
-            }CheckAccess();
+                CheckAccess();
+            }
             
 
         }

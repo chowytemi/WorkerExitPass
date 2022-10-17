@@ -45,16 +45,16 @@ namespace WorkerExitPass
         {
             namesddl.Visible = false;
             nametb.Visible = true;
-            submitAsTeam.Visible = false;
-            submitAsSolo.Visible = true;
+            //submitAsTeam.Visible = false;
+            //submitAsSolo.Visible = true;
         }
 
         protected void TeamBtn_Click(object sender, EventArgs e)
         {
             namesddl.Visible = true;
             nametb.Visible = false;
-            submitAsTeam.Visible = true;
-            submitAsSolo.Visible = false;
+            //submitAsTeam.Visible = true;
+            //submitAsSolo.Visible = false;
             GetListOfEmployees();
 
 
@@ -382,7 +382,9 @@ namespace WorkerExitPass
                                 namesddl.Items[i].Text.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
 
                                 //get EmpID
-                                string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1; ";
+                                //string empquery = "select SUBSTRING('" + namesddl.Items[i].Text + "', LEN(LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') + 1)), LEN('" + namesddl.Items[i].Text + "') - LEN(LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "'))) - LEN(RIGHT('" + namesddl.Items[i].Text + "', CHARINDEX(')', (REVERSE('" + namesddl.Items[i].Text + "')))))) AS empID from EmpList where Department = 'SUBCON' AND IsActive = 1 AND company = '" + company + "' order by EmpID;";
+                                //string empquery = " select empID from EmpList where Employee_Name = '" + namesddl.Items[i].Text + "' and IsActive = 1";
+                                string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1;";
                                 SqlCommand empcmd = new SqlCommand(empquery, appcon);
                                 using (SqlDataReader empdr = empcmd.ExecuteReader())
                                 {
@@ -402,6 +404,7 @@ namespace WorkerExitPass
 
 
                                             string employeeIDToExit = empdr[0].ToString();
+                                            Label1.Text = employeeIDToExit;
                                             using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
                                             {
 

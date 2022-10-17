@@ -270,6 +270,7 @@ namespace WorkerExitPass
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
+            string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
             string FromEmail = ConfigurationManager.AppSettings["FromMail"].ToString();
             string EmailPassword = ConfigurationManager.AppSettings["Password"].ToString();
 
@@ -362,7 +363,7 @@ namespace WorkerExitPass
                                                                         body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                                         body += "<br />Please click the following link to approve or reject the application:";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + exitid, "WebForm5.aspx") + "'>View Application</a>";
-                                                                        body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.asp", "WebForm5.aspx?exitid=" + exitid + "&approval=" + empID) + "'>View Application</a>";
+                                                                        body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.asp", "WebForm5.aspx") + "'>View Application</a>";
                                                                         body += "<br /><br />Thank you";
                                                                         mm.Body = body;
                                                                         mm.IsBodyHtml = true;
@@ -397,7 +398,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = 83";
+                                                                          "and Access.id  ='" + PJM + "';";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
@@ -427,7 +428,7 @@ namespace WorkerExitPass
                                                                     body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                                     body += "<br />Please click the following link to approve or reject the application:";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
-                                                                    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx?exitid=" + exitid + "&approval=" + empID) + "'>View Application</a>";
+                                                                    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx") + "'>View Application</a>";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" +exitid, "WebForm5.aspx") + "'>View Application</a>";
                                                                     body += "<br /><br />Thank you";
                                                                     mm.Body = body;
