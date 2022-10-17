@@ -106,7 +106,9 @@
 
                 <div class="rowButtons">
                         <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
-                        <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="Submit" />
+                        <%--<asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="Submit" />--%>
+                        <asp:Button class="button" ID="submitAsTeam" runat="server" Text="Submit" Visible="false" OnClick="SubmitAsTeam_Click" />
+                        <asp:Button class="button" ID="submitAsSolo" runat="server" Text="Submit" OnClick="SubmitAsSolo_Click" />
                 </div>
             </div>   
         </div>

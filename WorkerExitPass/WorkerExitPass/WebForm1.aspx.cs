@@ -55,6 +55,9 @@ namespace WorkerExitPass
         {
             try
             {
+                string empID = Session["empID"].ToString();
+                Session["empID"] = empID;
+
                 var time = Request["timeInput"];
                 var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
                 DateTime dateinput = DateTime.Parse(date);
@@ -72,7 +75,7 @@ namespace WorkerExitPass
                     {
                         submitForm();
                         sendEmailForApproval();
-                        Response.Redirect("Webform3.aspx");
+                        Response.Redirect("Webform3.aspx?exprmitstatus=" + empID);
                     }
                     else if (compare <= 0)
                     {
@@ -284,6 +287,7 @@ namespace WorkerExitPass
 
                         while (dr.Read())
                         {
+                            //string createdby = dr[1].ToString();
 
                             //get exitid
                             string exitquery = "select exitID, createdby, exittime, toexit, reason from exitapproval where createdby = @empID and company = @company and exittime = @time";
@@ -299,149 +303,165 @@ namespace WorkerExitPass
                                     while (exitdr.Read())
                                     {
                                         string exitid = exitdr[0].ToString();
-                                        string createdby = exitdr[1].ToString();
+                                        //string createdby = exitdr[1].ToString();
                                         //string exittime = exitdr[2].ToString();
                                         DateTime date = Convert.ToDateTime(exitdr[2]);
                                         string exittime = date.ToString("dd/MM/yyyy hh:mm tt");
                                         string toexit = exitdr[3].ToString();
                                         string reason = exitdr[4].ToString();
 
-                                        //check if worker or subcon
-                                        if (dr[2].ToString() == "WK")
+                                        string query3 = "select Employee_Name from EmpList where EmpID = '" + toexit + "';";
+
+                                        using (SqlCommand cmd3 = new SqlCommand(query3, conn))
                                         {
-                                            if (!string.IsNullOrEmpty(dr[5].ToString()))
+                                            using (SqlDataReader dr3 = cmd3.ExecuteReader())
                                             {
-                                                //worker - email to HOD
-                                                string ROname = dr[5].ToString();
 
-                                                string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
-                                                using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
+                                                while (dr3.Read())
                                                 {
-                                                    using (SqlDataReader hoddr = hodcmd.ExecuteReader())
+
+                                                    string exitName = dr3[0].ToString();
+
+                                                    //check if worker or subcon
+                                                    if (dr[2].ToString() == "WK")
                                                     {
-                                                        while (hoddr.Read())
+                                                        if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                         {
-                                                            //string ROcemail = hoddr[0].ToString();
-                                                            string ROcemail = "";
+                                                            //worker - email to HOD
+                                                            string ROname = dr[5].ToString();
 
-                                                            //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
+                                                            string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                            using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
+                                                            {
+                                                                using (SqlDataReader hoddr = hodcmd.ExecuteReader())
+                                                                {
+                                                                    while (hoddr.Read())
+                                                                    {
+                                                                        //string ROcemail = hoddr[0].ToString();
+                                                                        string ROcemail = "jihanshafitri.18@ichat.sp.edu.sg";
 
-                                                            MailMessage mm = new MailMessage();
-                                                            mm.From = new MailAddress(FromEmail);
-                                                            mm.Subject = "Early Exit Permit Pending for Approval";
-                                                            string body = "Hello,";
-                                                            body += "<br /><br />The following application was submitted:";
-                                                            body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                                                            body += "<tr style=\text-align:center; height: 0.5em;\">";
-                                                            body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
-                                                            body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
-                                                            body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
-                                                            body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
-                                                            body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
-                                                            body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
-                                                            body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
-                                                            body += "<td style=\" border: 1px solid\">" + createdby + "</td>";
-                                                            body += "<td style=\" border: 1px solid\">" + toexit + "</td>";
-                                                            body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                                            body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
-                                                            body += "<br />Please click the following link to approve or reject the application:";
-                                                            body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx?approval=" + empID) + "'>View Application</a>";
-                                                            body += "<br /><br />Thank you";
-                                                            mm.Body = body;
-                                                            mm.IsBodyHtml = true;
+                                                                        //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
+
+                                                                        MailMessage mm = new MailMessage();
+                                                                        mm.From = new MailAddress(FromEmail);
+                                                                        mm.Subject = "Early Exit Permit Pending for Approval";
+                                                                        string body = "Hello,";
+                                                                        body += "<br /><br />The following application was submitted:";
+                                                                        body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                        body += "<tr style=\text-align:center; height: 0.5em;\">";
+                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
+                                                                        //body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
+                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
+                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
+                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
+                                                                        body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
+                                                                        body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
+                                                                        //body += "<td style=\" border: 1px solid\">" + createdby + "</td>";
+                                                                        body += "<td style=\" border: 1px solid\">" + exitName + "</td>";
+                                                                        body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                                                        body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
+                                                                        body += "<br />Please click the following link to approve or reject the application:";
+                                                                        //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + exitid, "WebForm5.aspx") + "'>View Application</a>";
+                                                                        body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.asp", "WebForm5.aspx?exitid=" + exitid + "&approval=" + empID) + "'>View Application</a>";
+                                                                        body += "<br /><br />Thank you";
+                                                                        mm.Body = body;
+                                                                        mm.IsBodyHtml = true;
 
 
-                                                            mm.To.Add(new MailAddress(ROcemail));
+                                                                        mm.To.Add(new MailAddress(ROcemail));
 
 
-                                                            SmtpClient smtp = new SmtpClient();
-                                                            smtp.Host = "smtp-mail.outlook.com";
-                                                            smtp.EnableSsl = true;
-                                                            NetworkCredential NetworkCred = new NetworkCredential(FromEmail, EmailPassword);
-                                                            smtp.UseDefaultCredentials = false;
-                                                            smtp.Credentials = NetworkCred;
-                                                            smtp.Port = 587;
-                                                            smtp.Send(mm);
+                                                                        SmtpClient smtp = new SmtpClient();
+                                                                        smtp.Host = "smtp-mail.outlook.com";
+                                                                        smtp.EnableSsl = true;
+                                                                        NetworkCredential NetworkCred = new NetworkCredential(FromEmail, EmailPassword);
+                                                                        smtp.UseDefaultCredentials = false;
+                                                                        smtp.Credentials = NetworkCred;
+                                                                        smtp.Port = 587;
+                                                                        smtp.Send(mm);
 
+
+                                                                    }
+                                                                }
+
+                                                            }
+                                                        }
+
+                                                    }
+                                                    else if (dr[2].ToString() == "SUBCON")
+                                                    {
+                                                        //subcon - email to project managers
+                                                        Label2.Text = "subcon";
+
+                                                        string pjmquery = "select distinct   EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = 83";
+                                                        using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
+                                                        {
+                                                            using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
+                                                            {
+                                                                while (pjmdr.Read())
+                                                                {
+                                                                    //string ROcemail = hoddr[0].ToString();
+                                                                    //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
+
+                                                                    MailMessage mm = new MailMessage();
+                                                                    mm.From = new MailAddress(FromEmail);
+                                                                    mm.Subject = "Early Exit Permit Pending for Approval";
+                                                                    string body = "Hello,";
+                                                                    body += "<br /><br />The following application was submitted:";
+                                                                    body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                    body += "<tr style=\text-align:center; height: 0.5em;\">";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
+                                                                    //body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
+                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
+                                                                    body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
+                                                                    //body += "<td style=\" border: 1px solid\">" + createdby + "</td>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitName + "</td>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                                                    body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
+                                                                    body += "<br />Please click the following link to approve or reject the application:";
+                                                                    //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                                    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx?exitid=" + exitid + "&approval=" + empID) + "'>View Application</a>";
+                                                                    //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" +exitid, "WebForm5.aspx") + "'>View Application</a>";
+                                                                    body += "<br /><br />Thank you";
+                                                                    mm.Body = body;
+                                                                    mm.IsBodyHtml = true;
+
+                                                                    mm.From = new MailAddress(FromEmail);
+                                                                    SmtpClient smtp = new SmtpClient();
+                                                                    smtp.Host = "smtp-mail.outlook.com";
+                                                                    smtp.EnableSsl = true;
+                                                                    NetworkCredential NetworkCred = new NetworkCredential(FromEmail, EmailPassword);
+
+
+                                                                    string pjmID = "";
+                                                                    if (!pjmdr.IsDBNull(1))
+                                                                    {
+                                                                        pjmID = pjmdr.GetString(1);
+                                                                        Label1.Text += pjmID;
+                                                                        mm.Bcc.Add(new MailAddress("jihanshafitri.18@ichat.sp.edu.sg"));
+                                                                    }
+
+                                                                    smtp.UseDefaultCredentials = false;
+                                                                    smtp.Credentials = NetworkCred;
+                                                                    smtp.Port = 587;
+                                                                    smtp.Send(mm);
+
+
+                                                                }
+                                                            }
 
                                                         }
                                                     }
 
                                                 }
-                                            }
-
-                                        }
-                                        else if (dr[2].ToString() == "SUBCON")
-                                        {
-                                            //subcon - email to project managers
-                                            Label2.Text = "subcon";
-
-                                            string pjmquery = "select distinct   EmpList.EmpID,EmpList.CEmail " +
-                                                              "from Access, UserAccess, ARole, EmpList " +
-                                                              "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                              "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                              "and Access.id = 83";
-                                            using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
-                                            {
-                                                using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
-                                                {
-                                                    while (pjmdr.Read())
-                                                    {
-                                                        //string ROcemail = hoddr[0].ToString();
-                                                        Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
-
-                                                        MailMessage mm = new MailMessage();
-                                                        mm.From = new MailAddress(FromEmail);
-                                                        mm.Subject = "Early Exit Permit Pending for Approval";
-                                                        string body = "Hello,";
-                                                        body += "<br /><br />The following application was submitted:";
-                                                        body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                                                        body += "<tr style=\text-align:center; height: 0.5em;\">";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
-                                                        body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
-                                                        body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + createdby + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + toexit + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
-                                                        body += "<br />Please click the following link to approve or reject the application:";
-                                                        body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
-                                                        body += "<br /><br />Thank you";
-                                                        mm.Body = body;
-                                                        mm.IsBodyHtml = true;
-
-                                                        mm.From = new MailAddress(FromEmail);
-                                                        SmtpClient smtp = new SmtpClient();
-                                                        smtp.Host = "smtp-mail.outlook.com";
-                                                        smtp.EnableSsl = true;
-                                                        NetworkCredential NetworkCred = new NetworkCredential(FromEmail, EmailPassword);
-
-
-                                                        string pjmID = "";
-                                                        if (!pjmdr.IsDBNull(1))
-                                                        {
-                                                            pjmID = pjmdr.GetString(1);
-                                                            Label1.Text += pjmID;
-                                                            //mm.Bcc.Add(new MailAddress("@outlook.com"));
-                                                        }
-
-                                                        smtp.UseDefaultCredentials = false;
-                                                        smtp.Credentials = NetworkCred;
-                                                        smtp.Port = 587;
-                                                        smtp.Send(mm);
-
-
-                                                    }
-                                                }
-
-                                            }
-                                        }
-
-
+                                            }    }
                                     }
                                 }
 
