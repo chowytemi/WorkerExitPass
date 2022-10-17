@@ -15,18 +15,28 @@ namespace WorkerExitPass
     public partial class WebForm3 : System.Web.UI.Page
     {
         //Get login id
-        string empID = "PXE6563";
+        //string empID = "PXE6563";
         //string empID = "MB638";
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                FormStatus();
+                if ((Request.QueryString["exprmitstatus"] != null))
+                {
+
+                    string myempno = Request.QueryString["exprmitstatus"];
+                    Session["empID"] = myempno;
+
+                }
+                
             }
+            FormStatus();
         }
         private void FormStatus()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
 
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -91,6 +101,9 @@ namespace WorkerExitPass
 
         protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();

@@ -134,11 +134,11 @@ namespace WorkerExitPass
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-
+            string TK = ConfigurationManager.AppSettings["TK"].ToString();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85 and EmpList.EmpID = '" + empID + "' ; ";
+            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
             //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85 and ((IDNo like CONCAT('" + firstId + "', '%')) and (IDNo like CONCAT('%', '" + lastFiveId + "')));";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
@@ -248,6 +248,9 @@ namespace WorkerExitPass
         {
             try
             {
+                string empID = Session["empID"].ToString();
+                Session["empID"] = empID;
+
                 string description = projectddl.Text;
                 string projectInput = projectddl.Text;
 
@@ -341,6 +344,9 @@ namespace WorkerExitPass
 
         protected void TeamSubmit()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
             string description = projectddl.Text;
             string projectInput = projectddl.Text;
 
@@ -538,7 +544,7 @@ namespace WorkerExitPass
                                                 if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                 {
                                                     //worker - email to HOD
-                                                    string ROname = dr[5].ToString();
+                                                    //string ROname = dr[5].ToString();
 
                                                     string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                     using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
@@ -569,13 +575,13 @@ namespace WorkerExitPass
                                                                 body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                                 body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                                 body += "<br />Please click the following link to approve or reject the application:";
-                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?approval=" + empID) + "'>View Application</a>";
                                                                 body += "<br /><br />Thank you";
                                                                 mm.Body = body;
                                                                 mm.IsBodyHtml = true;
 
 
-                                                                mm.Bcc.Add(new MailAddress(ROcemail));
+                                                                mm.To.Add(new MailAddress(ROcemail));
 
 
                                                                 SmtpClient smtp = new SmtpClient();
@@ -647,9 +653,11 @@ namespace WorkerExitPass
                                                             string pjmID = "";
                                                             if (!pjmdr.IsDBNull(1))
                                                             {
-                                                                pjmID = pjmdr.GetString(1);
+                                                                //pjmID = pjmdr.GetString(1);
                                                                 Label1.Text += pjmID;
-                                                                //mm.Bcc.Add(new MailAddress(pjmID));
+                                                                pjmID = "chowytemi07.20@ichat.sp.edu.sg";
+                                                                mm.Bcc.Add(new MailAddress(pjmID));
+
                                                             }
 
                                                             mm.Bcc.Add(new MailAddress("@outlook.com"));

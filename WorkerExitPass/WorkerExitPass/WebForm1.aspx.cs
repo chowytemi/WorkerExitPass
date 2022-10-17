@@ -72,7 +72,7 @@ namespace WorkerExitPass
                     {
                         submitForm();
                         sendEmailForApproval();
-                        //Response.Redirect("Webform3.aspx");
+                        Response.Redirect("Webform3.aspx");
                     }
                     else if (compare <= 0)
                     {
@@ -345,7 +345,7 @@ namespace WorkerExitPass
                                                             body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                             body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                             body += "<br />Please click the following link to approve or reject the application:";
-                                                            body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                            body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx?approval=" + empID) + "'>View Application</a>";
                                                             body += "<br /><br />Thank you";
                                                             mm.Body = body;
                                                             mm.IsBodyHtml = true;

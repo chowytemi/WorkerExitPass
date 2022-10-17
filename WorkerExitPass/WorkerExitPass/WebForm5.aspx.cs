@@ -14,26 +14,34 @@ namespace WorkerExitPass
 {
     public partial class WebForm5 : System.Web.UI.Page
     {
+        //string empID = "M988";
         protected void Page_Load(object sender, EventArgs e)
         {
             //GetPending();
             //GetApplicationById();
             if (!IsPostBack)
             {
-
-            }
-            CheckAccess();
+                if ((Request.QueryString["approval"] != null))
+                {
+                    var exitID = Request.QueryString["exitid"];
+                    string myempno = Request.QueryString["approval"];
+                    Session["empID"] = myempno;
+                    
+                }
+            }CheckAccess();
+            
 
         }
 
         protected void CheckAccess()
         {
-   
-
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 83 and EmpList.EmpID = '" + empID + "' ; ";
+            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "' ; ";
             //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85 and ((IDNo like CONCAT('" + firstId + "', '%')) and (IDNo like CONCAT('%', '" + lastFiveId + "')));";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
@@ -191,8 +199,9 @@ namespace WorkerExitPass
 
         protected void ApproveBtn_Click(object sender, EventArgs e)
         {
-
-            string approverID = "T203";
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            //string approverID = "T203";
             DateTime approveddate = DateTime.Now;
             var exitID = Request.QueryString["exitid"];
             //int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
@@ -201,7 +210,7 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-            string sqlquery = "update exitapproval set approver = '" + approverID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
+            string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
 
             using (SqlCommand update = new SqlCommand(sqlquery, conn))
             {
@@ -211,13 +220,14 @@ namespace WorkerExitPass
             }
 
             mpeApproval.Hide();
-            Response.Redirect("WebForm4.aspx");
+            Response.Redirect("WebForm4.aspx?approval=" + empID);
         }
 
         protected void RejectBtn_Click(object sender, EventArgs e)
         {
-
-            string approverID = "T203";
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            //string approverID = "T203";
             DateTime approveddate = DateTime.Now;
             var exitID = Request.QueryString["exitid"];
             //int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
@@ -226,7 +236,7 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-            string sqlquery = "update exitapproval set approver = '" + approverID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
+            string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
 
             using (SqlCommand update = new SqlCommand(sqlquery, conn))
             {
@@ -236,13 +246,14 @@ namespace WorkerExitPass
             }
 
             mpeApproval.Hide();
-            Response.Redirect("WebForm4.aspx");
+            Response.Redirect("WebForm4.aspx?approval=" + empID);
         }
 
         protected void btnBack_Click(object sender, EventArgs e)
         {
-
-            Response.Redirect("WebForm4.aspx");
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            Response.Redirect("WebForm4.aspx?approval=" + empID);
 
         }
     }
