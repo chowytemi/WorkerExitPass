@@ -45,16 +45,16 @@ namespace WorkerExitPass
         {
             namesddl.Visible = false;
             nametb.Visible = true;
-            //submitAsTeam.Visible = false;
-            //submitAsSolo.Visible = true;
+            submitAsTeam.Visible = false;
+            submitAsSolo.Visible = true;
         }
 
         protected void TeamBtn_Click(object sender, EventArgs e)
         {
             namesddl.Visible = true;
             nametb.Visible = false;
-            //submitAsTeam.Visible = true;
-            //submitAsSolo.Visible = false;
+            submitAsTeam.Visible = true;
+            submitAsSolo.Visible = false;
             GetListOfEmployees();
 
 
@@ -781,6 +781,8 @@ namespace WorkerExitPass
 
         protected void SubmitAsTeam_Click(object sender, EventArgs e)
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
             int counter = 0;
             try
             {
@@ -811,8 +813,8 @@ namespace WorkerExitPass
                         //if (counter > 0)
                         //{
                             TeamSubmit();
-                            //sendEmailForApproval();
-                            Response.Redirect("Webform3.aspx");
+                            sendEmailForApproval();
+                        Response.Redirect("Webform3.aspx?extprmitstatus=" + empID );
 
                         //}
 
@@ -837,6 +839,8 @@ namespace WorkerExitPass
         {
             try
             {
+                string empID = Session["empID"].ToString();
+                Session["empID"] = empID;
                 var time = Request["timeInput"];
                 var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
                 DateTime dateinput = DateTime.Parse(date);

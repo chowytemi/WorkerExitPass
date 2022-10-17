@@ -175,13 +175,22 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Button cancelBtn;
         
         /// <summary>
-        /// submitBtn control.
+        /// submitAsTeam control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button submitBtn;
+        protected global::System.Web.UI.WebControls.Button submitAsTeam;
+        
+        /// <summary>
+        /// submitAsSolo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button submitAsSolo;
         
         /// <summary>
         /// Label1 control.
