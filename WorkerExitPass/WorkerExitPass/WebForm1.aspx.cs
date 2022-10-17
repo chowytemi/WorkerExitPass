@@ -322,7 +322,7 @@ namespace WorkerExitPass
                                                         while (hoddr.Read())
                                                         {
                                                             //string ROcemail = hoddr[0].ToString();
-
+                                                            string ROcemail = "";
 
                                                             //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
@@ -392,7 +392,7 @@ namespace WorkerExitPass
 
                                                         MailMessage mm = new MailMessage();
                                                         mm.From = new MailAddress(FromEmail);
-                                                        mm.Subject = "Early Exit Permit Pending for Approval - SubCon";
+                                                        mm.Subject = "Early Exit Permit Pending for Approval";
                                                         string body = "Hello,";
                                                         body += "<br /><br />The following application was submitted:";
                                                         body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
@@ -426,7 +426,7 @@ namespace WorkerExitPass
                                                         {
                                                             pjmID = pjmdr.GetString(1);
                                                             Label1.Text += pjmID;
-                                                            //mm.Bcc.Add(new MailAddress("chowwwwder@outlook.com"));
+                                                            //mm.Bcc.Add(new MailAddress("@outlook.com"));
                                                         }
 
                                                         smtp.UseDefaultCredentials = false;

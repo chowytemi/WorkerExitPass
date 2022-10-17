@@ -210,7 +210,7 @@ namespace WorkerExitPass
 
                         insert.ExecuteNonQuery();
                     }
-                    
+
 
                 }
 
@@ -371,11 +371,11 @@ namespace WorkerExitPass
 
                         for (int i = 0; i < namesddl.Items.Count; i++)
                         {
-                           
+
 
                             if (namesddl.Items[i].Selected)
                             {
-                                
+
 
                                 //get EmpID
                                 string empquery = " select empID from EmpList where Employee_Name = '" + namesddl.Items[i].Text + "' and IsActive = 1";
@@ -390,12 +390,13 @@ namespace WorkerExitPass
                                             if (ReasonDropdown.Text == "Medical Injury")
                                             {
                                                 insertsinglequery = "insert into exitapproval(exitID, approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                                            } else 
+                                            }
+                                            else
                                             {
                                                 insertsinglequery = "insert into exitapproval(exitID, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                             }
-                                                
-                                         
+
+
                                             string employeeIDToExit = empdr[0].ToString();
                                             using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
                                             {
@@ -431,7 +432,7 @@ namespace WorkerExitPass
                                             {
                                                 insertmultiplequery = "insert into exitapproval(exitID, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                             }
-                                            
+
 
                                             string employeeIDToExit = empdr[0].ToString();
                                             using (SqlCommand insert = new SqlCommand(insertmultiplequery, appcon))
@@ -458,14 +459,14 @@ namespace WorkerExitPass
                                             }
                                         }
 
-                                        
+
                                     }
                                 }
 
 
 
                             }
-                            
+
                         }
                     }
 
@@ -473,11 +474,12 @@ namespace WorkerExitPass
 
                 }
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
-            
+
 
         }
 
@@ -546,6 +548,7 @@ namespace WorkerExitPass
                                                             while (hoddr.Read())
                                                             {
                                                                 //string ROcemail = hoddr[0].ToString();
+                                                                string ROcemail = "";
 
                                                                 MailMessage mm = new MailMessage();
                                                                 mm.From = new MailAddress(FromEmail);
@@ -566,7 +569,7 @@ namespace WorkerExitPass
                                                                 body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                                 body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                                 body += "<br />Please click the following link to approve or reject the application:";
-                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                                body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
                                                                 body += "<br /><br />Thank you";
                                                                 mm.Body = body;
                                                                 mm.IsBodyHtml = true;
@@ -608,12 +611,11 @@ namespace WorkerExitPass
                                                     {
                                                         while (pjmdr.Read())
                                                         {
-                                                            //string ROcemail = hoddr[0].ToString();
                                                             Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
                                                             MailMessage mm = new MailMessage();
                                                             mm.From = new MailAddress(FromEmail);
-                                                            mm.Subject = "Early Exit Permit Pending for Approval - SubCon";
+                                                            mm.Subject = "Early Exit Permit Pending for Approval";
                                                             string body = "Hello,";
                                                             body += "<br /><br />The following application was submitted:";
                                                             body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
@@ -630,7 +632,7 @@ namespace WorkerExitPass
                                                             body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                             body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                             body += "<br />Please click the following link to approve or reject the application:";
-                                                            body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
+                                                            body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
                                                             body += "<br /><br />Thank you";
                                                             mm.Body = body;
                                                             mm.IsBodyHtml = true;
@@ -650,6 +652,9 @@ namespace WorkerExitPass
                                                                 //mm.Bcc.Add(new MailAddress(pjmID));
                                                             }
 
+                                                            mm.Bcc.Add(new MailAddress("@outlook.com"));
+
+
                                                             smtp.UseDefaultCredentials = false;
                                                             smtp.Credentials = NetworkCred;
                                                             smtp.Port = 587;
@@ -663,12 +668,8 @@ namespace WorkerExitPass
 
                                             }
 
-
                                         }
                                     }
-
-
-
                                 }
 
                             }
@@ -676,20 +677,20 @@ namespace WorkerExitPass
                         }
 
 
-
                     }
 
                 }
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
-            
-            
+
+
         }
 
-        
+
 
         protected void Submit(object sender, EventArgs e)
         {
