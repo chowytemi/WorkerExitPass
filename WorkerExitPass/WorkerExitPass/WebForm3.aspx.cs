@@ -29,10 +29,12 @@ namespace WorkerExitPass
                     Session["empID"] = myempno;
 
                 }
-                
+                FormStatus();
             }
-            FormStatus();
+            
+        
         }
+
         private void FormStatus()
         {
             string empID = Session["empID"].ToString();
@@ -43,7 +45,7 @@ namespace WorkerExitPass
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
             //string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by exitID desc;";
-            string statussql = "select exitID, createddate, exittime, approve from exitapproval where toexit = '" + empID + "' order by exitID desc;";
+            string statussql = "select distinct exitID, createddate, exittime, approve from exitapproval where toexit = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
 
             SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
             using (DataTable dt = new DataTable())
@@ -112,8 +114,7 @@ namespace WorkerExitPass
             {
                 int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
 
-                string sql = "select distinct exitapproval.approve, (select EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "' and exitapproval.toexit = '" + empID + "';";
-                //string sql = "select distinct exitapproval.approve, (select EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID) AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.exitID = '" + exitID + "';";
+                string sql = "select distinct exitapproval.approve, (select EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -156,7 +157,6 @@ namespace WorkerExitPass
                 tbDate.Text = date.ToString("dd/MM/yyyy");
                 tbTime.Text = time.ToString("hh:mm tt");
                 tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
-                //tbName.Text = dt.Rows[0]["Employee_Name"].ToString();
                 tbCompany.Text = dt.Rows[0]["company"].ToString();
                 tbReason.Text = dt.Rows[0]["reason"].ToString();
 
@@ -182,8 +182,6 @@ namespace WorkerExitPass
                 string empName = "";
                 for (int i = 0; i < dt2.Rows.Count; i++)
                 {
-                    //tbName.Text += dt2.Rows[i]["Employee_Name"].ToString() + ", ";
-                    //tbName.Text = String.Join(", ", dt2.Rows[i]["Employee_Name"].ToString());
                     empName += dt2.Rows[i]["Employee_Name"].ToString() + ",";
                     
                 }

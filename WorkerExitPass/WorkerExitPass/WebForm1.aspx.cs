@@ -271,8 +271,10 @@ namespace WorkerExitPass
             Session["empID"] = empID;
 
             string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
-            string FromEmail = ConfigurationManager.AppSettings["FromMail"].ToString();
-            string EmailPassword = ConfigurationManager.AppSettings["Password"].ToString();
+            string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
+            string smtpserver = ConfigurationManager.AppSettings["smtpserver"].ToString();
+            string smtport = ConfigurationManager.AppSettings["smtport"].ToString();
+            int smtpport = Convert.ToInt32(smtport);
 
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -330,21 +332,20 @@ namespace WorkerExitPass
                                                         {
                                                             //worker - email to HOD
                                                             string ROname = dr[5].ToString();
-
-                                                            string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                            string hodquery = "select approveremail from testtable";
+                                                            //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                             using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
                                                             {
                                                                 using (SqlDataReader hoddr = hodcmd.ExecuteReader())
                                                                 {
                                                                     while (hoddr.Read())
                                                                     {
-                                                                        //string ROcemail = hoddr[0].ToString();
-                                                                        string ROcemail = "jihanshafitri.18@ichat.sp.edu.sg";
+                                                                        string ROcemail = hoddr[0].ToString(); 
 
                                                                         //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
                                                                         MailMessage mm = new MailMessage();
-                                                                        mm.From = new MailAddress(FromEmail);
+                                                                        mm.From = new MailAddress(MailFrom);
                                                                         mm.Subject = "Early Exit Permit Pending for Approval";
                                                                         string body = "Hello,";
                                                                         body += "<br /><br />The following application was submitted:";
@@ -363,22 +364,18 @@ namespace WorkerExitPass
                                                                         body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                                         body += "<br />Please click the following link to approve or reject the application:";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + exitid, "WebForm5.aspx") + "'>View Application</a>";
-                                                                        body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.asp", "WebForm5.aspx") + "'>View Application</a>";
+                                                                        body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROname) + "'>View Application</a>";
                                                                         body += "<br /><br />Thank you";
                                                                         mm.Body = body;
                                                                         mm.IsBodyHtml = true;
+                                                                        mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
 
 
                                                                         mm.To.Add(new MailAddress(ROcemail));
 
 
-                                                                        SmtpClient smtp = new SmtpClient();
-                                                                        smtp.Host = "smtp-mail.outlook.com";
-                                                                        smtp.EnableSsl = true;
-                                                                        NetworkCredential NetworkCred = new NetworkCredential(FromEmail, EmailPassword);
-                                                                        smtp.UseDefaultCredentials = false;
-                                                                        smtp.Credentials = NetworkCred;
-                                                                        smtp.Port = 587;
+                                                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp  
+                                                                        smtp.EnableSsl = false;                
                                                                         smtp.Send(mm);
 
 
@@ -398,18 +395,20 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id  ='" + PJM + "';";
+                                                                          "and Access.id = 87 and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
                                                             {
                                                                 while (pjmdr.Read())
                                                                 {
+                                                                    string name = pjmdr[0].ToString();
+
                                                                     //string ROcemail = hoddr[0].ToString();
                                                                     //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
                                                                     MailMessage mm = new MailMessage();
-                                                                    mm.From = new MailAddress(FromEmail);
+                                                                    mm.From = new MailAddress(MailFrom);
                                                                     mm.Subject = "Early Exit Permit Pending for Approval";
                                                                     string body = "Hello,";
                                                                     body += "<br /><br />The following application was submitted:";
@@ -428,30 +427,26 @@ namespace WorkerExitPass
                                                                     body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
                                                                     body += "<br />Please click the following link to approve or reject the application:";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid) + "'>View Application</a>";
-                                                                    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm5.aspx") + "'>View Application</a>";
+                                                                    body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>View Application</a>";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" +exitid, "WebForm5.aspx") + "'>View Application</a>";
                                                                     body += "<br /><br />Thank you";
                                                                     mm.Body = body;
                                                                     mm.IsBodyHtml = true;
 
-                                                                    mm.From = new MailAddress(FromEmail);
-                                                                    SmtpClient smtp = new SmtpClient();
-                                                                    smtp.Host = "smtp-mail.outlook.com";
-                                                                    smtp.EnableSsl = true;
-                                                                    NetworkCredential NetworkCred = new NetworkCredential(FromEmail, EmailPassword);
+                                                                    mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp
+                                                                    smtp.EnableSsl = false;
+
 
 
                                                                     string pjmID = "";
                                                                     if (!pjmdr.IsDBNull(1))
                                                                     {
                                                                         pjmID = pjmdr.GetString(1);
-                                                                        Label1.Text += pjmID;
-                                                                        mm.Bcc.Add(new MailAddress("jihanshafitri.18@ichat.sp.edu.sg"));
+                                                                        mm.Bcc.Add(new MailAddress(pjmID));
                                                                     }
 
-                                                                    smtp.UseDefaultCredentials = false;
-                                                                    smtp.Credentials = NetworkCred;
-                                                                    smtp.Port = 587;
+                                                               
                                                                     smtp.Send(mm);
 
 
