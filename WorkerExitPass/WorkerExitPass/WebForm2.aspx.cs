@@ -56,6 +56,7 @@ namespace WorkerExitPass
             submitAsTeam.Visible = true;
             submitAsSolo.Visible = false;
             GetListOfEmployees();
+            SoloBtn.Attributes.Remove("activeBtn");
             SoloBtn.Attributes.Add("class", "submitAsButton");
             TeamBtn.Attributes.Add("class", "activeBtn");
 
@@ -147,9 +148,8 @@ namespace WorkerExitPass
             con.Open();
             string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + Test + "' and EmpList.EmpID = '" + empID + "' ; ";
             //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85 and ((IDNo like CONCAT('" + firstId + "', '%')) and (IDNo like CONCAT('%', '" + lastFiveId + "')));";
-            SqlCommand cmd = new SqlCommand(sql, con);
+            SqlCommand cmd = new SqlCommand(sql, con);         
             SqlDataReader dr = cmd.ExecuteReader();
-
             if (dr.HasRows)
             {
                 RetrieveDataFromLogin();
@@ -158,7 +158,10 @@ namespace WorkerExitPass
             }
             else
             {
+
                 Response.Redirect("http://eservices.dyna-mac.com/error");
+              
+                
             }
 
             dr.Close();

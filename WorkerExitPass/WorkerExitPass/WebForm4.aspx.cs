@@ -58,13 +58,24 @@ namespace WorkerExitPass
             if (dr.HasRows)
             {
                 GetPending();
+                dr.Close();
             }
             else
             {
-                Response.Redirect("http://eservices.dyna-mac.com/error");
-            }
+                string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
+                SqlCommand cmd2 = new SqlCommand(sql2, con);
+                SqlDataReader dr2 = cmd2.ExecuteReader();
+                if (dr2.HasRows)
+                {
+                    GetPendingRO();
+                }
+                else
+                {
+                    Response.Redirect("http://eservices.dyna-mac.com/error");
+                }
+                dr2.Close();
 
-            dr.Close();
+            }
             con.Close();
 
         }
@@ -90,6 +101,32 @@ namespace WorkerExitPass
             return dt;
             
             
+        }
+        private DataTable GetPendingRO()
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
+            DataTable dt = new DataTable();
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            //string statussql = "select distinct exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exitID desc;";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval,  EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NOT NULL AND EmpList.RO = '" + empID + "' order by exitID desc;";
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                using (SqlCommand cmd = new SqlCommand(statussql))
+                {
+                    cmd.Connection = conn;
+                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    {
+                        sda.Fill(dt);
+                        GridView1.DataSource = dt;
+                        GridView1.DataBind();
+                    }
+                }
+            }
+            return dt;
+
+
         }
 
         //private DataTable GetAll()

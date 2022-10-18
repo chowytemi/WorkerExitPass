@@ -52,15 +52,25 @@ namespace WorkerExitPass
             if (dr.HasRows)
             {
                 IsApprove();
+                dr.Close();
             }
             else
             {
-                Response.Redirect("http://eservices.dyna-mac.com/error");
+                string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
+                SqlCommand cmd2 = new SqlCommand(sql2, con);
+                SqlDataReader dr2 = cmd2.ExecuteReader();
+                if (dr2.HasRows)
+                {
+                    IsApprove();
+                }
+                else
+                {
+                    Response.Redirect("http://eservices.dyna-mac.com/error");
+                }
+                dr2.Close();
+
             }
-
-            dr.Close();
             con.Close();
-
         }
 
         protected void IsApprove()
