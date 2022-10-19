@@ -32,8 +32,8 @@
         <div class="container">
             
             <div class="submitAs">
-                <asp:Button class="submitAsButton" ID="SoloBtn" runat="server" Text="Solo" OnClick="SoloBtn_Click" />
-                <asp:Button class="submitAsButton" ID="TeamBtn" runat="server" Text="Team" OnClick="TeamBtn_Click" />
+                <asp:Button ID="SoloBtn" runat="server" Text="Solo" OnClick="SoloBtn_Click" CssClass="activeBtn" />
+                <asp:Button ID="TeamBtn" runat="server" Text="Team" OnClick="TeamBtn_Click" CssClass="submitAsButton"/>
             </div>
 
             <div class="form">

@@ -14,11 +14,9 @@ namespace WorkerExitPass
 {
     public partial class WebForm5 : System.Web.UI.Page
     {
-        //string empID = "M988";
         protected void Page_Load(object sender, EventArgs e)
         {
-            //GetPending();
-            //GetApplicationById();
+      
             if (!IsPostBack)
             {
                 if ((Request.QueryString["approval"] != null))
@@ -45,7 +43,6 @@ namespace WorkerExitPass
             SqlConnection con = new SqlConnection(cs);
             con.Open();
             string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + Test + "' and EmpList.EmpID = '" + empID + "' ; ";
-            //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = 85 and ((IDNo like CONCAT('" + firstId + "', '%')) and (IDNo like CONCAT('%', '" + lastFiveId + "')));";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
 
@@ -86,7 +83,6 @@ namespace WorkerExitPass
             {
                 if (string.IsNullOrEmpty(dr[0].ToString()))
                 {
-                    GetPending();
                     GetApplicationById();
                 }
                 else
@@ -99,27 +95,6 @@ namespace WorkerExitPass
             conn.Close();
         }
 
-        private DataTable GetPending()
-        {
-            DataTable dt = new DataTable();
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exitID desc;";
-            using (SqlConnection conn = new SqlConnection(cs))
-            {
-                using (SqlCommand cmd = new SqlCommand(statussql))
-                {
-                    cmd.Connection = conn;
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                    {
-                        sda.Fill(dt);
-                        GridView1.DataSource = dt;
-                        GridView1.DataBind();
-                    }
-                }
-            }
-
-            return dt;
-        }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -156,7 +131,6 @@ namespace WorkerExitPass
                 SqlConnection conn = new SqlConnection(cs);
                 conn.Open();
 
-                //string statussql = "select exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, EmpList.Employee_Name, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
                 string statussql = "select distinct createddate, exittime, projectdesc, company, reason, remarks from exitapproval where exitID = '" + exitID +"';";
                 SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
 
@@ -173,7 +147,6 @@ namespace WorkerExitPass
                 tbDate.Text = date.ToString("dd/MM/yyyy");
                 tbTime.Text = time.ToString("hh:mm tt");
                 tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
-                //tbName.Text = dt.Rows[0]["Employee_Name"].ToString();
                 tbCompany.Text = dt.Rows[0]["company"].ToString();
                 tbReason.Text = dt.Rows[0]["reason"].ToString();
 
@@ -210,14 +183,80 @@ namespace WorkerExitPass
             }
         }
 
+        protected void sendEmail()
+        {
+            var exitID = Request.QueryString["exitid"];
+            string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
+            string smtpserver = ConfigurationManager.AppSettings["smtpserver"].ToString();
+            string smtport = ConfigurationManager.AppSettings["smtport"].ToString();
+            int smtpport = Convert.ToInt32(smtport);
+
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                con.Open();
+                string sqlquery = "select exitapproval.ID, exitapproval.toexit, EmpList.Employee_Name, EmpList.CEmail, exitapproval.approve, " +
+                    "exitapproval.exittime from EmpList, exitapproval where EmpList.EmpID = exitapproval.toexit and exitapproval.exitID = '" + exitID + "';";
+
+                using (SqlCommand cmd = new SqlCommand(sqlquery, con))
+                {
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            
+                            string empName = dr[2].ToString();
+                            string empEmail = dr[3].ToString();
+                            string status = dr[4].ToString();
+                            if (status == "True")
+                            {
+                                status = "approved";
+                            } else if (status == "False")
+                            {
+                                status = "rejected";
+                            }
+                            string date = dr[5].ToString();
+
+                            string sqlquery2 = "select approveremail from testtable";
+
+                            using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
+                            {
+                                using (SqlDataReader dr2 = cmd2.ExecuteReader())
+                                {   
+                                    while (dr2.Read())
+                                    {
+                                        string email = dr2[0].ToString();
+
+                                        MailMessage mm = new MailMessage();
+                                        mm.From = new MailAddress(MailFrom);
+                                        mm.Subject = "Early Exit Permit is " + status;
+                                        string body = "Hello, " + empName + ".";
+                                        body += "<br /><br />Your application for early exit permit on " + date + " has been " + status + ".";
+                                        mm.Body = body;
+                                        mm.IsBodyHtml = true;
+                                        mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                        mm.To.Add(new MailAddress(email));
+                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp  
+                                        smtp.EnableSsl = false;
+                                        smtp.Send(mm);
+                                    }
+                                    
+
+                                }
+                            }    
+                        }
+                        con.Close();
+                    }
+                }
+            }
+        }
+
         protected void ApproveBtn_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            //string approverID = "T203";
             DateTime approveddate = DateTime.Now;
             var exitID = Request.QueryString["exitid"];
-            //int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
             int approve = 1;
 
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -231,19 +270,19 @@ namespace WorkerExitPass
 
                 conn.Close();
             }
-
+            sendEmail();
             mpeApproval.Hide();
             Response.Redirect("WebForm4.aspx?approval=" + empID);
+            
+            
         }
 
         protected void RejectBtn_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            //string approverID = "T203";
             DateTime approveddate = DateTime.Now;
             var exitID = Request.QueryString["exitid"];
-            //int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
             int approve = 0;
 
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -257,9 +296,10 @@ namespace WorkerExitPass
 
                 conn.Close();
             }
-
+            sendEmail();
             mpeApproval.Hide();
             Response.Redirect("WebForm4.aspx?approval=" + empID);
+            
         }
 
         protected void btnBack_Click(object sender, EventArgs e)

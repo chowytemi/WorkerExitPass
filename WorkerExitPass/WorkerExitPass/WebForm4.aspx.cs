@@ -14,28 +14,19 @@ namespace WorkerExitPass
 {
     public partial class WebForm4 : System.Web.UI.Page
     {
-        //Get login id
-        //string empID = "PXE6563";
-        //string empID = "T202";
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //var exitID = Request.QueryString["exitid"];
-            //Label1.Text = exitID;
 
             if (!IsPostBack)
             {
-                
-                //MultiView1.SetActiveView(View2);
-                //btnShowPending.Attributes.Add("class", "btnActive");
+
                 if ((Request.QueryString["approval"] != null))
                 {
 
                     string myempno = Request.QueryString["approval"];
                     Session["empID"] = myempno;
 
-
-                    //var exitID = Request.QueryString["exitid"];
                 }
                 CheckAccess();
             }
@@ -84,7 +75,7 @@ namespace WorkerExitPass
         {
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exitID desc;";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NULL order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -109,7 +100,6 @@ namespace WorkerExitPass
 
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //string statussql = "select distinct exitID, createddate, exittime, reason, approve from exitapproval where approve IS NULL AND reason NOT IN('Medical Injury') order by exitID desc;";
             string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval,  EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NOT NULL AND EmpList.RO = '" + empID + "' order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
@@ -128,66 +118,6 @@ namespace WorkerExitPass
 
 
         }
-
-        //private DataTable GetAll()
-        //{
-        //    DataTable dt = new DataTable();
-        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-        //    string statussql = "select exitID, createddate, exittime, reason, approve from exitapproval";
-        //    using (SqlConnection conn = new SqlConnection(cs))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand(statussql))
-        //        {
-        //            cmd.Connection = conn;
-        //            using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-        //            {
-        //                sda.Fill(dt);
-        //            }
-        //        }
-        //    }
-
-        //    return dt;
-        //}
-
-        //private DataTable GetApproved()
-        //{
-        //    DataTable dt = new DataTable();
-        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-        //    string statussql = "select exitID, createddate, exittime, reason from exitapproval where approve = 1 order by createddate, exittime;";
-        //    using (SqlConnection conn = new SqlConnection(cs))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand(statussql))
-        //        {
-        //            cmd.Connection = conn;
-        //            using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-        //            {
-        //                sda.Fill(dt);
-        //            }
-        //        }
-        //    }
-
-        //    return dt;
-        //}
-
-        //private DataTable GetRejected()
-        //{
-        //    DataTable dt = new DataTable();
-        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-        //    string statussql = "select exitID, createddate, exittime, reason from exitapproval where approve = 0 order by createddate, exittime;";
-        //    using (SqlConnection conn = new SqlConnection(cs))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand(statussql))
-        //        {
-        //            cmd.Connection = conn;
-        //            using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-        //            {
-        //                sda.Fill(dt);
-        //            }
-        //        }
-        //    }
-
-        //    return dt;
-        //}
 
         protected void ddlReason_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -225,186 +155,10 @@ namespace WorkerExitPass
                 }
 
                 e.Row.Attributes["onclick"] = $"location.href = 'WebForm5.aspx?exitid={GridView1.DataKeys[e.Row.RowIndex]["exitID"]}&approval={empID}'";
-                //e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridView1, "Select$" + e.Row.RowIndex);
                 e.Row.ToolTip = "Click to select this row.";
 
             }
         }
-
-
-        protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-            //try
-            //{
-            //    //string exitID = GridView1.SelectedRow.Cells[0].Text;
-            //    int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
-
-            //    //Connect to database
-            //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //    SqlConnection conn = new SqlConnection(cs);
-            //    conn.Open();
-
-            //    string statussql = "select exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, EmpList.Employee_Name, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
-            //    SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
-
-            //    DataSet ds = new DataSet();
-            //    da.Fill(ds);
-            //    DataTable dt = ds.Tables[0];
-
-            //    DateTime date = Convert.ToDateTime(dt.Rows[0]["createddate"]);
-
-            //    DateTime time = Convert.ToDateTime(dt.Rows[0]["exittime"]);
-
-            //    //Binding TextBox From dataTable    
-            //    lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
-            //    tbDate.Text = date.ToString("dd/MM/yyyy");
-            //    tbTime.Text = time.ToString("hh:mm tt");
-            //    tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
-            //    tbName.Text = dt.Rows[0]["Employee_Name"].ToString();
-            //    tbCompany.Text = dt.Rows[0]["company"].ToString();
-            //    tbReason.Text = dt.Rows[0]["reason"].ToString();
-
-            //    if (dt.Rows[0]["remarks"].ToString() == "")
-            //    {
-            //        tbRemarks.Text = "N.A";
-            //    }
-            //    else
-            //    {
-            //        tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
-            //    }
-
-
-            //    mpeApproval.Show();
-
-            //}
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
-        }
-
-        protected void ApproveBtn_Click(object sender, EventArgs e)
-        {
-            //lblConfirmation.Text = "Do you want to approve this early exit permit?";
-            //mpeConfirmation.Show();
-
-            //string approverID = "T202";
-            //DateTime approveddate = DateTime.Now;
-            //int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
-            ////int exitID = 12;
-            //int approve = 1;
-
-            //string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //SqlConnection conn = new SqlConnection(cs);
-            //conn.Open();
-            //string sqlquery = "update exitapproval set approver = '" + approverID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
-
-            //using (SqlCommand update = new SqlCommand(sqlquery, conn))
-            //{
-            //    update.ExecuteNonQuery();
-
-            //    conn.Close();
-            //}
-
-            //Response.Redirect(Request.RawUrl);
-        }
-
-        protected void RejectBtn_Click(object sender, EventArgs e)
-        {
-            //string approverID = "T202";
-            //DateTime approveddate = DateTime.Now;
-            //int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
-            ////int exitID = 12;
-            //int approve = 0;
-
-            //string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //SqlConnection conn = new SqlConnection(cs);
-            //conn.Open();
-            //string sqlquery = "update exitapproval set approver = '" + approverID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
-
-            //using (SqlCommand update = new SqlCommand(sqlquery, conn))
-            //{
-            //    update.ExecuteNonQuery();
-
-            //    conn.Close();
-            //}
-
-            //Response.Redirect(Request.RawUrl);
-        }
-
-        //protected void btnShowAll_Click(object sender, EventArgs e)
-        //{
-        //    MultiView1.ActiveViewIndex = 0;
-        //    DataTable dt = this.GetAll();
-        //    GridView2.DataSource = dt;
-        //    GridView2.DataBind();
-        //}
-
-        //protected void btnShowPending_Click(object sender, EventArgs e)
-        //{
-        //    MultiView1.ActiveViewIndex = 1;
-        //    GetPending();
-        //}
-
-        //protected void btnShowApproved_Click(object sender, EventArgs e)
-        //{
-        //    MultiView1.ActiveViewIndex = 2;
-        //    DataTable dt = this.GetApproved();
-        //    GridView3.DataSource = dt;
-        //    GridView3.DataBind();
-        //}
-
-        //protected void btnShowRejected_Click(object sender, EventArgs e)
-        //{
-        //    MultiView1.ActiveViewIndex = 3;
-        //    DataTable dt = this.GetRejected();
-        //    GridView4.DataSource = dt;
-        //    GridView4.DataBind();
-        //}
-
-        //protected void GridView2_RowDataBound(object sender, GridViewRowEventArgs e)
-        //{
-        //    if ((e.Row.Cells[4].Text) == "True")
-        //    {
-        //        e.Row.Cells[4].Text = "Approved";
-
-        //    }
-        //    else if ((e.Row.Cells[4].Text) == "&nbsp;")
-        //    {
-
-        //        e.Row.Cells[4].Text = "Pending";
-
-        //    }
-        //    else
-        //    {
-        //        e.Row.Cells[4].Text = "Rejected";
-        //    }
-        //}
-
-        //protected void MultiView1_ActiveViewChanged(object sender, EventArgs e)
-        //{
-        //int activeView;
-        //activeView = MultiView1.ActiveViewIndex;
-
-        //if (activeView == 0)
-        //{
-        //    btnShowAll.Attributes.Add("class", "btnActive");
-        //}
-        //else if (activeView == 1)
-        //{
-        //    btnShowPending.Attributes.Add("class", "btnActive");
-        //}
-        //else if (activeView == 2)
-        //{
-        //    btnShowApproved.Attributes.Add("class", "btnActive");
-        //}
-        //else
-        //{
-        //    btnShowRejected.Attributes.Add("class", "btnActive");
-        //}
-
-        //}
 
         protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {

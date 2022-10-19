@@ -35,14 +35,12 @@
 
             <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-            <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground" CancelControlID="btnBack">
+            <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground">
             </ajaxToolkit:ModalPopupExtender>
             <asp:Panel ID="Panel1" runat="server">
-                        <div class="rowIcon">
-                            <span id="btnBack">
-                                <i class="fa fa-times fa-2x" aria-hidden="true"></i>
-                            </span>
-                        </div>                
+                <div class="rowIcon">
+                    <asp:LinkButton ID="btnBack" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>" OnClick="btnBack_Click"/>
+                </div>                 
                 <div class="content">
                         <div class="rowModal">
                             <asp:Label ID="lblexitID" runat="server" />

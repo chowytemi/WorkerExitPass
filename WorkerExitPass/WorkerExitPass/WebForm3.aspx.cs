@@ -14,9 +14,6 @@ namespace WorkerExitPass
 {
     public partial class WebForm3 : System.Web.UI.Page
     {
-        //Get login id
-        //string empID = "PXE6563";
-        //string empID = "MB638";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -196,6 +193,11 @@ namespace WorkerExitPass
             {
                 throw;
             }
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {          
+            Server.TransferRequest(Request.Url.AbsolutePath, false);
         }
     }
 }
