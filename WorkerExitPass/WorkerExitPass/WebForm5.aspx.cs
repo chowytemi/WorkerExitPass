@@ -197,10 +197,6 @@ namespace WorkerExitPass
             using (SqlConnection con = new SqlConnection(cs))
             {
                 con.Open();
-                //string sqlquery = "select exitapproval.ID, exitapproval.toexit, EmpList.Employee_Name, EmpList.CEmail, exitapproval.approve, " +
-                //    "exitapproval.exittime from EmpList, exitapproval where EmpList.EmpID = exitapproval.toexit and exitapproval.exitID = '" + exitID + "';";
-                //string sqlquery = "select distinct exitapproval.createdby, EmpList.Employee_Name, EmpList.CEmail, exitapproval.approve, exitapproval.exittime from EmpList, exitapproval where EmpList.EmpID = exitapproval.createdby and exitapproval.exitID = '" + exitID + "' AND EmpList.CEmail IS NOT NULL;";
-                //string sqlquery = "select distinct exitapproval.exitID, exitapproval.createdby, EmpList.Employee_Name, EmpList.CEmail, exitapproval.approve, exitapproval.exittime, exitapproval.reason from EmpList, exitapproval where EmpList.EmpID = exitapproval.createdby and exitapproval.exitID = '" + exitID + "' AND EmpList.CEmail IS NOT NULL;";
                 string sqlquery = "select distinct exitapproval.exitID, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'approver', exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
                 using (SqlCommand cmd = new SqlCommand(sqlquery, con))
                 {
@@ -243,21 +239,23 @@ namespace WorkerExitPass
                                 string body = "";
                                 body += "Hello, " + createdByName + ".";
                                 body += "<br /><br />Your application for early exit permit on " + date + " has been " + status + ".";
-                                body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 100%;\">";
-                                body += "<tr style=\text-align:center; height: 0.5em;\">";
-                                body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
-                                body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
-                                body += "<th style=\"color: #004B7A; border: 1px solid\">Project</th>";
-                                body += "<th style=\"color: #004B7A; border: 1px solid\">Exit time</th>";
-                                body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th>";
-                                body += "<th style=\"color: #004B7A; border: 1px solid\">Approver</th>";
-                                body += "<th style=\"color: #004B7A; border: 1px solid\">Approved Date</th></tr>";
-                                body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
+                                body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                body += "<tr style=\" height: 0.5em;\">";
+                                body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Exit ID</th>";
                                 body += "<td style=\" border: 1px solid\">" + id + "</td>";
-
+                                body += "<tr style=\" height: 0.5em;\">";
+                                body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Project</th>";
+                                body += "<td style=\" border: 1px solid\">" + project + "</td>";
+                                body += "<tr style=\" height: 0.5em;\">";
+                                body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Reason</th>";
+                                body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                                body += "<tr style=\" height: 0.5em;\">";
+                                body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Exit time</th>";
+                                body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                body += "<tr style=\" height: 0.5em;\">";
+                                body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Employee Name(s)</th>";
                                 if (dt.Rows.Count == 1)
                                 {
-                                    //body += "<br /><br />Your application for early exit permit on " + date + " has been " + status + ".";
                                     body += "<td style=\" border: 1px solid\">" + createdByName + "</td>";
                                 }
                                 else
@@ -267,15 +265,14 @@ namespace WorkerExitPass
                                         exitNames += dt.Rows[i][0].ToString() + "<br />";
 
                                     }
-                                    //exitNames = exitNames.TrimEnd(',');
-                                    //body += "<br /><br />Your application for early exit permit on " + date + " for these employees: " + exitNames + " has been " + status + ".";
                                     body += "<td style=\" border: 1px solid\">" + exitNames + "</td>";
 
                                 }
-                                body += "<td style=\" border: 1px solid\">" + project + "</td>";
-                                body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                                body += "<tr style=\" height: 0.5em;\">";
+                                body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Approver</th>";
                                 body += "<td style=\" border: 1px solid\">" + approver + "</td>";
+                                body += "<tr style=\" height: 0.5em;\" > ";
+                                body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Approval Date</th>";
                                 body += "<td style=\" border: 1px solid\">" + approveddate + "</td></tr></table>";
                                 body += "<br />Thank you";
 
@@ -307,7 +304,6 @@ namespace WorkerExitPass
                             
                         
                         con.Close();
-                    //}
                 }
             }
         }

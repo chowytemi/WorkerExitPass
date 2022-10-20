@@ -515,8 +515,8 @@ namespace WorkerExitPass
                             {
                                 string createdby = dr[1].ToString();
                                 //get exitid
-                                string exitquery = "select distinct exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
-
+                                //string exitquery = "select distinct exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
+                                string exitquery = "select distinct exitID, projectdesc, reason, exittime from exitapproval where createdby = @empID and company = @company and exittime = @time;";
                                 using (SqlCommand exitcmd = new SqlCommand(exitquery, conn))
                                 {
                                     exitcmd.Parameters.AddWithValue("@empID", empID);
@@ -532,42 +532,47 @@ namespace WorkerExitPass
                                             body += "<br /><br />The following application was submitted:";
                                             
                                             string exitid = exitdr[0].ToString();
-
-                                            string query3 = "select EmpList.Employee_Name, exitapproval.exittime, exitapproval.reason from EmpList, exitapproval where EmpList.EmpID =  exitapproval.toexit and exitapproval.exitID= '" + exitid + "';";
+                                            string project = exitdr[1].ToString();
+                                            string reason = exitdr[2].ToString();                                            
+                                            DateTime exittime = Convert.ToDateTime(exitdr[3].ToString());
+                                            string exittime1 = exittime.ToString("dd/MM/yyyy hh:mm tt");
+                                            //string query3 = "select EmpList.Employee_Name, exitapproval.exittime, exitapproval.reason from EmpList, exitapproval where EmpList.EmpID =  exitapproval.toexit and exitapproval.exitID= '" + exitid + "';";
+                                            string query3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitid + "' and EmpList.EmpID = exitapproval.toexit;";
 
                                             using (SqlCommand cmd3 = new SqlCommand(query3, conn))
                                             {
+                                                SqlDataAdapter da = new SqlDataAdapter(query3, conn);
+                                                DataSet ds = new DataSet();
+                                                da.Fill(ds);
+                                                DataTable dt = ds.Tables[0];
 
-                                                using (SqlDataReader dr3 = cmd3.ExecuteReader())
+                                                string exitNames = "";
+
+                                                body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                body += "<tr style=\" height: 0.5em;\">";
+                                                body += "<th style=\" color: #004B7A; text-align: left; border: 1px solid\">Exit ID</th>";
+                                                body += "<td style=\" border: 1px solid\">" + exitid + "</td></tr>";
+                                                body += "<tr style=\" height: 0.5em;\">";
+                                                body += "<th style=\" color: #004B7A; text-align: left; border: 1px solid\">Project</th>";
+                                                body += "<td style=\" border: 1px solid\">" + project + "</td></tr>";
+                                                body += "<tr style=\" height: 0.5em;\">";                                                
+                                                body += "<th style=\" color: #004B7A; text-align: left; border: 1px solid\">Reason</th>";
+                                                body += "<td style=\" border: 1px solid\">" + reason + "</td></tr>";
+                                                body += "<tr style=\" height: 0.5em;\">";
+                                                body += "<th style=\" color: #004B7A; text-align: left; border: 1px solid\">Exit time</th>";
+                                                body += "<td style=\" border: 1px solid\">" + exittime1 + "</td></tr>";   
+                                                body += "<tr style=\" height: 0.5em;\">";
+                                                body += "<th style=\"color: #004B7A; text-align: left; border: 1px solid\">Employee Name(s)</th>";
+                                                for (int i = 0; i < dt.Rows.Count; i++)
                                                 {
+                                                    exitNames += dt.Rows[i][0].ToString() + "<br />";
 
-                                                    while (dr3.Read())
-                                                    {
-                                                       
-                                                        //DateTime date = Convert.ToDateTime(dr[1]);
-                                                        string exittime = dr3[1].ToString();
-                                                        string reason = dr3[2].ToString();
-                                                        DataTable schemaTable = dr3.GetSchemaTable();
-                                                        string exitName = dr3[0].ToString();
-
-                                                                                                              
-
-                                                        body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                                                        body += "<tr style=\text-align:center; height: 0.5em;\">";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Created by</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
-                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
-                                                        body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
-                                                        body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + createdby + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + exitName + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                                        body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
-                                                        
-                                                    }
                                                 }
+                                                body += "<td style=\" border: 1px solid\">" + exitNames + "</td></tr>";
+                                                body += "<tr style=\" height: 0.5em;\">";
+                                                body += "<th style=\" color: #004B7A; text-align: left; border: 1px solid\">Created by</th>";
+                                                body += "<td style=\" border: 1px solid\">" + createdby + "</td></tr></table>";
+                                                                                                                                             
                                             }
 
 
@@ -613,7 +618,7 @@ namespace WorkerExitPass
                                                                        } else
                                                                        {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
+                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application";
         
                                                                        }
 
@@ -671,7 +676,7 @@ namespace WorkerExitPass
                                                                   else
                                                                   {
                                                                       mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                      body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
+                                                                      body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application";
 
                                                                   }
                                                                   //mm.Subject = "Early Exit Permit Pending PJM for Approval";

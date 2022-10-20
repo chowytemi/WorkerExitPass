@@ -382,19 +382,23 @@ namespace WorkerExitPass
                                                                         //mm.Subject = "Early Exit Permit Pending RO for Approval";
                                                                         string body = "Hello,";
                                                                         body += "<br /><br />The following application was submitted:";
-                                                                        body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                                                                        body += "<tr style=\text-align:center; height: 0.5em;\">";
-                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";
-                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
-                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Project</th>";
-                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
-                                                                        body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
-                                                                        body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
+                                                                        body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                        body += "<tr style=\" height: 0.5em;\">";
+                                                                        body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
                                                                         body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
-                                                                        body += "<td style=\" border: 1px solid\">" + exitName + "</td>";
+                                                                        body += "<tr style=\" height: 0.5em;\">";
+                                                                        body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Project</th>";
                                                                         body += "<td style=\" border: 1px solid\">" + project + "</td>";
+                                                                        body += "<tr style=\" height: 0.5em;\">";
+                                                                        body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Reason</th>";
+                                                                        body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                                                                        body += "<tr style=\" height: 0.5em;\">";
+                                                                        body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Requested time</th>";
                                                                         body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                                                        body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
+                                                                        body += "<tr style=\" height: 0.5em;\">";
+                                                                        body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employees exiting</th>";
+                                                                        body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
+                                                                        
                                                                         if (ReasonDropdown.Text == "Medical Injury")
                                                                         {
 
@@ -404,7 +408,7 @@ namespace WorkerExitPass
                                                                         else
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
+                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application";
                                                                             body += "<br /><br />Thank you";
                                                                         }
                                                                         //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";                                                                        
@@ -452,19 +456,22 @@ namespace WorkerExitPass
                                                                     //mm.Subject = "Early Exit Permit Pending PJM for Approval";
                                                                     string body = "Hello,";
                                                                     body += "<br /><br />The following application was submitted:";
-                                                                    body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                                                                    body += "<tr style=\text-align:center; height: 0.5em;\">";
-                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Exit ID</th>";                               
-                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Employees exiting</th>";
-                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Project</th>";
-                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Requested time</th>";
-                                                                    body += "<th style=\"color: #004B7A; border: 1px solid\">Reason</th></tr>";
-                                                                    body += "<tr style=\"text-align:center; height: 0.5em;\" > ";
+                                                                    body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
                                                                     body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
-                                                                    body += "<td style=\" border: 1px solid\">" + exitName + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Project</th>";
                                                                     body += "<td style=\" border: 1px solid\">" + project + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Reason</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Requested time</th>";
                                                                     body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                                                    body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employees exiting</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
                                                                     if (ReasonDropdown.Text == "Medical Injury")
                                                                     {
 

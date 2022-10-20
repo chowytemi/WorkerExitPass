@@ -133,10 +133,9 @@
 
 .labelData {
     color: #424242;
-    font-family: 'Rubik', sans-serif;
+    font-family: 'Open-Sans', sans-serif;
+    font-weight: bold;
     font-size: 1em;
-    /*font-weight: bold;
-    margin-top: 1em;*/
     text-indent: 1em;
 }
 

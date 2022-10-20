@@ -148,13 +148,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label date;
         
         /// <summary>
-        /// tbDate control.
+        /// lblDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbDate;
+        protected global::System.Web.UI.WebControls.Label lblDate;
         
         /// <summary>
         /// time control.
@@ -166,13 +166,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label time;
         
         /// <summary>
-        /// tbTime control.
+        /// lblTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbTime;
+        protected global::System.Web.UI.WebControls.Label lblTime;
         
         /// <summary>
         /// project control.
@@ -184,13 +184,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label project;
         
         /// <summary>
-        /// tbProject control.
+        /// lblProject control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbProject;
+        protected global::System.Web.UI.WebControls.Label lblProject;
         
         /// <summary>
         /// Label3 control.
@@ -202,13 +202,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label Label3;
         
         /// <summary>
-        /// tbName control.
+        /// lblName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbName;
+        protected global::System.Web.UI.WebControls.Label lblName;
         
         /// <summary>
         /// companyName control.
@@ -220,13 +220,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label companyName;
         
         /// <summary>
-        /// tbCompany control.
+        /// lblCompany control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbCompany;
+        protected global::System.Web.UI.WebControls.Label lblCompany;
         
         /// <summary>
         /// reason control.
@@ -238,13 +238,22 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label reason;
         
         /// <summary>
-        /// tbReason control.
+        /// lblReason control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbReason;
+        protected global::System.Web.UI.WebControls.Label lblReason;
+        
+        /// <summary>
+        /// remarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label remarks;
         
         /// <summary>
         /// lblRemarks control.
@@ -254,14 +263,5 @@ namespace WorkerExitPass {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRemarks;
-        
-        /// <summary>
-        /// tbRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbRemarks;
     }
 }

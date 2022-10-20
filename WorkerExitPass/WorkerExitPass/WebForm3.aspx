@@ -68,33 +68,42 @@
                             <div id="dateTimeRow">
                                 <div class="col">
                                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
-                                        <asp:TextBox class="textbox" ID="tbDate" runat="server" ReadOnly="True"></asp:TextBox>
+<%--                                        <asp:TextBox class="textbox" ID="tbDate" runat="server" ReadOnly="True"></asp:TextBox>--%>
+                                        <asp:Label class="labelData" ID="lblDate" runat="server"></asp:Label>
+
                                 </div>
                                 <div class="col">
                                         <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
-                                        <asp:TextBox class="textbox" ID="tbTime" runat="server"></asp:TextBox>
+                                        <%--<asp:TextBox class="textbox" ID="tbTime" runat="server"></asp:TextBox>--%>
+                                        <asp:Label class="labelData" ID="lblTime" runat="server"></asp:Label>
+
                                 </div>
                             </div>
                         <div class="row">
                                 <asp:Label class="label" ID="project" runat="server" Text="Project"></asp:Label>
-                                <asp:TextBox class="textbox" ID="tbProject" runat="server" ReadOnly="True"></asp:TextBox>
+                                <%--<asp:TextBox class="textbox" ID="tbProject" runat="server" ReadOnly="True"></asp:TextBox>--%>
+                                <asp:Label class="labelData" ID="lblProject" runat="server"></asp:Label>
                         </div> 
                         <div class="row">
                                 <asp:Label class="label" ID="Label3" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
-                                <asp:TextBox class="textbox" ID="tbName" runat="server" ReadOnly="True"></asp:TextBox>
-<%--                                <asp:Label class="label" ID="lblName" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>--%>
+<%--                                <asp:TextBox class="textbox" ID="tbName" runat="server" ReadOnly="True"></asp:TextBox>--%>
+                                <asp:Label class="labelData" ID="lblName" runat="server"></asp:Label>
                         </div>
                         <div class="row">
                                 <asp:Label class="label" ID="companyName" runat="server" Text="Name of Company"></asp:Label>
-                                <asp:TextBox class="textbox" ID="tbCompany" runat="server" ReadOnly="True"></asp:TextBox>
+<%--                                <asp:TextBox class="textbox" ID="tbCompany" runat="server" ReadOnly="True"></asp:TextBox>--%>
+                                <asp:Label class="labelData" ID="lblCompany" runat="server"></asp:Label>
                         </div>
                         <div class="row">
                                 <asp:Label class="label" ID="reason" runat="server" Text="Reason for Leaving Yard"></asp:Label>
-                                <asp:TextBox class="textbox" ID="tbReason" runat="server" ReadOnly="True"></asp:TextBox>
+<%--                                <asp:TextBox class="textbox" ID="tbReason" runat="server" ReadOnly="True"></asp:TextBox>--%>
+                                <asp:Label class="labelData" ID="lblReason" runat="server"></asp:Label>
                         </div>
                         <div class="row">
-                                <asp:Label class="label" ID="lblRemarks" runat="server" Text="Remarks"></asp:Label>
-                                <asp:TextBox class="textbox" ID="tbRemarks" runat="server" ReadOnly="True"></asp:TextBox>
+                                <asp:Label class="label" ID="remarks" runat="server" Text="Remarks"></asp:Label>
+<%--                                <asp:TextBox class="textbox" ID="tbRemarks" runat="server" ReadOnly="True"></asp:TextBox>--%>
+                                <asp:Label class="labelData" ID="lblRemarks" runat="server"></asp:Label>
+
                         </div>
                         </div>  
                 </div> 

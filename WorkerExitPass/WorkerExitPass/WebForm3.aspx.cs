@@ -211,23 +211,23 @@ namespace WorkerExitPass
                 DateTime date = Convert.ToDateTime(dt.Rows[0]["createddate"]);
                 DateTime time = Convert.ToDateTime(dt.Rows[0]["exittime"]);
 
-                tbDate.Text = date.ToString("dd/MM/yyyy");
-                tbTime.Text = time.ToString("hh:mm tt");
-                tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
-                tbCompany.Text = dt.Rows[0]["company"].ToString();
-                //tbReason.Text = dt.Rows[0]["reason"].ToString();
+                lblDate.Text = date.ToString("dd/MM/yyyy");
+                lblTime.Text = time.ToString("hh:mm tt");
+                lblProject.Text = dt.Rows[0]["projectdesc"].ToString();
+                lblCompany.Text = dt.Rows[0]["company"].ToString();
+                lblReason.Text = dt.Rows[0]["reason"].ToString();
 
                 if (dt.Rows[0]["remarks"].ToString() == "")
                 {
-                    tbRemarks.Text = "N.A";
+                    lblRemarks.Text = "N.A";
+                    remarks.Attributes.Add("class", "hide");
                     lblRemarks.Attributes.Add("class", "hide");
-                    tbRemarks.Attributes.Add("class", "hide");
                 }
                 else
                 {
                     lblRemarks.Attributes.Add("class", "label");
-                    tbRemarks.Attributes.Add("class", "textbox");
-                    tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
+                    remarks.Attributes.Add("class", "textbox");
+                    lblRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
 
                 string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.toexit;";
@@ -239,11 +239,11 @@ namespace WorkerExitPass
                 string empName = "";
                 for (int i = 0; i < dt2.Rows.Count; i++)
                 {
-                    empName += dt2.Rows[i]["Employee_Name"].ToString() + ",";
+                    empName += dt2.Rows[i]["Employee_Name"].ToString() + "<br />";
 
                 }
-                empName = empName.TrimEnd(',');
-                tbName.Text = empName;
+                //empName = empName.TrimEnd(',');
+                lblName.Text = empName;
 
                 mpePopUp.Show();
                 conn.Close();
