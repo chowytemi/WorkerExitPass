@@ -599,7 +599,7 @@ namespace WorkerExitPass
                                                                        string ROid = hoddr[0].ToString();
                                                                        string ROcemail = hoddr[1].ToString();
 
-                                                                       body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
+                                                                       body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
                                                                        body += "<br /><br />Thank you";
 
                                                                        MailMessage mm = new MailMessage();
@@ -642,7 +642,7 @@ namespace WorkerExitPass
                                                                   string name = pjmdr[0].ToString();
                                                             //body += "<br />Please click the following link to approve or reject the application:";
                                                             //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>View Application</a>";
-                                                                  body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
+                                                                  body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
                                                                   body += "<br /><br />Thank you";
                                                                   //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 

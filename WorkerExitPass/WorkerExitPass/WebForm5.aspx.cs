@@ -197,9 +197,9 @@ namespace WorkerExitPass
             using (SqlConnection con = new SqlConnection(cs))
             {
                 con.Open();
-                string sqlquery = "select exitapproval.ID, exitapproval.toexit, EmpList.Employee_Name, EmpList.CEmail, exitapproval.approve, " +
-                    "exitapproval.exittime from EmpList, exitapproval where EmpList.EmpID = exitapproval.toexit and exitapproval.exitID = '" + exitID + "';";
-
+                //string sqlquery = "select exitapproval.ID, exitapproval.toexit, EmpList.Employee_Name, EmpList.CEmail, exitapproval.approve, " +
+                //    "exitapproval.exittime from EmpList, exitapproval where EmpList.EmpID = exitapproval.toexit and exitapproval.exitID = '" + exitID + "';";
+                string sqlquery = "select distinct exitapproval.createdby, EmpList.Employee_Name, EmpList.CEmail, exitapproval.approve, exitapproval.exittime from EmpList, exitapproval where EmpList.EmpID = exitapproval.createdby and exitapproval.exitID = '" + exitID + "' AND EmpList.CEmail IS NOT NULL;";
                 using (SqlCommand cmd = new SqlCommand(sqlquery, con))
                 {
                     using (SqlDataReader dr = cmd.ExecuteReader())
@@ -207,9 +207,9 @@ namespace WorkerExitPass
                         while (dr.Read())
                         {
                             
-                            string empName = dr[2].ToString();
-                            string empEmail = dr[3].ToString();
-                            string status = dr[4].ToString();
+                            string createdByName = dr[1].ToString();
+                            string createdByEmail = dr[2].ToString();
+                            string status = dr[3].ToString();
                             if (status == "True")
                             {
                                 status = "approved";
@@ -217,35 +217,64 @@ namespace WorkerExitPass
                             {
                                 status = "rejected";
                             }
-                            string date = dr[5].ToString();
+                            string date = dr[4].ToString();
 
-                            string sqlquery2 = "select approveremail from testtable";
-
-                            using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
+                            string sqlquery3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.toexit;";
+                            using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
                             {
-                                using (SqlDataReader dr2 = cmd2.ExecuteReader())
-                                {   
-                                    while (dr2.Read())
-                                    {
-                                        string email = dr2[0].ToString();
+                                SqlDataAdapter da = new SqlDataAdapter(sqlquery3, con);
+                                DataSet ds = new DataSet();
+                                da.Fill(ds);
+                                DataTable dt = ds.Tables[0];
 
-                                        MailMessage mm = new MailMessage();
-                                        mm.From = new MailAddress(MailFrom);
-                                        mm.Subject = "Early Exit Permit is " + status;
-                                        string body = "Hello, " + empName + ".";
-                                        body += "<br /><br />Your application for early exit permit on " + date + " has been " + status + ".";
-                                        mm.Body = body;
-                                        mm.IsBodyHtml = true;
-                                        mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                        mm.To.Add(new MailAddress(email));
-                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp  
-                                        smtp.EnableSsl = false;
-                                        smtp.Send(mm);
+                                string exitNames = "";
+                                string body = "";
+                                body += "Hello, " + createdByName + ".";
+
+                                //if (dt.Rows.Count == 0)
+                                if (dt.Rows[0]["Employee_Name"].ToString().Equals('1'))
+                                {
+                                    body += "<br /><br />Your application for early exit permit on " + date + " has been " + status + ".";
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < dt.Rows.Count; i++)
+                                    {
+                                        exitNames += dt.Rows[i][0].ToString() + ",";
+
                                     }
-                                    
+                                    exitNames = exitNames.TrimEnd(',');
+                                    body += "<br /><br />Your application for early exit permit on " + date + " for these employees: " + exitNames + " has been " + status + ".";
 
                                 }
-                            }    
+
+
+                                string sqlquery2 = "select approveremail from testtable";
+                                using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
+                                {
+                                    using (SqlDataReader dr2 = cmd2.ExecuteReader())
+                                    {   
+                                        while (dr2.Read())
+                                        {
+                                            string email = dr2[0].ToString();
+
+                                            MailMessage mm = new MailMessage();
+                                            mm.From = new MailAddress(MailFrom);
+                                            mm.Subject = "Early Exit Permit is " + status;                                           
+                                            mm.Body = body;
+                                            mm.IsBodyHtml = true;
+                                            mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                            mm.To.Add(new MailAddress(email));
+                                            SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp  
+                                            smtp.EnableSsl = false;
+                                            smtp.Send(mm);
+                                        }
+                                    
+
+                                    }
+                                }    
+                            }
+                            
                         }
                         con.Close();
                     }
