@@ -41,7 +41,7 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            string sql = "select distinct EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
+            string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
             if (dr.HasRows)
@@ -379,7 +379,7 @@ namespace WorkerExitPass
 
                                                                         MailMessage mm = new MailMessage();
                                                                         mm.From = new MailAddress(MailFrom);
-                                                                        mm.Subject = "Early Exit Permit Pending RO for Approval";
+                                                                        //mm.Subject = "Early Exit Permit Pending RO for Approval";
                                                                         string body = "Hello,";
                                                                         body += "<br /><br />The following application was submitted:";
                                                                         body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
@@ -395,9 +395,21 @@ namespace WorkerExitPass
                                                                         body += "<td style=\" border: 1px solid\">" + project + "</td>";
                                                                         body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                                         body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
-                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";                                                                        
+                                                                        if (ReasonDropdown.Text == "Medical Injury")
+                                                                        {
+
+                                                                            mm.Subject = "Early Exit Permit Medical Injury Notification";
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            mm.Subject = "Early Exit Permit Pending RO for Approval";
+                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
+                                                                            body += "<br /><br />Thank you";
+                                                                        }
+                                                                        //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";                                                                        
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROname) + "'>View Application</a>";
-                                                                        body += "<br /><br />Thank you";
+                                                                        
                                                                         mm.Body = body;
                                                                         mm.IsBodyHtml = true;
                                                                         mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
@@ -417,7 +429,7 @@ namespace WorkerExitPass
                                                     else if (dr[2].ToString() == "SUBCON")
                                                     {
                                                         //subcon - email to project managers
-                                                        Label2.Text = "subcon";
+                                                        //Label2.Text = "subcon";
 
                                                         string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
@@ -437,7 +449,7 @@ namespace WorkerExitPass
 
                                                                     MailMessage mm = new MailMessage();
                                                                     mm.From = new MailAddress(MailFrom);
-                                                                    mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                                                    //mm.Subject = "Early Exit Permit Pending PJM for Approval";
                                                                     string body = "Hello,";
                                                                     body += "<br /><br />The following application was submitted:";
                                                                     body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
@@ -453,10 +465,22 @@ namespace WorkerExitPass
                                                                     body += "<td style=\" border: 1px solid\">" + project + "</td>";
                                                                     body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                                     body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
-                                                                    body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application";
+                                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                                    {
+
+                                                                        mm.Subject = "Early Exit Permit Medical Injury Notification";
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
+                                                                        body += "<br /><br />Thank you";
+                                                                    }
+                                                                    //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application";
                                                                     //body += "<br />Please click the following link to approve or reject the application:";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>View Application</a>";
-                                                                    body += "<br /><br />Thank you";
+                                                                    
                                                                     mm.Body = body;
                                                                     mm.IsBodyHtml = true;
 

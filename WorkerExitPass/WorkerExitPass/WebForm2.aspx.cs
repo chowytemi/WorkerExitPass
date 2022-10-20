@@ -547,9 +547,10 @@ namespace WorkerExitPass
                                                         //DateTime date = Convert.ToDateTime(dr[1]);
                                                         string exittime = dr3[1].ToString();
                                                         string reason = dr3[2].ToString();
-
                                                         DataTable schemaTable = dr3.GetSchemaTable();
                                                         string exitName = dr3[0].ToString();
+
+                                                                                                              
 
                                                         body += "<br /><br /><table style=\"table-layout: fixed; text-align:center; border-collapse: collapse; border: 1px solid; width: 70%;\">";
                                                         body += "<tr style=\text-align:center; height: 0.5em;\">";
@@ -598,19 +599,32 @@ namespace WorkerExitPass
                                                                    {
                                                                        string ROid = hoddr[0].ToString();
                                                                        string ROcemail = hoddr[1].ToString();
-
-                                                                       body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
-                                                                       body += "<br /><br />Thank you";
+                                                                    
+                                                                       //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
+                                                                       
 
                                                                        MailMessage mm = new MailMessage();
                                                                        mm.From = new MailAddress(MailFrom);
-                                                                       mm.Subject = "Early Exit Permit Pending RO for Approval";
+                                                                       if (ReasonDropdown.Text == "Medical Injury")
+                                                                       {
+
+                                                                            mm.Subject = "Early Exit Permit Medical Injury Notification";
+
+                                                                       } else
+                                                                       {
+                                                                            mm.Subject = "Early Exit Permit Pending RO for Approval";
+                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
+        
+                                                                       }
+
+
+                                                                       body += "<br /><br />Thank you";
                                                                        mm.Body = body;
                                                                        mm.IsBodyHtml = true;
                                                                        mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                        mm.To.Add(new MailAddress(ROcemail));
                                                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp
-                                                                       smtp.Host = "smtp-mail.outlook.com";
+                                                                       //smtp.Host = "smtp-mail.outlook.com";
                                                                        smtp.EnableSsl = false;       
                                                                        smtp.Send(mm);     
 
@@ -630,7 +644,7 @@ namespace WorkerExitPass
                                                                   "from Access, UserAccess, ARole, EmpList " +
                                                                   "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                   "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                  "and Access.id = 87 and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
+                                                                  "and Access.id = '" + Test + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
 
                                                 //string pjmquery = "select approveremail from testtable";
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -642,13 +656,25 @@ namespace WorkerExitPass
                                                                   string name = pjmdr[0].ToString();
                                                             //body += "<br />Please click the following link to approve or reject the application:";
                                                             //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>View Application</a>";
-                                                                  body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
-                                                                  body += "<br /><br />Thank you";
+                                                                  //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
+                                                                  //body += "<br /><br />Thank you";
                                                                   //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
 
                                                                   MailMessage mm = new MailMessage();
                                                                   mm.From = new MailAddress(MailFrom);
-                                                                  mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                                                  if (ReasonDropdown.Text == "Medical Injury")
+                                                                  {
+
+                                                                      mm.Subject = "Early Exit Permit Medical Injury Notification";
+
+                                                                  }
+                                                                  else
+                                                                  {
+                                                                      mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                                                      body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
+
+                                                                  }
+                                                                  //mm.Subject = "Early Exit Permit Pending PJM for Approval";
                                                                   mm.Body = body;
                                                                   mm.IsBodyHtml = true;
                                                                   mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());

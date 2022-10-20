@@ -147,57 +147,64 @@ namespace WorkerExitPass
                 }
                 else
                 {
-                    lblWhen.Text = "Pending";
-                    //lblApprover.Text = "NULL";
-                    string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1;";
-                    using (SqlCommand cmd = new SqlCommand(sqlquery,conn))
+                    if (dt.Rows[0]["reason"].ToString() == "Medical Injury")
                     {
-                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        lblWhen.Text = "N.A";
+                        lblApprover.Text = "N.A";
+                    } else
+                    {
+                        lblWhen.Text = "Pending";
+                        string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1;";
+                        using (SqlCommand cmd = new SqlCommand(sqlquery,conn))
                         {
-                            while (dr.Read())
+                            using (SqlDataReader dr = cmd.ExecuteReader())
                             {
-                                if (dr[2].ToString() == "WK")
+                                while (dr.Read())
                                 {
-                                    string pjmquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
-                                        "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "'";
-                                    using (SqlCommand cmd2 = new SqlCommand(pjmquery, conn))
+                                    if (dr[2].ToString() == "WK")
                                     {
-                                        SqlDataAdapter da3 = new SqlDataAdapter(pjmquery, conn);
-                                        DataSet ds3 = new DataSet();
-                                        da3.Fill(ds3);
-                                        DataTable dt3 = ds3.Tables[0];
-
-                                        string pjmNames = "";
-                                        for (int i = 0; i < dt3.Rows.Count; i++)
+                                        string pjmquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
+                                            "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "'";
+                                        using (SqlCommand cmd2 = new SqlCommand(pjmquery, conn))
                                         {
-                                            pjmNames += dt3.Rows[i][0].ToString() + "<br />";
+                                            SqlDataAdapter da3 = new SqlDataAdapter(pjmquery, conn);
+                                            DataSet ds3 = new DataSet();
+                                            da3.Fill(ds3);
+                                            DataTable dt3 = ds3.Tables[0];
 
+                                            string pjmNames = "";
+                                            for (int i = 0; i < dt3.Rows.Count; i++)
+                                            {
+                                                pjmNames += dt3.Rows[i][0].ToString() + "<br />";
+
+                                            }
+                                            lblApprover.Text = "Pending approval from: <br />" + pjmNames;
                                         }
-                                        lblApprover.Text = pjmNames;
-                                    }
-                                } else if (dr[2].ToString() == "SUBCON")
-                                {
-                                    string roquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
-                                        "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + Test + "'";
-                                    using (SqlCommand cmd3 = new SqlCommand(roquery, conn))
-                                    {                                       
-                                        SqlDataAdapter da4 = new SqlDataAdapter(roquery, conn);
-                                        DataSet ds4 = new DataSet();
-                                        da4.Fill(ds4);
-                                        DataTable dt3 = ds4.Tables[0];
+                                    } else if (dr[2].ToString() == "SUBCON")
+                                    {
+                                        string roquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
+                                            "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + Test + "'";
+                                        using (SqlCommand cmd3 = new SqlCommand(roquery, conn))
+                                        {                                       
+                                            SqlDataAdapter da4 = new SqlDataAdapter(roquery, conn);
+                                            DataSet ds4 = new DataSet();
+                                            da4.Fill(ds4);
+                                            DataTable dt3 = ds4.Tables[0];
 
-                                        string roNames = "";
-                                        for (int i = 0; i < dt3.Rows.Count; i++)
-                                        {
-                                            roNames += dt3.Rows[i][0].ToString() + "<br />";
+                                            string roNames = "";
+                                            for (int i = 0; i < dt3.Rows.Count; i++)
+                                            {
+                                                roNames += dt3.Rows[i][0].ToString() + "<br />";
 
+                                            }
+                                            lblApprover.Text = "Pending approval from: <br />" + roNames;
                                         }
-                                        lblApprover.Text = roNames;
                                     }
                                 }
                             }
                         }
                     }
+                    
                     
                 }
 
@@ -208,7 +215,7 @@ namespace WorkerExitPass
                 tbTime.Text = time.ToString("hh:mm tt");
                 tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
                 tbCompany.Text = dt.Rows[0]["company"].ToString();
-                tbReason.Text = dt.Rows[0]["reason"].ToString();
+                //tbReason.Text = dt.Rows[0]["reason"].ToString();
 
                 if (dt.Rows[0]["remarks"].ToString() == "")
                 {
