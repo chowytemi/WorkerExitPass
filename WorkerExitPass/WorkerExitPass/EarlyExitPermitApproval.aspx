@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm5.aspx.cs" Inherits="WorkerExitPass.WebForm5" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EarlyExitPermitApproval.aspx.cs" Inherits="WorkerExitPass.WebForm5" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 
 <!DOCTYPE html>

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="WorkerExitPass.WebForm1" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EarlyExitPermit.aspx.cs" Inherits="WorkerExitPass.WebForm1" %>
 
 <!DOCTYPE html>
 
