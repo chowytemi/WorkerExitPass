@@ -39,6 +39,7 @@ namespace WorkerExitPass
             //using test access 87, pjm access 83
             //string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
             string Test = ConfigurationManager.AppSettings["Test"].ToString();
+            string RO = ConfigurationManager.AppSettings["RO"].ToString();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
@@ -53,7 +54,8 @@ namespace WorkerExitPass
             }
             else
             {
-                string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
+                //string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
+                string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "' and EmpList.EmpID = '" + empID + "' ; ";
                 SqlCommand cmd2 = new SqlCommand(sql2, con);
                 SqlDataReader dr2 = cmd2.ExecuteReader();
                 if (dr2.HasRows)

@@ -99,7 +99,7 @@
         border-radius: 0 0 0.625em 0.625em;
     }
 
-    .submitAsButton {
+    .submitAsButton, .activeBtn {
         display: inline-block;
         width: 40%;
         font-size: 1.25em;
@@ -132,14 +132,14 @@
 
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 768px) {
-    .submitAsButton {
+    .submitAsButton, .activeBtn {
         width: 30%;
     }
 }
 
 /* Medium devices (landscape tablets, 320px and down) */
 @media only screen and (max-width: 320px) {
-    .submitAsButton {
+    .submitAsButton, .activeBtn {
         width: 40%;
     }
 }

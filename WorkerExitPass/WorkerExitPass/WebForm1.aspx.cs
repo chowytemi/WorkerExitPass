@@ -358,7 +358,7 @@ namespace WorkerExitPass
                                                         if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                         {
                                                             //worker - email to HOD
-                                                            string ROname = dr[5].ToString();
+                                                            //string ROname = dr[5].ToString();
                                                             string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
@@ -372,6 +372,7 @@ namespace WorkerExitPass
                                                                 {
                                                                     while (hoddr.Read())
                                                                     {
+                                                                        string ROid = hoddr[0].ToString();
                                                                         string ROcemail = hoddr[1].ToString(); 
 
                                                                         //Label2.Text = Request.Url.AbsoluteUri.Replace("WebForm1.aspx", "WebForm4.aspx?exitid=" + exitid);
@@ -394,7 +395,7 @@ namespace WorkerExitPass
                                                                         body += "<td style=\" border: 1px solid\">" + project + "</td>";
                                                                         body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
                                                                         body += "<td style=\" border: 1px solid\">" + reason + "</td></tr></table>";
-                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROname) + "'>here</a> to approve or reject the application:";                                                                        
+                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";                                                                        
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROname) + "'>View Application</a>";
                                                                         body += "<br /><br />Thank you";
                                                                         mm.Body = body;

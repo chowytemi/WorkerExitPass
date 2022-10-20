@@ -339,7 +339,7 @@ namespace WorkerExitPass
 
             string description = projectddl.Text;
             string projectInput = projectddl.Text;
-
+            string companyInput = companytb.Text;
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["service"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
@@ -375,7 +375,7 @@ namespace WorkerExitPass
 
                                 //get EmpID
                                 //string empquery = " select empID from EmpList where Employee_Name = '" + namesddl.Items[i].Text + "' and IsActive = 1";
-                                string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1;";
+                                string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput +"';";
                                 SqlCommand empcmd = new SqlCommand(empquery, appcon);
                                 using (SqlDataReader empdr = empcmd.ExecuteReader())
                                 {
@@ -576,11 +576,11 @@ namespace WorkerExitPass
                                                 if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                 {
                                                      //worker - email to HOD
-                                                    string ROname = dr[5].ToString();
+                                                    //string ROname = dr[5].ToString();
                                                     //body += "<br />Please click the following link to approve or reject the application:";
                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROname) + "'>View Application</a>";
-                                                    body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROname) + "'>here</a> to approve or reject the application:";
-                                                    body += "<br /><br />Thank you";
+                                                    //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROname) + "'>here</a> to approve or reject the application:";
+                                                    //body += "<br /><br />Thank you";
                                                     //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                     //string hodquery = "select approveremail from testtable";
                                                     string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
@@ -596,7 +596,11 @@ namespace WorkerExitPass
                                                            {
                                                                    while (hoddr.Read())
                                                                    {
+                                                                       string ROid = hoddr[0].ToString();
                                                                        string ROcemail = hoddr[1].ToString();
+
+                                                                       body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";
+                                                                       body += "<br /><br />Thank you";
 
                                                                        MailMessage mm = new MailMessage();
                                                                        mm.From = new MailAddress(MailFrom);
