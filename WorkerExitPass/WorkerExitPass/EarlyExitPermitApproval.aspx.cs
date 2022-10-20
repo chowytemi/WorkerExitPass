@@ -329,7 +329,7 @@ namespace WorkerExitPass
             }
             sendEmail();
             mpeApproval.Hide();
-            Response.Redirect("WebForm4.aspx?approval=" + empID);
+            Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
             
             
         }
@@ -355,7 +355,7 @@ namespace WorkerExitPass
             }
             sendEmail();
             mpeApproval.Hide();
-            Response.Redirect("WebForm4.aspx?approval=" + empID);
+            Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
             
         }
 
@@ -363,7 +363,7 @@ namespace WorkerExitPass
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            Response.Redirect("WebForm4.aspx?approval=" + empID);
+            Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
 
         }
     }

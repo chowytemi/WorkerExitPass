@@ -157,7 +157,7 @@ namespace WorkerExitPass
                     e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
                 }
 
-                e.Row.Attributes["onclick"] = $"location.href = 'WebForm5.aspx?exitid={GridView1.DataKeys[e.Row.RowIndex]["exitID"]}&approval={empID}'";
+                e.Row.Attributes["onclick"] = $"location.href = 'EarlyExitPermitApproval.aspx?exitid={GridView1.DataKeys[e.Row.RowIndex]["exitID"]}&approval={empID}'";
                 e.Row.ToolTip = "Click to select this row.";
 
             }

@@ -101,7 +101,7 @@ namespace WorkerExitPass
                     {
                         submitForm();
                         sendEmailForApproval();
-                        Response.Redirect("Webform3.aspx?exprmitstatus=" + empID);
+                        Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
                     }
                     else if (compare <= 0)
                     {
@@ -408,7 +408,7 @@ namespace WorkerExitPass
                                                                         else
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application";
+                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application";
                                                                             body += "<br /><br />Thank you";
                                                                         }
                                                                         //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application:";                                                                        
@@ -481,7 +481,7 @@ namespace WorkerExitPass
                                                                     else
                                                                     {
                                                                         mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
+                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application:";
                                                                         body += "<br /><br />Thank you";
                                                                     }
                                                                     //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm1.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application";

@@ -618,7 +618,7 @@ namespace WorkerExitPass
                                                                        } else
                                                                        {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application";
+                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application";
         
                                                                        }
 
@@ -676,7 +676,7 @@ namespace WorkerExitPass
                                                                   else
                                                                   {
                                                                       mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                      body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("WebForm2.aspx?exprmit=" + empID, "WebForm4.aspx?approval=" + name) + "'>here</a> to approve or reject the application";
+                                                                      body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application";
 
                                                                   }
                                                                   //mm.Subject = "Early Exit Permit Pending PJM for Approval";
@@ -828,7 +828,7 @@ namespace WorkerExitPass
                         {
                             TeamSubmit();
                             sendEmailForApproval();
-                            Response.Redirect("Webform3.aspx?extprmitstatus=" + empID );
+                            Response.Redirect("EarlyExitPermitStatus.aspx?extprmitstatus=" + empID );
 
                         } else if (counter == 0){
                             ScriptManager.RegisterClientScriptBlock
@@ -877,7 +877,7 @@ namespace WorkerExitPass
                     {
                         SoloSubmit();
                         sendEmailForApproval();
-                        Response.Redirect("Webform3.aspx?extprmitstatus=" + empID);
+                        Response.Redirect("EarlyExitPermitStatus.aspx?extprmitstatus=" + empID);
                     }
                 }
 
