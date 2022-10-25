@@ -105,10 +105,6 @@ namespace WorkerExitPass
 
                         string workersIn = timelogdr[0].ToString();
 
-
-
-
-
                         string query2 = "select CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
                    "AND company = '" + company + "' AND EmpID = '" + workersIn + "' order by EmpID;";
 

@@ -30,20 +30,77 @@ namespace WorkerExitPass
                 }
                 //BindDataSetDataProjects();
                 //RetrieveDataFromLogin();
-                CheckAccess();
+                //CheckAccess();
+                CheckClockInEmp();
             }
         }
 
+        protected void CheckClockInEmp()
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            string cmsstr = ConfigurationManager.ConnectionStrings["cms"].ConnectionString;
+
+            SqlConnection con = new SqlConnection(cmsstr);
+            con.Open();
+            
+            string sql = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + empID + "'; ";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            SqlDataReader dr = cmd.ExecuteReader();
+
+            if (dr.HasRows)
+            {
+                CheckAccess();
+            } else
+            {
+                Response.Redirect("http://eservices.dyna-mac.com/error");
+            }
+
+        }
         protected void CheckAccess()
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            //string cmsstr = ConfigurationManager.ConnectionStrings["cms"].ConnectionString;
+
             SqlConnection con = new SqlConnection(cs);
             con.Open();
+
+            //SqlConnection appcon = new SqlConnection(cmsstr);
+            //appcon.Open();
+
             string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
+            //string sql = "select EmpID from EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK');";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
+            //while (dr.Read())
+            //{
+            //    string inEmp = dr[0].ToString();
+
+            //    string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + inEmp + "'; ";
+
+            //    using (SqlCommand cmd2 = new SqlCommand(query, appcon))
+            //    {
+            //        SqlDataReader dr2 = cmd2.ExecuteReader();
+            //        if (dr2.HasRows)
+            //        {
+            //            RetrieveDataFromLogin();
+            //            BindDataSetDataProjects();
+            //            BindDataSetDataReason();
+            //        }
+            //        else
+            //        {
+
+            //            Response.Redirect("http://eservices.dyna-mac.com/error");
+
+
+            //        }
+            //        dr2.Close();
+            //        appcon.Close();
+            //    }
+
+            //}
             if (dr.HasRows)
             {
                 RetrieveDataFromLogin();
