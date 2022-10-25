@@ -161,7 +161,7 @@ namespace WorkerExitPass
                     tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
 
-                string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.toexit = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
+                string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.EmpID = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
                 SqlDataAdapter da2 = new SqlDataAdapter(sql2, conn);
 
                 DataSet ds2 = new DataSet();
@@ -227,7 +227,7 @@ namespace WorkerExitPass
                     
                     
 
-                    string sqlquery3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.toexit;";
+                    string sqlquery3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
                             using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
                             {
                                 SqlDataAdapter da = new SqlDataAdapter(sqlquery3, con);
@@ -320,6 +320,7 @@ namespace WorkerExitPass
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
             string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
+           
 
             using (SqlCommand update = new SqlCommand(sqlquery, conn))
             {
@@ -357,6 +358,65 @@ namespace WorkerExitPass
             mpeApproval.Hide();
             Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
             
+        }
+
+        protected void ApproveByEmail()
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            DateTime approveddate = DateTime.Now;
+            var exitID = Request.QueryString["exitid"];
+            var status = Request.QueryString["status"];
+
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection conn = new SqlConnection(cs);
+            conn.Open();
+            string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + status + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
+
+
+            using (SqlCommand update = new SqlCommand(sqlquery, conn))
+            {
+                update.ExecuteNonQuery();
+
+                conn.Close();
+            }
+            sendEmail();
+            mpeApproval.Hide();
+            Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+
+
+        }
+
+        protected void IndivSubmit()
+        {
+            //string empID = Session["empID"].ToString();
+            //Session["empID"] = empID;
+            //DateTime approveddate = DateTime.Now;
+            //var exitID = Request.QueryString["exitid"];
+            //int approve = 1;
+
+            ////get selected ID 
+
+
+            //string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            //SqlConnection conn = new SqlConnection(cs);
+            //conn.Open();
+
+            //string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'"
+            //   + "AND EmpID = '" + SelectedEmpID + "'";
+
+
+            //using (SqlCommand update = new SqlCommand(sqlquery, conn))
+            //{
+            //    update.ExecuteNonQuery();
+
+            //    conn.Close();
+            //}
+            //sendEmail();
+            //mpeApproval.Hide();
+            //Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+
+
         }
 
         protected void btnBack_Click(object sender, EventArgs e)

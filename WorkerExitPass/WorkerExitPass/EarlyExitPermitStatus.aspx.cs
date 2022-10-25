@@ -42,7 +42,7 @@ namespace WorkerExitPass
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
             //string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by exitID desc;";
-            string statussql = "select distinct exitID, createddate, exittime, approve from exitapproval where toexit = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
+            string statussql = "select distinct exitID, createddate, exittime, approve from exitapproval where EmpID = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
 
             SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
             using (DataTable dt = new DataTable())
@@ -230,7 +230,7 @@ namespace WorkerExitPass
                     lblRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
 
-                string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.toexit;";
+                string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
                 SqlDataAdapter da2 = new SqlDataAdapter(sql2, conn);
                 DataSet ds2 = new DataSet();
                 da2.Fill(ds2);

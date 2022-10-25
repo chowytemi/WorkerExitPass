@@ -220,8 +220,8 @@ namespace WorkerExitPass
                     if (ReasonDropdown.Text == "Medical Injury")
                     {
                         //insert request
-                        //string sqlinsertapprovequery = "insert into exitapproval(approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values(1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approve, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        //string sqlinsertapprovequery = "insert into exitapproval(approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
                         {
@@ -233,7 +233,7 @@ namespace WorkerExitPass
                             insert.CommandType = CommandType.Text;
                             insert.Parameters.AddWithValue("@createdby", empID);
                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                            insert.Parameters.AddWithValue("@toexit", empID);
+                            insert.Parameters.AddWithValue("@EmpID", empID);
                             insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
                             insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
@@ -247,8 +247,8 @@ namespace WorkerExitPass
                     else
                     {
                         //insert request
-                        //string sqlinsertquery = "insert into exitapproval(createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                        string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        //string sqlinsertquery = "insert into exitapproval(createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                         using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                         {
 
@@ -259,7 +259,7 @@ namespace WorkerExitPass
                             insert.CommandType = CommandType.Text;
                             insert.Parameters.AddWithValue("@createdby", empID);
                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                            insert.Parameters.AddWithValue("@toexit", empID);
+                            insert.Parameters.AddWithValue("@EmpID", empID);
                             insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
                             insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
@@ -321,7 +321,7 @@ namespace WorkerExitPass
                             //string createdby = dr[1].ToString();
 
                             //get exitid
-                            string exitquery = "select exitID, projectdesc, exittime, toexit, reason from exitapproval where createdby = @empID and company = @company and exittime = @time";
+                            string exitquery = "select exitID, projectdesc, exittime, EmpID, reason from exitapproval where createdby = @empID and company = @company and exittime = @time";
                             //string exitquery = "select exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
                             using (SqlCommand exitcmd = new SqlCommand(exitquery, conn))
                             {
@@ -337,10 +337,10 @@ namespace WorkerExitPass
                                         string project = exitdr[1].ToString();
                                         DateTime date = Convert.ToDateTime(exitdr[2]);
                                         string exittime = date.ToString("dd/MM/yyyy hh:mm tt");
-                                        string toexit = exitdr[3].ToString();
+                                        string EmpID = exitdr[3].ToString();
                                         string reason = exitdr[4].ToString();
 
-                                        string query3 = "select Employee_Name from EmpList where EmpID = '" + toexit + "';";
+                                        string query3 = "select Employee_Name from EmpList where EmpID = '" + EmpID + "';";
 
                                         using (SqlCommand cmd3 = new SqlCommand(query3, conn))
                                         {
