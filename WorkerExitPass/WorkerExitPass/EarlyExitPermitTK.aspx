@@ -32,8 +32,14 @@
         <div class="container">
             
             <div class="submitAs">
-                <asp:Button ID="SoloBtn" runat="server" Text="Solo" OnClick="SoloBtn_Click" CssClass="activeBtn" />
-                <asp:Button ID="TeamBtn" runat="server" Text="Team" OnClick="TeamBtn_Click" CssClass="submitAsButton"/>
+                <div class="submitLbl">
+                    <asp:Label ID="lblSubmitFor" runat="server" Text="Submit for"></asp:Label>
+                </div>
+                <div class="submitBtns">
+                    <asp:Button ID="SoloBtn" runat="server" Text="Myself" OnClick="SoloBtn_Click" CssClass="activeBtn" />
+                    <asp:Button ID="TeamBtn" runat="server" Text="Team" OnClick="TeamBtn_Click" CssClass="submitAsButton"/>
+                </div>
+                
             </div>
 
             <div class="form">
@@ -87,12 +93,12 @@
                             <asp:Label class="label" ID="reason" runat="server" Text="Reason for Leaving Yard"></asp:Label>
 
                                 <asp:DropDownList class="dropdown" ID="ReasonDropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ReasonDropdown_SelectedIndexChanged">
-                                <asp:ListItem Text="Select" Value="Select"></asp:ListItem>
+                                <%--<asp:ListItem Text="Select" Value="Select"></asp:ListItem>
                                 <asp:ListItem Text="Medical injury" Value="Medical Injury"></asp:ListItem>
                                 <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
                                 <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
                                 <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
-                                <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
+                                <asp:ListItem Text="Others" Value="Others"></asp:ListItem>--%>
                             </asp:DropDownList>
                     </div>
                 </div>
@@ -112,12 +118,6 @@
                 </div>
             </div>   
         </div>
-        
-        <asp:Label ID="Label1" runat="server"></asp:Label>
-        
-        <asp:Label ID="Label2" runat="server"></asp:Label>
-        
-
     </form>
 </body>
 </html>

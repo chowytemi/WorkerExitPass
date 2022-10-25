@@ -8,6 +8,8 @@
     border-radius: 0.625em 0 0 0.625em;
     width: 15%;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .form { 
@@ -20,7 +22,14 @@
 .label {
     text-align: left;
 }
-
+#lblSubmitFor {
+    text-align: center;
+    color: #004B7A;
+    font-family: 'Rubik', sans-serif;
+    display: block;
+    font-size: 1.3em;
+    margin-top: 0.5em;
+}
 .submitAsButton {
     display: block;
     width: 75%;
@@ -78,6 +87,7 @@
     /*color: red !important;*/
     line-height: 2em;
 }
+
 /* Medium devices (landscape tablets, 992px and down) */
 @media only screen and (max-width: 992px) {
     .container {
@@ -85,16 +95,18 @@
     }
 
     .submitAs {
-        height: 10%;
+        height: 15%;
         width: 100%;
         display: flex;
         border-radius: 0.625em 0.625em 0 0;
-        align-items: center;
-        justify-content: center;
+        /*align-items: center;
+        justify-content: center;*/
     }
-
+    .submitBtns {
+        align-items: center;
+    }
     .form {
-        height: 90%;
+        height: 85%;
         width: 100%;
         border-radius: 0 0 0.625em 0.625em;
     }
@@ -131,15 +143,15 @@
 }
 
 /* Medium devices (landscape tablets, 768px and down) */
-@media only screen and (max-width: 768px) {
+/*@media only screen and (max-width: 768px) {
     .submitAsButton, .activeBtn {
         width: 30%;
     }
-}
+}*/
 
 /* Medium devices (landscape tablets, 320px and down) */
-@media only screen and (max-width: 320px) {
+/*@media only screen and (max-width: 320px) {
     .submitAsButton, .activeBtn {
         width: 40%;
     }
-}
+}*/

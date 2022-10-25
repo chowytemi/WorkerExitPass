@@ -20,7 +20,7 @@
         <h1>Early Exit Permit Approval</h1>
         <div class="container">
                     <div class="row">            
-                        <asp:DropDownList ID="ddlReason" class="dropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlReason_SelectedIndexChanged">
+                        <asp:DropDownList ID="ddlReason" class="dropdown" runat="server" AutoPostBack="false" OnSelectedIndexChanged="ddlReason_SelectedIndexChanged">
                             <asp:ListItem Text="Reason" Value=""></asp:ListItem>
                             <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
                             <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
@@ -37,10 +37,7 @@
                         </Columns>
                         <PagerStyle HorizontalAlign = "Right" CssClass = "GridPager" />
                     </asp:GridView>
-               
         </div>
-       
-
     </form>
 </body>
 </html>

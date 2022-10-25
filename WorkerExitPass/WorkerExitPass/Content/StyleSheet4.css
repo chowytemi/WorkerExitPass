@@ -30,6 +30,12 @@
     margin-bottom: 0.5em;
 }
 
+#CheckBoxList1 {
+    color: #424242;
+    font-family: 'Open-Sans', sans-serif;
+    font-size: 1em;
+}
+
 .btnRow {
     display: flex;
     justify-content: center;

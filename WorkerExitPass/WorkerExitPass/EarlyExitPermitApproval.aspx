@@ -62,8 +62,13 @@
                         </div> 
                         <div class="row">
                                 <asp:Label class="label" ID="name" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
+                                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                                    <ContentTemplate>
+                                        <asp:CheckBoxList ID="CheckBoxList1" runat="server" AutoPostBack="True"></asp:CheckBoxList>
+<%--                                        <asp:Label class="labelData" ID="lblName" runat="server"></asp:Label>--%>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
                                 <asp:TextBox class="textbox" ID="tbName" runat="server" ReadOnly="True"></asp:TextBox>
-                                <%--<asp:Label class="labelData" ID="lblName" runat="server"></asp:Label>--%>
                         </div>
                         <div class="row">
                                 <asp:Label class="label" ID="companyName" runat="server" Text="Name of Company"></asp:Label>

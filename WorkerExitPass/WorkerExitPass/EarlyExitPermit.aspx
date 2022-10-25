@@ -69,14 +69,15 @@
             <div class="row">
                 <div class="col-12">
                     <asp:Label class="label" ID="reason" runat="server" Text="Reason for Leaving Yard"></asp:Label>
+<%--                        <asp:RequiredFieldValidator ID="Reason_RequiredFieldValidator" runat="server" ErrorMessage="*" ControlToValidate="ReasonDropdown" InitialValue="Select" Visible="False"></asp:RequiredFieldValidator>--%>
                         <asp:DropDownList class="dropdown" ID="ReasonDropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ReasonDropdown_SelectedIndexChanged">
-                        <asp:ListItem Text="Select" Value="Select"></asp:ListItem>
-                        <asp:ListItem Text="Medical injury" Value="Medical Injury"></asp:ListItem>
-                        <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
-                        <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
-                        <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
-                        <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
-                   </asp:DropDownList>
+            <%--                <asp:ListItem Text="Select" Value="Select"></asp:ListItem>
+                            <asp:ListItem Text="Medical injury" Value="Medical Injury"></asp:ListItem>
+                            <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
+                            <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
+                            <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
+                            <asp:ListItem Text="Others" Value="Others"></asp:ListItem>--%>
+                        </asp:DropDownList>
                 </div>
             </div>
             
