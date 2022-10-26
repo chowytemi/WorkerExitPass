@@ -102,8 +102,15 @@
         /*align-items: center;
         justify-content: center;*/
     }
-    .submitBtns {
+    /*.submitBtns {
         align-items: center;
+    }*/
+    .submitBtns {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
     }
     .form {
         height: 85%;
