@@ -30,30 +30,40 @@ namespace WorkerExitPass
                 }
                 //BindDataSetDataProjects();
                 //RetrieveDataFromLogin();
-                //CheckAccess();
-                CheckClockInEmp();
+                CheckAccess();
+                //CheckClockInEmp();
             }
         }
 
         protected void CheckClockInEmp()
         {
+            string company = companytb.Text;
+
+
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
             string cmsstr = ConfigurationManager.ConnectionStrings["cms"].ConnectionString;
 
-            SqlConnection con = new SqlConnection(cmsstr);
-            con.Open();
-            
-            string sql = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + empID + "'; ";
-            SqlCommand cmd = new SqlCommand(sql, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.HasRows)
+            if (company != "DMES")
             {
-                CheckAccess();
+                SqlConnection con = new SqlConnection(cmsstr);
+                con.Open();
+
+                string sql = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + empID + "'; ";
+                SqlCommand cmd = new SqlCommand(sql, con);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+                    CheckAccess();
+                }
+                else
+                {
+                    Response.Redirect("http://eservices.dyna-mac.com/error");
+                }
             } else
             {
-                Response.Redirect("http://eservices.dyna-mac.com/error");
+                CheckAccess();
             }
 
         }
@@ -67,56 +77,39 @@ namespace WorkerExitPass
             SqlConnection con = new SqlConnection(cs);
             con.Open();
 
-            //SqlConnection appcon = new SqlConnection(cmsstr);
-            //appcon.Open();
-
-            string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
-            //string sql = "select EmpID from EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK');";
-            SqlCommand cmd = new SqlCommand(sql, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            //while (dr.Read())
-            //{
-            //    string inEmp = dr[0].ToString();
-
-            //    string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + inEmp + "'; ";
-
-            //    using (SqlCommand cmd2 = new SqlCommand(query, appcon))
-            //    {
-            //        SqlDataReader dr2 = cmd2.ExecuteReader();
-            //        if (dr2.HasRows)
-            //        {
-            //            RetrieveDataFromLogin();
-            //            BindDataSetDataProjects();
-            //            BindDataSetDataReason();
-            //        }
-            //        else
-            //        {
-
-            //            Response.Redirect("http://eservices.dyna-mac.com/error");
-
-
-            //        }
-            //        dr2.Close();
-            //        appcon.Close();
-            //    }
-
-            //}
-            if (dr.HasRows)
+            string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
+               "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
+               "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
+            SqlCommand cmdline = new SqlCommand(sqlcheck, con);
+            SqlDataReader drcheck = cmdline.ExecuteReader();
+            if (drcheck.HasRows)
             {
-                RetrieveDataFromLogin();
-                BindDataSetDataProjects();
-                BindDataSetDataReason();
+                //string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
+                string sql = "select EmpID from EmpList where IsActive = 1 and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
+                SqlCommand cmd = new SqlCommand(sql, con);
+                SqlDataReader dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    RetrieveDataFromLogin();
+                    BindDataSetDataProjects();
+                    BindDataSetDataReason();
+                }
+                else
+                {
+                    Response.Redirect("http://eservices.dyna-mac.com/error");
+                }
+
+                dr.Close();
             }
             else
             {
-
                 Response.Redirect("http://eservices.dyna-mac.com/error");
-
-
             }
 
-            dr.Close();
+            drcheck.Close();
             con.Close();
+
+            
 
         }
 
@@ -220,7 +213,7 @@ namespace WorkerExitPass
             ReasonDropdown.DataBind();
         }
 
-        //Get data from Login - currently hardcoded
+        //Get data from Login 
         protected void RetrieveDataFromLogin()
         {
             //Connect to database
@@ -516,11 +509,18 @@ namespace WorkerExitPass
                                                     {
                                                         //subcon - email to project managers
 
+                                                        //string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                        //                  "from Access, UserAccess, ARole, EmpList " +
+                                                        //                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                        //                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                        //                  "and Access.id = '" + Test + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
+
+                                                        //for testing
                                                         string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + Test + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + RO + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
@@ -570,7 +570,7 @@ namespace WorkerExitPass
                                                                     mm.Body = body;
                                                                     mm.IsBodyHtml = true;
                                                                     mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp
+                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); 
                                                                     smtp.EnableSsl = false;
 
                                                                     string pjmID = "";
@@ -579,10 +579,12 @@ namespace WorkerExitPass
                                                                         pjmID = pjmdr.GetString(1);
                                                                         mm.Bcc.Add(new MailAddress(pjmID));
 
-                                                                        if (ReasonDropdown.Text == "Medical Injury")
-                                                                        {
-                                                                            mm.Bcc.Add(new MailAddress(pjmID));
-                                                                        }
+
+                                                                        //send to safety
+                                                                        //if (ReasonDropdown.Text == "Medical Injury")
+                                                                        //{
+                                                                        //    mm.Bcc.Add(new MailAddress(pjmID));
+                                                                        //}
 
                                                                         smtp.Send(mm);
 

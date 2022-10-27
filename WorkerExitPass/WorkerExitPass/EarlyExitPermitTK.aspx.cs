@@ -31,7 +31,6 @@ namespace WorkerExitPass
             }
 
         }
-
         protected void SoloBtn_Click(object sender, EventArgs e)
         {
             namesddl.Visible = false;
@@ -155,25 +154,6 @@ namespace WorkerExitPass
 
 
         }
-
-        protected void GetListOfEmployees2()
-        {
-            //string constr = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //string company = companytb.Text;
-            //using (SqlConnection con = new SqlConnection(constr))
-            //{
-            //    using (SqlCommand cmd = new SqlCommand("select CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "' order by EmpID;"))
-            //    {
-            //        cmd.CommandType = CommandType.Text;
-            //        cmd.Connection = con;
-            //        con.Open();
-            //        namesddl.DataSource = cmd.ExecuteReader();
-            //        namesddl.DataTextField = "empNameID";
-            //        namesddl.DataBind();
-            //        con.Close();
-            //    }
-            //}
-        }
         protected void BindDataSetDataReason()
         {
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -236,16 +216,36 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            string sql = "select EmpID from EmpList";
-            //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
-            SqlCommand cmd = new SqlCommand(sql, con);
-            SqlDataReader dr = cmd.ExecuteReader();
-            if (dr.HasRows)
+
+
+            string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
+                "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
+                "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
+            SqlCommand cmdline = new SqlCommand(sqlcheck, con);
+            SqlDataReader drcheck = cmdline.ExecuteReader();
+            if (drcheck.HasRows)
             {
-                RetrieveDataFromLogin();
-                BindDataSetDataProjects();
-                GetListOfEmployees();
-                BindDataSetDataReason();
+                //for testing
+                //string sql = "select EmpID from EmpList";
+                string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
+                SqlCommand cmd = new SqlCommand(sql, con);
+                SqlDataReader dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    RetrieveDataFromLogin();
+                    BindDataSetDataProjects();
+                    GetListOfEmployees();
+                    BindDataSetDataReason();
+                }
+                else
+                {
+
+                    Response.Redirect("http://eservices.dyna-mac.com/error");
+
+
+                }
+
+                dr.Close();
             }
             else
             {
@@ -255,70 +255,9 @@ namespace WorkerExitPass
 
             }
 
-            dr.Close();
+            drcheck.Close();
             con.Close();
 
-        }
-
-        protected void submitForm()
-        {
-            //try
-            //{
-            //    string empID = Session["empID"].ToString();
-            //    Session["empID"] = empID;
-            //    string description = projectddl.Text;
-            //    string projectInput = projectddl.Text;
-
-
-            //    //Connect to database
-            //    string cs = ConfigurationManager.ConnectionStrings["service"].ConnectionString;
-            //    SqlConnection conn = new SqlConnection(cs);
-            //    conn.Open();
-
-            //    string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //    SqlConnection appcon = new SqlConnection(connectionstring);
-            //    appcon.Open();
-
-            //    //get code
-            //    string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
-            //    SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
-            //    SqlDataReader dr = cmdlineno.ExecuteReader();
-
-            //    while (dr.Read())
-            //    {
-            //        string projectcode = dr[0].ToString();
-
-            //        //insert request
-            //        string sqlinsertquery = "insert into exitapproval(createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-
-            //        using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
-            //        {
-
-            //            var time = Request["timeInput"];
-            //            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-
-
-            //            insert.CommandType = CommandType.Text;
-            //            insert.Parameters.AddWithValue("@createdby", empID);
-            //            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-            //            insert.Parameters.AddWithValue("@EmpID", empID);
-            //            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
-            //            insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
-            //            insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
-            //            insert.Parameters.AddWithValue("@exittime", dateInput);
-            //            insert.Parameters.AddWithValue("@projectdesc", projectInput);
-            //            insert.Parameters.AddWithValue("@projectcode", projectcode);
-
-            //            insert.ExecuteNonQuery();
-            //        }
-
-
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
 
         }
 
@@ -681,7 +620,6 @@ namespace WorkerExitPass
                                                     //worker - email to HOD
                                                     //string ROname = dr[5].ToString();
                                                     //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
-                                                    //string hodquery = "select approveremail from testtable";
                                                     string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
@@ -723,7 +661,7 @@ namespace WorkerExitPass
                                                                 mm.IsBodyHtml = true;
                                                                 mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                 mm.To.Add(new MailAddress(ROcemail));
-                                                                SmtpClient smtp = new SmtpClient(smtpserver, smtpport); 
+                                                                SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
                                                                 smtp.EnableSsl = false;
                                                                 smtp.Send(mm);
 
@@ -739,13 +677,20 @@ namespace WorkerExitPass
                                             {
                                                 //subcon - email to project managers
 
+                                                //string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                //                  "from Access, UserAccess, ARole, EmpList " +
+                                                //                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                //                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                //                  "and Access.id = '" + Test
+                                                //                  //+ "'";
+                                                //                  + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
+
+                                                //for testing
                                                 string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                                  "from Access, UserAccess, ARole, EmpList " +
-                                                                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                  "and Access.id = '" + Test
-                                                                  //+ "'";
-                                                                  + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + RO + "'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -798,7 +743,7 @@ namespace WorkerExitPass
                                                 }
 
                                             }
-                                            
+
 
                                         }
                                     }
@@ -822,69 +767,6 @@ namespace WorkerExitPass
 
         }
 
-
-
-        protected void Submit(object sender, EventArgs e)
-        {
-            //int counter = 0;
-            //try
-            //{
-            //    var time = Request["timeInput"];
-            //    var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-            //    DateTime dateinput = DateTime.Parse(date);
-            //    var currentdate = DateTime.Now;
-            //    string projectInput = projectddl.Text;
-            //    string nameInput = nametb.Text;
-            //    string companyInput = companytb.Text;
-            //    string reasonInput = ReasonDropdown.Text;
-            //    string remarksInput = remarkstb.Text;
-
-            //    if (projectInput != "" || nameInput != "" || companyInput != "")
-            //    {
-            //        int compare = DateTime.Compare(dateinput, currentdate);
-            //        if (compare > 0)
-            //        {
-            //            for (int i = 0; i < namesddl.Items.Count; i++)
-            //            {
-            //                if (namesddl.Items[i].Selected)
-            //                {
-            //                    counter += 1;
-            //                }
-            //                if (counter > 1)
-            //                {
-            //                    TeamSubmit();
-            //                    sendEmailForApproval();
-            //                    Response.Redirect("Webform3.aspx");
-
-            //                }
-            //                else if (counter == 1)
-            //                {
-            //                    SoloSubmit();
-            //                    sendEmailForApproval();
-            //                    Response.Redirect("Webform3.aspx");
-            //                }
-            //            }
-
-            //            //SoloSubmit();
-            //            //sendEmailForApproval();
-            //            //Response.Redirect("Webform3.aspx");
-            //        }
-            //        else if (compare <= 0)
-            //        {
-            //            ScriptManager.RegisterClientScriptBlock
-            //              (this, this.GetType(), "alertMessage", "alert" +
-            //              "('Please choose a time after the current time')", true);
-            //            return;
-            //        }
-            //    }
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
-
-        }
 
         protected void SubmitAsTeam_Click(object sender, EventArgs e)
         {

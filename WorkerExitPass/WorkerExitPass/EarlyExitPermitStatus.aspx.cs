@@ -182,8 +182,10 @@ namespace WorkerExitPass
                                         }
                                     } else if (dr[2].ToString() == "SUBCON")
                                     {
+
+                                        //for testing - supposed to be PJM
                                         string roquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
-                                            "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + Test + "'";
+                                            "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "'";
                                         using (SqlCommand cmd3 = new SqlCommand(roquery, conn))
                                         {                                       
                                             SqlDataAdapter da4 = new SqlDataAdapter(roquery, conn);
