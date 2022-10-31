@@ -414,7 +414,8 @@ namespace WorkerExitPass
                             if (namesddl.Items[i].Selected)
                             {
                                 //get EmpID
-                                string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
+                                //string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
+                                string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','" + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
                                 SqlCommand empcmd = new SqlCommand(empquery, appcon);
                                 using (SqlDataReader empdr = empcmd.ExecuteReader())
                                 {
@@ -525,11 +526,12 @@ namespace WorkerExitPass
             //string Test = ConfigurationManager.AppSettings["Test"].ToString();
             string RO = ConfigurationManager.AppSettings["RO"].ToString();
             string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
+            string MailTo = ConfigurationManager.AppSettings["MailTo"].ToString();
             //string EmailPassword = ConfigurationManager.AppSettings["Password"].ToString();
             string smtpserver = ConfigurationManager.AppSettings["smtpserver"].ToString();
             string smtport = ConfigurationManager.AppSettings["smtport"].ToString();
             int smtpport = Convert.ToInt32(smtport);
-
+            string link = ConfigurationManager.AppSettings["link"].ToString();
             var time = Request["timeInput"];
             var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
@@ -573,7 +575,7 @@ namespace WorkerExitPass
                                             DateTime exittime = Convert.ToDateTime(exitdr[3].ToString());
                                             string exittime1 = exittime.ToString("dd/MM/yyyy hh:mm tt");
                                             //string query3 = "select EmpList.Employee_Name, exitapproval.exittime, exitapproval.reason from EmpList, exitapproval where EmpList.EmpID =  exitapproval.toexit and exitapproval.exitID= '" + exitid + "';";
-                                            string query3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitid + "' and EmpList.EmpID = exitapproval.EmpID;";
+                                            string query3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) from EmpList, exitapproval where exitapproval.exitID = '" + exitid + "' and EmpList.EmpID = exitapproval.EmpID;";
 
                                             using (SqlCommand cmd3 = new SqlCommand(query3, conn))
                                             {
@@ -648,7 +650,9 @@ namespace WorkerExitPass
                                                                 else
                                                                 {
                                                                     mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                    body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
+                                                                    body += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
+
+                                                                    //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
                                                                     //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
@@ -696,6 +700,7 @@ namespace WorkerExitPass
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                 {
+                        
                                                     using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
                                                     {
                                                         while (pjmdr.Read())
@@ -713,7 +718,9 @@ namespace WorkerExitPass
                                                             else
                                                             {
                                                                 mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application.";
+                                                                body += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?exitid=" + exitid + "'>here</a> to approve or reject the application.";
+
+                                                                //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application.";
                                                                 //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
                                                                 //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
                                                                 //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
@@ -723,7 +730,7 @@ namespace WorkerExitPass
 
                                                             mm.Body = body;
                                                             mm.IsBodyHtml = true;
-                                                            mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                                            //mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                             SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
                                                             smtp.EnableSsl = false;
 
@@ -732,7 +739,9 @@ namespace WorkerExitPass
                                                             {
                                                                 pjmID = pjmdr.GetString(1);
                                                                 mm.To.Add(new MailAddress(pjmID));
+
                                                             }
+                                                            mm.To.Add(new MailAddress(MailTo));
 
                                                             smtp.UseDefaultCredentials = false;
                                                             smtp.Send(mm);
@@ -755,56 +764,56 @@ namespace WorkerExitPass
                                                                           "and Access.id = '" + PJM + "'";
 
 
-                                                using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
-                                                {
-                                                    using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
-                                                    {
-                                                        while (pjmdr.Read())
-                                                        {
-                                                            string name = pjmdr[0].ToString();
+                                            //    using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
+                                            //    {
+                                            //        using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
+                                            //        {
+                                            //            while (pjmdr.Read())
+                                            //            {
+                                            //                string name = pjmdr[0].ToString();
 
-                                                            MailMessage mm = new MailMessage();
-                                                            mm.From = new MailAddress(MailFrom);
-                                                            if (ReasonDropdown.Text == "Medical Injury")
-                                                            {
+                                            //                MailMessage mm = new MailMessage();
+                                            //                mm.From = new MailAddress(MailFrom);
+                                            //                if (ReasonDropdown.Text == "Medical Injury")
+                                            //                {
 
-                                                                mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                            //                    mm.Subject = "Early Exit Permit Medical Injury Notification";
 
-                                                            }
-                                                            else
-                                                            {
-                                                                mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application.";
-                                                                //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
-                                                                //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
-                                                                //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
+                                            //                }
+                                            //                else
+                                            //                {
+                                            //                    mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                            //                    body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application.";
+                                            //                    //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
+                                            //                    //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
+                                            //                    //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
 
-                                                            }
-                                                            body += "<br /><br />This is an automatically generated email, please do not reply.";
+                                            //                }
+                                            //                body += "<br /><br />This is an automatically generated email, please do not reply.";
 
-                                                            mm.Body = body;
-                                                            mm.IsBodyHtml = true;
-                                                            mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                            SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
-                                                            smtp.EnableSsl = false;
+                                            //                mm.Body = body;
+                                            //                mm.IsBodyHtml = true;
+                                            //                mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                            //                SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                            //                smtp.EnableSsl = false;
 
-                                                            string pjmID = "";
-                                                            if (!pjmdr.IsDBNull(0))
-                                                            {
-                                                                pjmID = pjmdr.GetString(1);
-                                                                mm.To.Add(new MailAddress(pjmID));
-                                                            }
+                                            //                string pjmID = "";
+                                            //                if (!pjmdr.IsDBNull(0))
+                                            //                {
+                                            //                    pjmID = pjmdr.GetString(1);
+                                            //                    mm.To.Add(new MailAddress(pjmID));
+                                            //                }
 
-                                                            smtp.UseDefaultCredentials = false;
-                                                            smtp.Send(mm);
+                                            //                smtp.UseDefaultCredentials = false;
+                                            //                smtp.Send(mm);
 
 
-                                                        }
-                                                    }
+                                            //            }
+                                            //        }
 
-                                                }
+                                            //    }
 
-                                            }
+                                            //}
 
 
                                         }

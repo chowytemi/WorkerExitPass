@@ -432,6 +432,7 @@ namespace WorkerExitPass
             string smtpserver = ConfigurationManager.AppSettings["smtpserver"].ToString();
             string smtport = ConfigurationManager.AppSettings["smtport"].ToString();
             int smtpport = Convert.ToInt32(smtport);
+            string link = ConfigurationManager.AppSettings["link"].ToString();
 
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -533,7 +534,9 @@ namespace WorkerExitPass
                                                                         else
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
+                                                                            body += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
+
+                                                                            //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
                                                                             //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
                                                                             //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
                                                                             //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
@@ -610,7 +613,9 @@ namespace WorkerExitPass
                                                                     else
                                                                     {
                                                                         mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                        body += "<br />Click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to view the application or";
+                                                                        body += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
+
+                                                                        //body += "<br />Click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to view the application or";
                                                                         //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
                                                                         //body += "<div style=\" display: flex; flex-direction: row; justify-content: space-around; align-items: center;\">";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
