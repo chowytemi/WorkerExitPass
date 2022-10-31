@@ -102,7 +102,7 @@ namespace WorkerExitPass
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            //string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
+            string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
             string Test = ConfigurationManager.AppSettings["Test"].ToString();
             string RO = ConfigurationManager.AppSettings["RO"].ToString();
 
@@ -201,6 +201,25 @@ namespace WorkerExitPass
                                             }
                                             lblApprover.Text = "Pending approval from: <br />" + roNames;
                                         }
+                                    } else //for testing
+                                    {
+                                        string pjmquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
+                                            "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + PJM + "'";
+                                        using (SqlCommand cmd2 = new SqlCommand(pjmquery, conn))
+                                        {
+                                            SqlDataAdapter da3 = new SqlDataAdapter(pjmquery, conn);
+                                            DataSet ds3 = new DataSet();
+                                            da3.Fill(ds3);
+                                            DataTable dt3 = ds3.Tables[0];
+
+                                            string pjmNames = "";
+                                            for (int i = 0; i < dt3.Rows.Count; i++)
+                                            {
+                                                pjmNames += dt3.Rows[i][0].ToString() + "<br />";
+
+                                            }
+                                            lblApprover.Text = "Pending approval from: <br />" + pjmNames;
+                                        }
                                     }
                                 }
                             }
@@ -260,6 +279,29 @@ namespace WorkerExitPass
         protected void btnBack_Click(object sender, EventArgs e)
         {          
             Server.TransferRequest(Request.Url.AbsolutePath, false);
+
+        }
+
+        protected void InvalidatePermits()
+        {
+            //string empID = Session["empID"].ToString();
+            //Session["empID"] = empID;
+
+            ////Connect to database
+            //string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            //SqlConnection conn = new SqlConnection(cs);
+            //conn.Open();
+            ////string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by exitID desc;";
+            //string statussql = "select distinct exitID, createddate, exittime, approve from exitapproval where EmpID = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
+
+            //SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
+            //using (DataTable dt = new DataTable())
+            //{
+            //    da.Fill(dt);
+            //    GridView1.DataSource = dt;
+            //    GridView1.DataBind();
+
+            //}
         }
     }
 }

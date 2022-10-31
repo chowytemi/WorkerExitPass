@@ -92,7 +92,7 @@ namespace WorkerExitPass
                     string employeesCompID = dr[0].ToString();
                     string jobcode = dr[1].ToString();
 
-                    string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "'; ";
+                    string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "' order by EmpID; ";
 
 
                     using (SqlCommand cmd2 = new SqlCommand(query, appcon))
@@ -218,34 +218,24 @@ namespace WorkerExitPass
             con.Open();
 
 
-            string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
-                "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
-                "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
-            SqlCommand cmdline = new SqlCommand(sqlcheck, con);
-            SqlDataReader drcheck = cmdline.ExecuteReader();
-            if (drcheck.HasRows)
-            {
+            //string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
+            //    "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
+            //    "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
+            //SqlCommand cmdline = new SqlCommand(sqlcheck, con);
+            //SqlDataReader drcheck = cmdline.ExecuteReader();
+            //if (drcheck.HasRows)
+            //{
                 //for testing
                 //string sql = "select EmpID from EmpList";
                 string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
-                SqlCommand cmd = new SqlCommand(sql, con);
-                SqlDataReader dr = cmd.ExecuteReader();
-                if (dr.HasRows)
-                {
-                    RetrieveDataFromLogin();
-                    BindDataSetDataProjects();
-                    GetListOfEmployees();
-                    BindDataSetDataReason();
-                }
-                else
-                {
-
-                    Response.Redirect("http://eservices.dyna-mac.com/error");
-
-
-                }
-
-                dr.Close();
+            SqlCommand cmd = new SqlCommand(sql, con);
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.HasRows)
+            {
+                RetrieveDataFromLogin();
+                BindDataSetDataProjects();
+                GetListOfEmployees();
+                BindDataSetDataReason();
             }
             else
             {
@@ -255,7 +245,17 @@ namespace WorkerExitPass
 
             }
 
-            drcheck.Close();
+            dr.Close();
+            //}
+            //else
+            //{
+
+            //    Response.Redirect("http://eservices.dyna-mac.com/error");
+
+
+            //}
+
+            //drcheck.Close();
             con.Close();
 
 
@@ -362,6 +362,8 @@ namespace WorkerExitPass
 
                 }
 
+                sendEmailForApproval();
+                Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
             {
@@ -496,17 +498,14 @@ namespace WorkerExitPass
 
                                     }
                                 }
-
-
-
                             }
 
                         }
                     }
-
-
-
                 }
+
+                sendEmailForApproval();
+                Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
 
             }
             catch (Exception ex)
@@ -521,8 +520,8 @@ namespace WorkerExitPass
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            //string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
-            string Test = ConfigurationManager.AppSettings["Test"].ToString();
+            string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
+            //string Test = ConfigurationManager.AppSettings["Test"].ToString();
             string RO = ConfigurationManager.AppSettings["RO"].ToString();
             string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
             //string EmailPassword = ConfigurationManager.AppSettings["Password"].ToString();
@@ -620,6 +619,7 @@ namespace WorkerExitPass
                                                     //worker - email to HOD
                                                     //string ROname = dr[5].ToString();
                                                     //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                    //for testing
                                                     string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
@@ -650,7 +650,7 @@ namespace WorkerExitPass
                                                                     body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
-                                                                    body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
+                                                                    //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
 
                                                                 }
 
@@ -690,7 +690,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + RO + "'";
+                                                                          "and Access.id = '" + PJM + "'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -713,7 +713,7 @@ namespace WorkerExitPass
                                                             {
                                                                 mm.Subject = "Early Exit Permit Pending PJM for Approval";
                                                                 body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application.";
-                                                                body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
+                                                                //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
                                                                 //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
                                                                 //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
 
@@ -730,7 +730,68 @@ namespace WorkerExitPass
                                                             if (!pjmdr.IsDBNull(0))
                                                             {
                                                                 pjmID = pjmdr.GetString(1);
-                                                                mm.Bcc.Add(new MailAddress(pjmID));
+                                                                mm.To.Add(new MailAddress(pjmID));
+                                                            }
+
+                                                            smtp.UseDefaultCredentials = false;
+                                                            smtp.Send(mm);
+
+
+                                                        }
+                                                    }
+
+                                                }
+
+                                            }
+                                            else 
+                                            {
+                                                
+                                                //for testing
+                                                string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "'";
+
+
+                                                using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
+                                                {
+                                                    using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
+                                                    {
+                                                        while (pjmdr.Read())
+                                                        {
+                                                            string name = pjmdr[0].ToString();
+
+                                                            MailMessage mm = new MailMessage();
+                                                            mm.From = new MailAddress(MailFrom);
+                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            {
+
+                                                                mm.Subject = "Early Exit Permit Medical Injury Notification";
+
+                                                            }
+                                                            else
+                                                            {
+                                                                mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                                                body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to approve or reject the application.";
+                                                                //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
+                                                                //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
+                                                                //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
+
+                                                            }
+                                                            body += "<br /><br />This is an automatically generated email, please do not reply.";
+
+                                                            mm.Body = body;
+                                                            mm.IsBodyHtml = true;
+                                                            mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                                            SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                                            smtp.EnableSsl = false;
+
+                                                            string pjmID = "";
+                                                            if (!pjmdr.IsDBNull(0))
+                                                            {
+                                                                pjmID = pjmdr.GetString(1);
+                                                                mm.To.Add(new MailAddress(pjmID));
                                                             }
 
                                                             smtp.UseDefaultCredentials = false;
@@ -766,6 +827,132 @@ namespace WorkerExitPass
 
 
         }
+
+
+
+        protected void CheckSubmissionSolo()
+        {
+            var time = Request["timeInput"];
+            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
+            //Connect to database
+
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
+
+            //check for duplicate
+            string sqlquery1 = "select exitID from exitapproval where  CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and exittime = '" + dateInput + "';";
+
+            SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
+            SqlDataReader dr1 = cmd1.ExecuteReader();
+
+            if (!dr1.HasRows)
+            {
+                //check for submit time after approved time
+                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and empID = '" + empID + "' and (approve = 1 or approve is not null)  ";
+
+                SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
+                SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
+
+                if (!drcheck.HasRows)
+                {
+                    SoloSubmit();
+                }
+                else if (drcheck.HasRows)
+                {
+                    ScriptManager.RegisterClientScriptBlock
+                         (this, this.GetType(), "alertMessage", "alert" +
+                         "('There is already an approved permit before submitted time')", true);
+                    return;
+                }
+            }
+            else
+            {
+                ScriptManager.RegisterClientScriptBlock
+                       (this, this.GetType(), "alertMessage", "alert" +
+                       "('Duplicate Submission of time')", true);
+                return;
+            }
+
+        }
+
+        protected void CheckSubmissionTeam()
+        {
+            var time = Request["timeInput"];
+            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            string companyInput = companytb.Text;
+
+
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
+
+
+            //Connect to database
+
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
+
+            for (int i = 0; i < namesddl.Items.Count; i++)
+            {
+                if (namesddl.Items[i].Selected)
+                {
+                    //get EmpID
+                    string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
+                    SqlCommand empcmd = new SqlCommand(empquery, appcon);
+                    using (SqlDataReader empdr = empcmd.ExecuteReader())
+                    {
+                        while (empdr.Read())
+                        {
+
+                            string checkEmpID = empdr[0].ToString();
+                            //check for duplicate
+                            string sqlquery1 = "select exitID from exitapproval where  CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + checkEmpID + "' and exittime = '" + dateInput + "';";
+
+                            SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
+                            SqlDataReader dr1 = cmd1.ExecuteReader();
+
+                            if (!dr1.HasRows)
+                            {
+                                //check for submit time after approved time
+                                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and empID = '" + checkEmpID + "' and (approve = 1 or approve is not null)  ";
+
+                                SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
+                                SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
+
+                                if (!drcheck.HasRows)
+                                {
+                                    TeamSubmit();
+                                }
+                                else if (drcheck.HasRows)
+                                {
+                                    ScriptManager.RegisterClientScriptBlock
+                                         (this, this.GetType(), "alertMessage", "alert" +
+                                         "('There is already an approved permit before submitted time')", true);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                ScriptManager.RegisterClientScriptBlock
+                                       (this, this.GetType(), "alertMessage", "alert" +
+                                       "('Duplicate Submission of time')", true);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+        }
+
 
 
         protected void SubmitAsTeam_Click(object sender, EventArgs e)
@@ -811,9 +998,10 @@ namespace WorkerExitPass
                             }
                             else
                             {
-                                TeamSubmit();
-                                sendEmailForApproval();
-                                Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                                CheckSubmissionTeam();
+                                //TeamSubmit();
+                                //sendEmailForApproval();
+                                //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
                             }
 
                         }
@@ -873,9 +1061,10 @@ namespace WorkerExitPass
                         }
                         else
                         {
-                            SoloSubmit();
-                            sendEmailForApproval();
-                            Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                            CheckSubmissionSolo();
+                            //SoloSubmit();
+                            //sendEmailForApproval();
+                            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
                         }
 
                     }
@@ -894,5 +1083,11 @@ namespace WorkerExitPass
                 throw ex;
             }
         }
+
+
+
+
     }
+
+
 }

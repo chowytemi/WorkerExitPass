@@ -61,7 +61,8 @@ namespace WorkerExitPass
                 {
                     Response.Redirect("http://eservices.dyna-mac.com/error");
                 }
-            } else
+            }
+            else
             {
                 CheckAccess();
             }
@@ -84,7 +85,8 @@ namespace WorkerExitPass
             if (drcheck.HasRows)
             {
                 //string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
-                string sql = "select EmpID from EmpList where IsActive = 1 and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
+                //string sql = "select EmpID from EmpList where IsActive = 1 and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
+                string sql = "select EmpID from EmpList where IsActive = 1 and EmpID = '" + empID + "';";
                 SqlCommand cmd = new SqlCommand(sql, con);
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.HasRows)
@@ -108,7 +110,7 @@ namespace WorkerExitPass
             drcheck.Close();
             con.Close();
 
-            
+
 
         }
 
@@ -158,9 +160,9 @@ namespace WorkerExitPass
                         }
                         else
                         {
-                            submitForm();
-                            sendEmailForApproval();
-                            Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                            CheckSubmission();
+                            //sendEmailForApproval();
+                            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
                         }
 
                     }
@@ -238,39 +240,90 @@ namespace WorkerExitPass
 
         protected void CheckFormInputs()
         {
-            var time = Request["timeInput"];
-            var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-            DateTime dateinput = DateTime.Parse(date);
-            var currentdate = DateTime.Now;
-            string projectInput = projectddl.Text;
-            string nameInput = nametb.Text;
-            string companyInput = companytb.Text;
-            string reasonInput = ReasonDropdown.Text;
-            string remarksInput = remarkstb.Text;
+            //var time = Request["timeInput"];
+            //var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            //DateTime dateinput = DateTime.Parse(date);
+            //var currentdate = DateTime.Now;
+            //string projectInput = projectddl.Text;
+            //string nameInput = nametb.Text;
+            //string companyInput = companytb.Text;
+            //string reasonInput = ReasonDropdown.Text;
+            //string remarksInput = remarkstb.Text;
 
-            if (projectInput != "" || nameInput != "" || companyInput != "")
+            //if (projectInput != "" || nameInput != "" || companyInput != "")
+            //{
+            //    int compare = DateTime.Compare(dateinput, currentdate);
+            //    if (compare > 0)
+            //    {
+            //        Label1.Text = "After Current Time";
+            //    }
+            //    else if (compare <= 0)
+            //    {
+            //        ScriptManager.RegisterClientScriptBlock
+            //          (this, this.GetType(), "alertMessage", "alert" +
+            //          "('Please choose a time after the current time')", true);
+            //        return;
+            //    }
+            //}
+        }
+
+        protected void CheckSubmission()
+        {
+            var time = Request["timeInput"];
+            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
+            //Connect to database
+
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
+
+            //check for duplicate
+            string sqlquery1 = "select exitID from exitapproval where  CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and exittime = '" + dateInput + "';";
+
+            SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
+            SqlDataReader dr1 = cmd1.ExecuteReader();
+
+            if (!dr1.HasRows)
             {
-                int compare = DateTime.Compare(dateinput, currentdate);
-                if (compare > 0)
+                //check for submit time after approved time
+                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and empID = '" + empID + "' and (approve = 1 or approve is not null)";
+
+                SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
+                SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
+
+                if (!drcheck.HasRows)
                 {
-                    Label1.Text = "After Current Time";
+                    submitForm();
                 }
-                else if (compare <= 0)
+                else if (drcheck.HasRows)
                 {
                     ScriptManager.RegisterClientScriptBlock
-                      (this, this.GetType(), "alertMessage", "alert" +
-                      "('Please choose a time after the current time')", true);
+                         (this, this.GetType(), "alertMessage", "alert" +
+                         "('There is already an approved permit before submitted time')", true);
                     return;
                 }
             }
-        }
+            else
+            {
+                ScriptManager.RegisterClientScriptBlock
+                       (this, this.GetType(), "alertMessage", "alert" +
+                       "('Duplicate Submission of time')", true);
+                return;
+            }
 
+        }
         protected void submitForm()
         {
             try
             {
                 string description = projectddl.Text;
                 string projectInput = projectddl.Text;
+                var time = Request["timeInput"];
+                var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
@@ -283,6 +336,8 @@ namespace WorkerExitPass
                 string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
                 SqlConnection appcon = new SqlConnection(connectionstring);
                 appcon.Open();
+
+
 
                 //get code
                 string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
@@ -301,9 +356,6 @@ namespace WorkerExitPass
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
                         {
-
-                            var time = Request["timeInput"];
-                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
 
                             insert.CommandType = CommandType.Text;
@@ -328,9 +380,6 @@ namespace WorkerExitPass
                         using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                         {
 
-                            var time = Request["timeInput"];
-                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-
 
                             insert.CommandType = CommandType.Text;
                             insert.Parameters.AddWithValue("@createdby", empID);
@@ -352,7 +401,11 @@ namespace WorkerExitPass
 
                 }
                 dr.Close();
+
                 conn.Close();
+
+                sendEmailForApproval();
+                Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
 
             }
             catch (Exception ex)
@@ -372,7 +425,7 @@ namespace WorkerExitPass
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
-            //string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
+            string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
             string Test = ConfigurationManager.AppSettings["Test"].ToString();
             string RO = ConfigurationManager.AppSettings["RO"].ToString();
             string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
@@ -433,7 +486,7 @@ namespace WorkerExitPass
                                                     {
                                                         if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                         {
-                                                            //worker - email to HOD
+                                                            //worker - email to RO
                                                             //string ROname = dr[5].ToString();
                                                             string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
@@ -481,7 +534,7 @@ namespace WorkerExitPass
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
                                                                             body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
-                                                                            body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
+                                                                            //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
                                                                             //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
                                                                             //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
 
@@ -492,10 +545,9 @@ namespace WorkerExitPass
                                                                         mm.IsBodyHtml = true;
                                                                         mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                         mm.To.Add(new MailAddress(ROcemail));
-                                                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp  
+                                                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
                                                                         smtp.EnableSsl = false;
                                                                         smtp.Send(mm);
-
 
                                                                     }
                                                                 }
@@ -528,7 +580,6 @@ namespace WorkerExitPass
                                                                 {
                                                                     string name = pjmdr[0].ToString();
 
-                                                                    //string ROcemail = hoddr[0].ToString();
 
                                                                     MailMessage mm = new MailMessage();
                                                                     mm.From = new MailAddress(MailFrom);
@@ -560,7 +611,7 @@ namespace WorkerExitPass
                                                                     {
                                                                         mm.Subject = "Early Exit Permit Pending PJM for Approval";
                                                                         body += "<br />Click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to view the application or";
-                                                                        body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
+                                                                        //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
                                                                         //body += "<div style=\" display: flex; flex-direction: row; justify-content: space-around; align-items: center;\">";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
@@ -569,20 +620,20 @@ namespace WorkerExitPass
                                                                     mm.Body = body;
                                                                     mm.IsBodyHtml = true;
                                                                     mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); 
+                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
                                                                     smtp.EnableSsl = false;
 
                                                                     string pjmID = "";
                                                                     if (!pjmdr.IsDBNull(1))
                                                                     {
                                                                         pjmID = pjmdr.GetString(1);
-                                                                        mm.Bcc.Add(new MailAddress(pjmID));
+                                                                        mm.To.Add(new MailAddress(pjmID));
 
 
                                                                         //send to safety
                                                                         //if (ReasonDropdown.Text == "Medical Injury")
                                                                         //{
-                                                                        //    mm.Bcc.Add(new MailAddress(pjmID));
+                                                                        //    mm.To.Add(new MailAddress(pjmID));
                                                                         //}
 
                                                                         smtp.Send(mm);
@@ -594,6 +645,74 @@ namespace WorkerExitPass
                                                             }
                                                         }
 
+                                                    }
+                                                    else //for testing
+                                                    {
+                                                        string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "'";
+                                                        //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                        using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
+                                                        {
+                                                            using (SqlDataReader hoddr = hodcmd.ExecuteReader())
+                                                            {
+                                                                while (hoddr.Read())
+                                                                {
+                                                                    string ROid = hoddr[0].ToString();
+                                                                    string ROcemail = hoddr[1].ToString();
+
+                                                                    MailMessage mm = new MailMessage();
+                                                                    mm.From = new MailAddress(MailFrom);
+                                                                    string body = "Hello,";
+                                                                    body += "<br /><br />The following application was submitted:";
+                                                                    body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Project</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + project + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Reason</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Requested time</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee name</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
+
+                                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                                    {
+
+                                                                        mm.Subject = "Early Exit Permit Medical Injury Notification";
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        mm.Subject = "Early Exit Permit Pending for Approval";
+                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
+                                                                        //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
+                                                                        //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
+                                                                        //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
+
+                                                                    }
+
+                                                                    body += "<br /><br />This is an automatically generated email, please do not reply.";
+                                                                    mm.Body = body;
+                                                                    mm.IsBodyHtml = true;
+                                                                    mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                                                    mm.To.Add(new MailAddress(ROcemail));
+                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
+                                                                    smtp.EnableSsl = false;
+                                                                    smtp.Send(mm);
+
+                                                                }
+                                                            }
+
+                                                        }
                                                     }
                                                 }
                                             }
@@ -618,5 +737,9 @@ namespace WorkerExitPass
             }
 
         }
+
+        
+
+
     }
 }
