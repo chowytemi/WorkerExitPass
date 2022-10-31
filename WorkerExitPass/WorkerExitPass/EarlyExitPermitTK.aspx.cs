@@ -47,7 +47,6 @@ namespace WorkerExitPass
             nametb.Visible = false;
             submitAsTeam.Visible = true;
             submitAsSolo.Visible = false;
-            //GetListOfEmployees();
             SoloBtn.CssClass = SoloBtn.CssClass.Replace("activeBtn", "submitAsButton");
             TeamBtn.CssClass = SoloBtn.CssClass.Replace("submitAsButton", "activeBtn");
 
@@ -89,54 +88,54 @@ namespace WorkerExitPass
                 SqlDataReader dr = cmdlineno.ExecuteReader();
                 while (dr.Read())
                 {
-                
+
                     string employeesCompID = dr[0].ToString();
                     string jobcode = dr[1].ToString();
 
-                string query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "' order by EmpID; ";
+                    string query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "' order by EmpID; ";
 
 
-                using (SqlCommand cmd2 = new SqlCommand(query, appcon))
-                {
-
-                    SqlDataReader timelogdr = cmd2.ExecuteReader();
-
-
-                    while (timelogdr.Read())
+                    using (SqlCommand cmd2 = new SqlCommand(query, appcon))
                     {
 
-                        string workersIn = timelogdr[0].ToString();
+                        SqlDataReader timelogdr = cmd2.ExecuteReader();
 
-                        string query2 = "select distinct CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
-                   "AND company = '" + company + "' AND EmpID = '" + workersIn + "' order by empNameID;";
 
-                        using (SqlCommand namecmd = new SqlCommand(query2, con))
+                        while (timelogdr.Read())
                         {
 
-                            SqlDataReader namedr = namecmd.ExecuteReader();
+                            string workersIn = timelogdr[0].ToString();
 
+                            string query2 = "select distinct CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
+                       "AND company = '" + company + "' AND EmpID = '" + workersIn + "' order by empNameID;";
 
-                            while (namedr.Read())
+                            using (SqlCommand namecmd = new SqlCommand(query2, con))
                             {
 
-                                string empNameID = dr[0].ToString();
+                                SqlDataReader namedr = namecmd.ExecuteReader();
+
+
+                                while (namedr.Read())
+                                {
+
+                                    string empNameID = namedr[0].ToString();
 
                                     namesddl.Items.Add(empNameID);
-                                //namesddl.DataBind();
+                                    //namesddl.DataBind();
 
+                                }
                             }
+
                         }
+
 
                     }
 
 
+
                 }
-
-
-
+                con.Close();
             }
-            con.Close();
-        }
             else
             {
                 con.Open();
@@ -150,7 +149,7 @@ namespace WorkerExitPass
                     con.Close();
                 }
 
-}
+            }
 
 
 
@@ -227,9 +226,9 @@ namespace WorkerExitPass
             //SqlDataReader drcheck = cmdline.ExecuteReader();
             //if (drcheck.HasRows)
             //{
-                //for testing
-                string sql = "select EmpID from EmpList";
-                //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
+            //for testing
+            string sql = "select EmpID from EmpList";
+            //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
             if (dr.HasRows)
@@ -655,7 +654,7 @@ namespace WorkerExitPass
                                                                     //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
 
                                                                 }
-                                                                
+
 
                                                                 body += "<br /><br />This is an automatically generated email, please do not reply.";
 
@@ -745,9 +744,9 @@ namespace WorkerExitPass
                                                 }
 
                                             }
-                                            else 
+                                            else
                                             {
-                                                
+
                                                 //for testing
                                                 string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
