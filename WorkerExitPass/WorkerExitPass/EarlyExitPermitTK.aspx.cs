@@ -47,7 +47,7 @@ namespace WorkerExitPass
             nametb.Visible = false;
             submitAsTeam.Visible = true;
             submitAsSolo.Visible = false;
-            GetListOfEmployees();
+            //GetListOfEmployees();
             SoloBtn.CssClass = SoloBtn.CssClass.Replace("activeBtn", "submitAsButton");
             TeamBtn.CssClass = SoloBtn.CssClass.Replace("submitAsButton", "activeBtn");
 
@@ -83,58 +83,60 @@ namespace WorkerExitPass
 
             if (company != "DMES")
             {
-                string sqlquery = "select EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "' order by EmpID; ";
+                string sqlquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "' order by EmpID; ";
                 con.Open();
                 SqlCommand cmdlineno = new SqlCommand(sqlquery, con);
                 SqlDataReader dr = cmdlineno.ExecuteReader();
                 while (dr.Read())
                 {
+                
                     string employeesCompID = dr[0].ToString();
                     string jobcode = dr[1].ToString();
 
-                    string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "' order by EmpID; ";
+                string query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "' order by EmpID; ";
 
 
-                    using (SqlCommand cmd2 = new SqlCommand(query, appcon))
+                using (SqlCommand cmd2 = new SqlCommand(query, appcon))
+                {
+
+                    SqlDataReader timelogdr = cmd2.ExecuteReader();
+
+
+                    while (timelogdr.Read())
                     {
 
-                        SqlDataReader timelogdr = cmd2.ExecuteReader();
+                        string workersIn = timelogdr[0].ToString();
 
+                        string query2 = "select distinct CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
+                   "AND company = '" + company + "' AND EmpID = '" + workersIn + "' order by empNameID;";
 
-                        while (timelogdr.Read())
+                        using (SqlCommand namecmd = new SqlCommand(query2, con))
                         {
 
-                            string workersIn = timelogdr[0].ToString();
+                            SqlDataReader namedr = namecmd.ExecuteReader();
 
-                            string query2 = "select CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
-                       "AND company = '" + company + "' AND EmpID = '" + workersIn + "' order by EmpID;";
 
-                            using (SqlCommand namecmd = new SqlCommand(query2, con))
+                            while (namedr.Read())
                             {
 
-                                SqlDataReader namedr = namecmd.ExecuteReader();
-
-
-                                while (namedr.Read())
-                                {
-
-                                    string empNameID = namedr[0].ToString();
+                                string empNameID = dr[0].ToString();
 
                                     namesddl.Items.Add(empNameID);
-                                    namesddl.DataBind();
+                                //namesddl.DataBind();
 
-                                }
                             }
-
                         }
-
 
                     }
 
 
-
                 }
+
+
+
             }
+            con.Close();
+        }
             else
             {
                 con.Open();
@@ -148,7 +150,7 @@ namespace WorkerExitPass
                     con.Close();
                 }
 
-            }
+}
 
 
 
@@ -226,8 +228,8 @@ namespace WorkerExitPass
             //if (drcheck.HasRows)
             //{
                 //for testing
-                //string sql = "select EmpID from EmpList";
-                string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
+                string sql = "select EmpID from EmpList";
+                //string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
             if (dr.HasRows)
@@ -653,7 +655,7 @@ namespace WorkerExitPass
                                                                     //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
 
                                                                 }
-
+                                                                
 
                                                                 body += "<br /><br />This is an automatically generated email, please do not reply.";
 
@@ -690,7 +692,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' where empid = 'T202' or empid= 'T203'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
