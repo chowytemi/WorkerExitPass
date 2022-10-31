@@ -64,7 +64,8 @@
                                 <asp:Label class="label" ID="name" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
                                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                                     <ContentTemplate>
-                                        <asp:CheckBoxList ID="CheckBoxList1" runat="server" AutoPostBack="True"></asp:CheckBoxList>
+                                        <asp:CheckBox ID="chkAll" class="chkAllText" Text="Select All" runat="server" OnCheckedChanged="Check_UnCheckAll" AutoPostBack="True" />
+                                        <asp:CheckBoxList ID="CheckBoxList1" runat="server" AutoPostBack="True" OnSelectedIndexChanged="CheckBox_Checked_Unchecked"></asp:CheckBoxList>
 <%--                                        <asp:Label class="labelData" ID="lblName" runat="server"></asp:Label>--%>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>

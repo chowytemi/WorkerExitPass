@@ -323,6 +323,29 @@ namespace WorkerExitPass
             }
         }
 
+        protected void Check_UnCheckAll(object sender, EventArgs e)
+        {
+            foreach (ListItem li in CheckBoxList1.Items)
+            {
+                li.Selected = chkAll.Checked;
+            }
+        }
+
+        protected void CheckBox_Checked_Unchecked(object sender, EventArgs e)
+        {
+            bool isAllChecked = true;
+            foreach (ListItem li in CheckBoxList1.Items)
+            {
+                if (!li.Selected)
+                {
+                    isAllChecked = false;
+                    break;
+                }
+            }
+
+            chkAll.Checked = isAllChecked;
+        }
+
         protected void ApproveBtn_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
@@ -492,6 +515,5 @@ namespace WorkerExitPass
             Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
 
         }
-
     }
 }

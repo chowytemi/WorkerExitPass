@@ -30,7 +30,7 @@
     margin-bottom: 0.5em;
 }
 
-#CheckBoxList1 {
+#CheckBoxList1, .chkAllText {
     color: #424242;
     font-family: 'Open-Sans', sans-serif;
     font-size: 1em;
