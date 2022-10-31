@@ -72,7 +72,6 @@ namespace WorkerExitPass
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //string cmsstr = ConfigurationManager.ConnectionStrings["cms"].ConnectionString;
 
             SqlConnection con = new SqlConnection(cs);
             con.Open();
