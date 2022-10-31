@@ -741,6 +741,63 @@ namespace WorkerExitPass
                                                 }
 
                                             }
+                                            else //for testing 
+                                            {
+
+                                                string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
+
+
+                                                using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
+                                                {
+
+                                                    using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
+                                                    {
+                                                        while (pjmdr.Read())
+                                                        {
+                                                            string body1 = "";
+                                                            string name = pjmdr[0].ToString();
+
+                                                            MailMessage mm = new MailMessage();
+                                                            mm.From = new MailAddress(MailFrom);
+                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            {
+
+                                                                mm.Subject = "Early Exit Permit Medical Injury Notification";
+
+                                                            }
+                                                            else
+                                                            {
+                                                                mm.Subject = "Early Exit Permit Pending Test for Approval";
+                                                                body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
+
+                                                            }
+                                                            body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+
+                                                            mm.Body = body + body1;
+                                                            mm.IsBodyHtml = true;
+                                                            SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                                            smtp.EnableSsl = false;
+
+                                                            string pjmID = "";
+                                                            if (!pjmdr.IsDBNull(0))
+                                                            {
+                                                                pjmID = pjmdr.GetString(1);
+                                                                mm.To.Add(new MailAddress(pjmID));
+                                                            }
+
+                                                            smtp.UseDefaultCredentials = false;
+                                                            mm.To.Add(new MailAddress(MailTo));
+                                                            smtp.Send(mm);
+                                                        }
+                                                    }
+
+                                                }
+
+                                            }
                                             //sends one email, url need to log in
                                             //else if (dr[2].ToString() == "SUBCON")
                                             //{
