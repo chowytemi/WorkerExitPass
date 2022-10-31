@@ -433,6 +433,7 @@ namespace WorkerExitPass
             string smtport = ConfigurationManager.AppSettings["smtport"].ToString();
             int smtpport = Convert.ToInt32(smtport);
             string link = ConfigurationManager.AppSettings["link"].ToString();
+            string MailTo = ConfigurationManager.AppSettings["MailTo"].ToString();
 
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -524,7 +525,7 @@ namespace WorkerExitPass
                                                                         body += "<tr style=\" height: 0.5em;\">";
                                                                         body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee name</th>";
                                                                         body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
-
+                                                                        string body1 = "";
                                                                         if (ReasonDropdown.Text == "Medical Injury")
                                                                         {
 
@@ -534,7 +535,7 @@ namespace WorkerExitPass
                                                                         else
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
+                                                                            body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
 
                                                                             //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
                                                                             //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
@@ -543,11 +544,12 @@ namespace WorkerExitPass
 
                                                                         }
 
-                                                                        body += "<br /><br />This is an automatically generated email, please do not reply.";
-                                                                        mm.Body = body;
+                                                                        body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+                                                                        mm.Body = body + body1;
                                                                         mm.IsBodyHtml = true;
                                                                         mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                         mm.To.Add(new MailAddress(ROcemail));
+                                                                        mm.To.Add(new MailAddress(MailTo));
                                                                         SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
                                                                         smtp.EnableSsl = false;
                                                                         smtp.Send(mm);
@@ -604,6 +606,7 @@ namespace WorkerExitPass
                                                                     body += "<tr style=\" height: 0.5em;\">";
                                                                     body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee Name</th>";
                                                                     body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
+                                                                    string body1 = "";
                                                                     if (ReasonDropdown.Text == "Medical Injury")
                                                                     {
 
@@ -613,7 +616,7 @@ namespace WorkerExitPass
                                                                     else
                                                                     {
                                                                         mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                        body += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
+                                                                        body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
 
                                                                         //body += "<br />Click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to view the application or";
                                                                         //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
@@ -621,8 +624,8 @@ namespace WorkerExitPass
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
                                                                     }
-                                                                    body += "<br /><br />This is an automatically generated email, please do not reply.";
-                                                                    mm.Body = body;
+                                                                    body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+                                                                    mm.Body = body + body1;
                                                                     mm.IsBodyHtml = true;
                                                                     mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                     SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
@@ -641,10 +644,12 @@ namespace WorkerExitPass
                                                                         //    mm.To.Add(new MailAddress(pjmID));
                                                                         //}
 
-                                                                        smtp.Send(mm);
+                                                                        
 
 
                                                                     }
+                                                                    mm.To.Add(new MailAddress(MailTo));
+                                                                    smtp.Send(mm);
                                                                 }
 
                                                             }
@@ -688,6 +693,7 @@ namespace WorkerExitPass
                                                                     body += "<tr style=\" height: 0.5em;\">";
                                                                     body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee name</th>";
                                                                     body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
+                                                                    string body1 = "";
 
                                                                     if (ReasonDropdown.Text == "Medical Injury")
                                                                     {
@@ -698,20 +704,23 @@ namespace WorkerExitPass
                                                                     else
                                                                     {
                                                                         mm.Subject = "Early Exit Permit Pending for Approval";
-                                                                        body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
+                                                                        //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
+                                                                        body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
+
                                                                         //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
                                                                         //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
 
                                                                     }
 
-                                                                    body += "<br /><br />This is an automatically generated email, please do not reply.";
-                                                                    mm.Body = body;
+                                                                    body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+                                                                    mm.Body = body + body1;
                                                                     mm.IsBodyHtml = true;
                                                                     mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                     mm.To.Add(new MailAddress(ROcemail));
                                                                     SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
                                                                     smtp.EnableSsl = false;
+                                                                    mm.To.Add(new MailAddress(MailTo));
                                                                     smtp.Send(mm);
 
                                                                 }
