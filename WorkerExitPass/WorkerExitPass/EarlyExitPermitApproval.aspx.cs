@@ -110,17 +110,17 @@ namespace WorkerExitPass
                 DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
                 e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy");
 
-                if ((e.Row.Cells[2].Text) == "&nbsp;")
-                {
+                //if ((e.Row.Cells[2].Text) == "&nbsp;")
+                //{
 
-                    e.Row.Cells[2].Text = "NULL";
+                //    e.Row.Cells[2].Text = "NULL";
 
-                }
-                else
-                {
+                //}
+                //else
+                //{
                     DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
                     e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
-                }
+                //}
 
             }
         }
@@ -168,6 +168,7 @@ namespace WorkerExitPass
                 }
 
                 string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.EmpID = EmpList.EmpID and exitapproval.exitID = '" + exitID + "' and approve IS NULL;";
+                //string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.EmpID = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
 
                 SqlDataAdapter da2 = new SqlDataAdapter(sql2, conn);
 
@@ -176,14 +177,16 @@ namespace WorkerExitPass
                 DataTable dt2 = ds2.Tables[0];
                 //if (dt2.Rows.Count == 1)
                 //{
+                //    chkAll.Visible = false;
                 //    tbName.Text = dt2.Rows[0]["Employee_Name"].ToString();
-                //} else
+                //}
+                //else
                 //{
-                CheckBoxList1.DataSource = dt2;
-                CheckBoxList1.DataTextField = "Employee_Name";
-                CheckBoxList1.DataValueField = "Employee_Name";
-                CheckBoxList1.DataBind();
-                tbName.Visible = false;
+                    CheckBoxList1.DataSource = dt2;
+                    CheckBoxList1.DataTextField = "Employee_Name";
+                    CheckBoxList1.DataValueField = "Employee_Name";
+                    CheckBoxList1.DataBind();
+                    tbName.Visible = false;
                 //}
 
 
@@ -226,10 +229,11 @@ namespace WorkerExitPass
                     string reason = dt2.Rows[0][4].ToString();
                     string createdByEmail = dt2.Rows[0][5].ToString();
                     string approver = dt2.Rows[0][6].ToString();
-                    
+
 
                     //string sqlquery3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
-                    string sqlquery3 = "select EmpList.Employee_Name, exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
+                    //string sqlquery3 = "select EmpList.Employee_Name, exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
+                    string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name), exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
                     using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
                     {
                         SqlDataAdapter da = new SqlDataAdapter(sqlquery3, con);
@@ -366,55 +370,56 @@ namespace WorkerExitPass
             {
                 conn.Open();
 
-                foreach (ListItem li in CheckBoxList1.Items)
-                {
-                    if (li.Selected == true)
+                    foreach (ListItem li in CheckBoxList1.Items)
                     {
-                        string getIDquery = "select EmpID from EmpList where Employee_Name = @empName;";
-
-                        using (SqlCommand select = new SqlCommand(getIDquery, conn))
+                        if (li.Selected == true)
                         {
-                            select.CommandType = CommandType.Text;
-                            select.Parameters.AddWithValue("@empName", li.Value);
-                            select.ExecuteNonQuery();
+                            string getIDquery = "select EmpID from EmpList where Employee_Name = @empName;";
 
-                            using (SqlDataReader dr = select.ExecuteReader())
+                            using (SqlCommand select = new SqlCommand(getIDquery, conn))
                             {
-                                while (dr.Read())
+                                select.CommandType = CommandType.Text;
+                                select.Parameters.AddWithValue("@empName", li.Value);
+                                select.ExecuteNonQuery();
+
+                                using (SqlDataReader dr = select.ExecuteReader())
                                 {
-                                    string selectedEmpID = dr[0].ToString();
-
-                                    string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'"
-                                     + "AND EmpID = '" + selectedEmpID + "'";
-
-                                    using (SqlCommand update = new SqlCommand(sqlquery, conn))
+                                    while (dr.Read())
                                     {
+                                        string selectedEmpID = dr[0].ToString();
 
-                                        update.ExecuteNonQuery();
+                                        string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'"
+                                         + "AND EmpID = '" + selectedEmpID + "'";
+
+                                        using (SqlCommand update = new SqlCommand(sqlquery, conn))
+                                        {
+
+                                            update.ExecuteNonQuery();
 
 
+                                        }
                                     }
+                                    dr.Close();
                                 }
-                                dr.Close();
                             }
                         }
                     }
-                }
-                string sql3 = "select createddate, exittime, projectdesc, company, reason, remarks from exitapproval where exitID = '" + exitID + "' and approve IS NULL;";
-                SqlCommand cmdlineno = new SqlCommand(sql3, conn);
-                SqlDataReader dr2 = cmdlineno.ExecuteReader();
+                    string sql3 = "select createddate, exittime, projectdesc, company, reason, remarks from exitapproval where exitID = '" + exitID + "' and approve IS NULL;";
+                    SqlCommand cmdlineno = new SqlCommand(sql3, conn);
+                    SqlDataReader dr2 = cmdlineno.ExecuteReader();
 
-                if (dr2.HasRows)
-                {
-                    GetApplicationById();
-                    dr2.Close();
-                }
-                else
-                {
-                    sendEmail();
-                    mpeApproval.Hide();
-                    Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
-                }
+                    if (dr2.HasRows)
+                    {
+                        GetApplicationById();
+                        dr2.Close();
+                    }
+                    else
+                    {
+                        sendEmail();
+                        mpeApproval.Hide();
+                        Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+                    }
+        
                 conn.Close();
                 
             }
