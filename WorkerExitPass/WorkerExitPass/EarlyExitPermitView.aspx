@@ -19,15 +19,7 @@
     <form id="form1" runat="server">
         <h1>Early Exit Permit Approval</h1>
         <div class="container">
-                    <div class="row">            
-                        <asp:DropDownList ID="ddlReason" class="dropdown" runat="server" AutoPostBack="false" OnSelectedIndexChanged="ddlReason_SelectedIndexChanged">
-                            <asp:ListItem Text="Reason" Value=""></asp:ListItem>
-                            <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
-                            <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
-                            <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
-                            <asp:ListItem Text="Others" Value="Others"></asp:ListItem>
-                        </asp:DropDownList>
-                    </div>
+                    
                     <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" BackColor="#EBF6FE" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" DataKeyNames="exitID">
                         <Columns>
                             <asp:BoundField DataField="exitID" HeaderText="ID" />

@@ -77,13 +77,13 @@ namespace WorkerExitPass
             SqlConnection con = new SqlConnection(cs);
             con.Open();
 
-            string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
-               "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
-               "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
-            SqlCommand cmdline = new SqlCommand(sqlcheck, con);
-            SqlDataReader drcheck = cmdline.ExecuteReader();
-            if (drcheck.HasRows)
-            {
+            //string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
+            //   "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
+            //   "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
+            //SqlCommand cmdline = new SqlCommand(sqlcheck, con);
+            //SqlDataReader drcheck = cmdline.ExecuteReader();
+            //if (drcheck.HasRows)
+            //{
                 //string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
                 //string sql = "select EmpID from EmpList where IsActive = 1 and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
                 string sql = "select EmpID from EmpList where IsActive = 1 and EmpID = '" + empID + "';";
@@ -101,13 +101,13 @@ namespace WorkerExitPass
                 }
 
                 dr.Close();
-            }
-            else
-            {
-                Response.Redirect("http://eservices.dyna-mac.com/error");
-            }
+            //}
+            //else
+            //{
+            //    Response.Redirect("http://eservices.dyna-mac.com/error");
+            //}
 
-            drcheck.Close();
+            //drcheck.Close();
             con.Close();
 
 
@@ -536,12 +536,7 @@ namespace WorkerExitPass
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
                                                                             body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
-
-                                                                            //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
-                                                                            //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
-                                                                            //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
-                                                                            //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
-
+                                                                            
                                                                         }
 
                                                                         body1 += "<br /><br />This is an automatically generated email, please do not reply.";
@@ -564,19 +559,12 @@ namespace WorkerExitPass
                                                     else if (dr[2].ToString() == "SUBCON")
                                                     {
                                                         //subcon - email to project managers
-
-                                                        //string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                        //                  "from Access, UserAccess, ARole, EmpList " +
-                                                        //                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                        //                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                        //                  "and Access.id = '" + Test + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
-
                                                         //for testing
                                                         string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + RO + "'";
+                                                                          "and Access.id = '" + PJM + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
@@ -662,8 +650,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
-                                                        //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                                          "and Access.id = '" + RO + "'";
                                                         using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
                                                         {
                                                             using (SqlDataReader hoddr = hodcmd.ExecuteReader())
@@ -703,14 +690,10 @@ namespace WorkerExitPass
                                                                     }
                                                                     else
                                                                     {
-                                                                        mm.Subject = "Early Exit Permit Pending for Approval";
+                                                                        mm.Subject = "Early Exit Permit Pending Test for Approval";
                                                                         //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
                                                                         body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
-
-                                                                        //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
-                                                                        //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
-                                                                        //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
-
+                                                                        
                                                                     }
 
                                                                     body1 += "<br /><br />This is an automatically generated email, please do not reply.";

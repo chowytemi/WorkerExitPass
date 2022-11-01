@@ -26,7 +26,8 @@ namespace WorkerExitPass
                     Session["empID"] = myempno;
 
                 }
-                FormStatus();
+                CheckAccess();
+
             }
             
         
@@ -52,6 +53,38 @@ namespace WorkerExitPass
                 GridView1.DataBind();
 
             }
+            conn.Close();
+        }
+
+        protected void CheckAccess()
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection con = new SqlConnection(cs);
+            con.Open();
+
+            string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
+                "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
+                "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
+            SqlCommand cmdline = new SqlCommand(sqlcheck, con);
+            SqlDataReader drcheck = cmdline.ExecuteReader();
+            if (drcheck.HasRows)
+            {
+                FormStatus();
+            }
+            else
+            {
+
+                Response.Redirect("http://eservices.dyna-mac.com/error");
+
+
+            }
+
+            drcheck.Close();
+            con.Close();
+
+
         }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)

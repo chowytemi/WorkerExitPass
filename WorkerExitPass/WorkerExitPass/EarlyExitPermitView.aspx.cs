@@ -129,18 +129,7 @@ namespace WorkerExitPass
 
         }
 
-        protected void ddlReason_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string reason = ddlReason.SelectedItem.Value;
-            DataTable dt = this.GetPending();
-            DataView dataView = dt.DefaultView;
-            if (!string.IsNullOrEmpty(reason))
-            {
-                dataView.RowFilter = "Reason = '" + reason + "'";
-            }
-            GridView1.DataSource = dataView;
-            GridView1.DataBind();
-        }
+       
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
         {
