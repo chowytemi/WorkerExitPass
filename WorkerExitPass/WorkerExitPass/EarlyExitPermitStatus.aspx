@@ -47,16 +47,17 @@
                         </div>
                         <div id="approval">                                
                             <asp:Label class="label" ID="lblApproval" runat="server" Text="Approval Details"></asp:Label>
-                                <div id="statusWhenRow">
-                                        <div class="col">
-                                            <asp:Label class="label" runat="server" Text="Status"></asp:Label>
+                                <div id="row">
+                                       <%--<div class="col">--%>
+                                            <asp:Label class="label" ID="label" runat="server" Text="Status"></asp:Label>
                                             <asp:Label class="labelData" ID="lblStatus" runat="server" />
-                                        </div>
-                                        <div class="col">
+                                        <%--</div>--%>
+                                        <%--<div class="col">
                                             <asp:Label class="label" runat="server" Text="When"></asp:Label>
                                             <asp:Label class="labelData" ID="lblWhen" runat="server" />
-                                        </div> 
+                                        </div> --%>
                                     </div>
+                            <asp:Table ID="Table1" runat="server"></asp:Table>
                                 <div class="row">
                                         <asp:Label class="label" ID="name" runat="server" Text="Approver"></asp:Label>
                                         <asp:Label class="labelData" ID="lblApprover" runat="server"></asp:Label>

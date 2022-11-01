@@ -94,6 +94,15 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label lblApproval;
         
         /// <summary>
+        /// label control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label label;
+        
+        /// <summary>
         /// lblStatus control.
         /// </summary>
         /// <remarks>
@@ -103,13 +112,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label lblStatus;
         
         /// <summary>
-        /// lblWhen control.
+        /// Table1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWhen;
+        protected global::System.Web.UI.WebControls.Table Table1;
         
         /// <summary>
         /// name control.

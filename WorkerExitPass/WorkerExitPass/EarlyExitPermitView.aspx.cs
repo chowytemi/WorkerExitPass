@@ -28,11 +28,11 @@ namespace WorkerExitPass
                     Session["empID"] = myempno;
 
                 }
-                if ((Request.QueryString["exitid"] != null))
+                if ((Request.QueryString["exprmtid"] != null))
                 {
 
-                    string myempno = Request.QueryString["exitid"];
-
+                    string exitid = Request.QueryString["exprmtid"];
+                    Session["exitid"] = exitid;
                 }
 
                 CheckAccess();
