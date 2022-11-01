@@ -18,9 +18,23 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <h1>View Early Exit Permits</h1>
+        <div class="header1">
+            <h1>View Early Exit Permits</h1>
+        </div>
+        <div class="header">
+            <asp:Button ID="backBtn" runat="server" Text="Back" OnClick="Back_Click" />            
+        </div>
+        
+        
         <div>
-
+            <%--<div>--%>
+<%--                <asp:Button ID="backBtn" runat="server" Text="Back" OnClick="Back_Click" />--%>
+                <%--<div class="rowIcon">
+                <asp:LinkButton ID="LinkButton1" runat="server" Text="<i class='fa-angle-left fa-2x' aria-hidden='true'></i>" OnClick="btnBack_Click"/>
+                </div>--%>
+                
+            <%--</div>--%>
+                
             <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" OnSelectedIndexChanged="GridView1_SelectedIndexChanged">
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />

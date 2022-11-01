@@ -378,5 +378,14 @@ namespace WorkerExitPass
 
             //}
         }
+
+        protected void Back_Click(object sender, EventArgs e)
+        {
+            string link = ConfigurationManager.AppSettings["link"].ToString();
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            Response.Redirect(link + "exitpermit/EarlyExitPermitTK.aspx?exprmit=" + empID);
+
+        }
     }
 }

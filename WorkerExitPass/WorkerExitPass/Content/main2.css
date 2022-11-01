@@ -99,7 +99,7 @@
     justify-content: flex-end;
     margin-bottom: 0;
 }
-#btnBack {
+#btnBack, #LinkButton1 {
     color: #004B7A;
     float: right;
     margin-top: 2%;
