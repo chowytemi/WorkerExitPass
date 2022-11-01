@@ -655,7 +655,8 @@ namespace WorkerExitPass
                                                                 else
                                                                 {
                                                                     mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                    body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
+                                                                    body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+                                                                    //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
 
                                                                     //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
                                                                     //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
@@ -717,7 +718,9 @@ namespace WorkerExitPass
                                                             else
                                                             {
                                                                 mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                                                body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
+                                                                body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+
+                                                                //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
 
                                                             }
                                                             body1 += "<br /><br />This is an automatically generated email, please do not reply.";
@@ -776,7 +779,8 @@ namespace WorkerExitPass
                                                             else
                                                             {
                                                                 mm.Subject = "Early Exit Permit Pending Test for Approval";
-                                                                body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
+                                                                //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
+                                                                body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
 
                                                             }
                                                             body1 += "<br /><br />This is an automatically generated email, please do not reply.";

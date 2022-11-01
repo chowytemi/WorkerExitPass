@@ -233,7 +233,7 @@ namespace WorkerExitPass
 
                     //string sqlquery3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
                     //string sqlquery3 = "select EmpList.Employee_Name, exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
-                    string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name), exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
+                    string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp', exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
                     using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
                     {
                         SqlDataAdapter da = new SqlDataAdapter(sqlquery3, con);
