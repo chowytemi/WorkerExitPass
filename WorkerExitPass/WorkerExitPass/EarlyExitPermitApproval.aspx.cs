@@ -19,15 +19,29 @@ namespace WorkerExitPass
 
             if (!IsPostBack)
             {
-                if ((Request.QueryString["approver"] != null))
-                {
-                    string myempno = Request.QueryString["approver"];
-                    Session["empID"] = myempno;
-                }
+                //if ((Request.QueryString["approver"] != null))
+                //{
+                //    string myempno = Request.QueryString["approver"];
+                //    Session["empID"] = myempno;
+                //}
 
-                if ((Request.QueryString["status"] != null))
+                //if ((Request.QueryString["status"] != null))
+                //{
+                //    ApproveByEmail();
+                //}
+                //CheckAccess();
+                if ((Request.QueryString["approval"] != null))
                 {
-                    ApproveByEmail();
+
+                    string myempno = Request.QueryString["approval"];
+                    Session["empID"] = myempno;
+
+                }
+                if ((Request.QueryString["exprmtid"] != null))
+                {
+
+                    string exitid = Request.QueryString["exprmtid"];
+                    Session["exitid"] = exitid;
                 }
                 CheckAccess();
             }
