@@ -110,5 +110,7 @@
             </asp:Panel>
         </div>
     </form>
+        <asp:Label ID="Label1" runat="server"></asp:Label>
+
 </body>
 </html>

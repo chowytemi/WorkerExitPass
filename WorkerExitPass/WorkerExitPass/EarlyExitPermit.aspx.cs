@@ -77,13 +77,13 @@ namespace WorkerExitPass
             SqlConnection con = new SqlConnection(cs);
             con.Open();
 
-            //string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
-            //   "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
-            //   "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
-            //SqlCommand cmdline = new SqlCommand(sqlcheck, con);
-            //SqlDataReader drcheck = cmdline.ExecuteReader();
-            //if (drcheck.HasRows)
-            //{
+            string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
+               "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
+               "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
+            SqlCommand cmdline = new SqlCommand(sqlcheck, con);
+            SqlDataReader drcheck = cmdline.ExecuteReader();
+            if (drcheck.HasRows)
+            {
                 //string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
                 //string sql = "select EmpID from EmpList where IsActive = 1 and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
                 string sql = "select EmpID from EmpList where IsActive = 1 and EmpID = '" + empID + "';";
@@ -101,13 +101,13 @@ namespace WorkerExitPass
                 }
 
                 dr.Close();
-            //}
-            //else
-            //{
-            //    Response.Redirect("http://eservices.dyna-mac.com/error");
-            //}
+            }
+            else
+            {
+                Response.Redirect("http://eservices.dyna-mac.com/error");
+            }
 
-            //drcheck.Close();
+            drcheck.Close();
             con.Close();
 
 

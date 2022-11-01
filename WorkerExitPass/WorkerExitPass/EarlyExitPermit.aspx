@@ -110,34 +110,6 @@
             </Columns>
        </asp:GridView>
                     
-<%--          <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False"  AllowPaging="True" PageSize="30"  CssClass="auto-style13" DataKeyNames="EXITID">
-              <Columns>
-        <asp:BoundField ItemStyle-Width="100px" DataField="exitID" HeaderText="exitID" ReadOnly="True" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField> 
-        <asp:BoundField ItemStyle-Width="100px" DataField="toexit" HeaderText="toexit" ReadOnly="True" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>
-        <asp:BoundField ItemStyle-Width="100px" DataField="createdby" HeaderText="createdby" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>  
-        <asp:BoundField ItemStyle-Width="100px" DataField="createddate" HeaderText="createddate" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>
-        <asp:BoundField ItemStyle-Width="100px" DataField="reason" HeaderText="reason" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>
-                   <asp:BoundField ItemStyle-Width="100px" DataField="exittime" HeaderText="exittime" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>
-                   <asp:BoundField ItemStyle-Width="100px" DataField="projcode" HeaderText="projcode" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>
-                   <asp:BoundField ItemStyle-Width="100px" DataField="Employee_Name" HeaderText="EmployeeName" >
-<ItemStyle Width="100px"></ItemStyle>
-            </asp:BoundField>
-       </Columns>
-       </asp:GridView>--%>
        
     </form>
 </body>

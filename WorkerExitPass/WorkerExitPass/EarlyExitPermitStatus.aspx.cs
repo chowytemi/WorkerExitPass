@@ -14,6 +14,7 @@ namespace WorkerExitPass
 {
     public partial class WebForm3 : System.Web.UI.Page
     {
+        static string prevPage = String.Empty;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,10 +25,23 @@ namespace WorkerExitPass
 
                     string myempno = Request.QueryString["exprmitstatus"];
                     Session["empID"] = myempno;
+                    
 
+                    if (Request.UrlReferrer == null)
+                    {
+                        CheckAccess();
+
+                    }
+                    else if (Request.UrlReferrer != null)
+                    {
+                        FormStatus();
+                    }
+                    
+                       
+                    
                 }
-                CheckAccess();
 
+               
             }
             
         
