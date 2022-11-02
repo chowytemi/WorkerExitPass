@@ -160,7 +160,7 @@ namespace WorkerExitPass
             {
                 int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
                 string approve = GridView1.SelectedRow.Cells[3].Text;
-                label.Text += ": " + approve;
+                lblStatus.Text = approve;
                 if (approve == "Approved")
                 {
                     approve = "True";
@@ -187,24 +187,45 @@ namespace WorkerExitPass
                 da3.Fill(ds3);
                 DataTable dt3 = ds3.Tables[0];
 
-                lblStatus.Text += "<table>";
-                  
-                for (int i = 0; i < dt3.Rows.Count; i++)
+                using (DataTableReader reader = new DataTableReader(dt3))
                 {
-                    string status = dt3.Rows[i][0].ToString();
-                    if (status == "True")
+                    if (reader.HasRows)
                     {
-                        status = "Approved";
-                    }
-                    else if (status == "False")
-                    {
-                       status = "Rejected";
-                    }
+                        DateTime approvedate = Convert.ToDateTime(dt3.Rows[0]["approveddate"]);
+                        lblWhen.Text = approvedate.ToString("dd/MM/yyyy hh:mm tt");
+                        if (dt3.Rows.Count == 1)
+                        {
+                            //lblStatus.Text = "";
+                            //DateTime approvedate = Convert.ToDateTime(dt3.Rows[0]["approveddate"]);
+                            //lblWhen.Text = approvedate.ToString("dd/MM/yyyy hh:mm tt");
+                            lblEmpName.Text = dt3.Rows[0]["emp"].ToString();
 
-                    lblStatus.Text += "<tr><td>" + dt3.Rows[i][2].ToString() + "</td>";   
-                }                 
-   
-                lblStatus.Text += "</table>";
+                        }
+                        else
+                        {
+                            lblEmpName.Text += "<table>";
+
+                            for (int i = 0; i < dt3.Rows.Count; i++)
+                            {
+                                string status = dt3.Rows[i][0].ToString();
+                                if (status == "True")
+                                {
+                                    status = "Approved";
+                                }
+                                else if (status == "False")
+                                {
+                                    status = "Rejected";
+                                }
+
+                                lblEmpName.Text += "<tr><td>" + dt3.Rows[i][2].ToString() + "</td>";
+                            }
+
+                            lblEmpName.Text += "</table>";
+
+                        }
+                    }
+                }
+                
 
                 if (!string.IsNullOrEmpty(dt.Rows[0]["approver"].ToString()))
                 {                   
@@ -215,9 +236,12 @@ namespace WorkerExitPass
                     if (dt.Rows[0]["reason"].ToString() == "Medical Injury")
                     {
                         lblApprover.Text = "N.A";
+                        lblWhen.Text = "N.A";
                     }
                     else
                     {
+                        lblWhen.Text = "Pending";
+                        lblEmpName.Text = "Pending";                       
                         string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1;";
                         using (SqlCommand cmd = new SqlCommand(sqlquery, conn))
                         {
@@ -372,7 +396,7 @@ namespace WorkerExitPass
             //}
         }
 
-        protected void ExitPermit_Click(object sender, EventArgs e)
+        protected void CreateNew_Click(object sender, EventArgs e)
         {
             string link = ConfigurationManager.AppSettings["link"].ToString();
             string TK = ConfigurationManager.AppSettings["TK"].ToString();

@@ -22,7 +22,7 @@
             <h1>View Early Exit Permits</h1>
         </div>
         <div class="header">
-            <asp:Button ID="ExitPermitBtn" runat="server" Text="Exit Permit" OnClick="ExitPermit_Click" />       
+            <asp:Button ID="ExitPermitBtn" runat="server" Text="Create New" OnClick="CreateNew_Click" />       
         </div>
         
         
@@ -53,21 +53,25 @@
                         </div>
                         <div id="approval">                                
                             <asp:Label class="label" ID="lblApproval" runat="server" Text="Approval Details"></asp:Label>
-                                <div id="row">
-                                       <%--<div class="col">--%>
+                                <div id="statusWhenRow">
+                                       <div class="col">
                                             <asp:Label class="label" ID="label" runat="server" Text="Status"></asp:Label>
                                             <asp:Label class="labelData" ID="lblStatus" runat="server" />
-                                        <%--</div>--%>
-                                        <%--<div class="col">
+                                        </div>
+                                        <div class="col">
                                             <asp:Label class="label" runat="server" Text="When"></asp:Label>
                                             <asp:Label class="labelData" ID="lblWhen" runat="server" />
-                                        </div> --%>
+                                        </div> 
                                     </div>
+                                <div class="row">
+                                     <asp:Label class="label" ID="empName" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
+                                     <asp:Label class="labelData" ID="lblEmpName" runat="server"></asp:Label>
+                                </div>
                             <asp:Table ID="Table1" runat="server"></asp:Table>
                                 <div class="row">
                                         <asp:Label class="label" ID="name" runat="server" Text="Approver"></asp:Label>
                                         <asp:Label class="labelData" ID="lblApprover" runat="server"></asp:Label>
-                                    </div>     
+                                 </div>     
                         </div>
 
                         <div id="details">

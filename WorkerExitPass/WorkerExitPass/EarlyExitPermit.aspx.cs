@@ -494,7 +494,7 @@ namespace WorkerExitPass
                                                             //              "from Access, UserAccess, ARole, EmpList " +
                                                             //              "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                             //              "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                            //              "and Access.id = '" + RO + "'";
+                                                            //              "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
                                                             string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                             using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
                                                             {
@@ -535,8 +535,8 @@ namespace WorkerExitPass
                                                                         else
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
-
+                                                                        body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+                                                                            
                                                                         }
 
                                                                         body1 += "<br /><br />This is an automatically generated email, please do not reply.";

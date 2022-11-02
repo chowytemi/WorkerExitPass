@@ -110,6 +110,7 @@ namespace WorkerExitPass
 
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+
             string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval,  EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NOT NULL order by exitID desc;";
             //string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval,  EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NOT NULL AND EmpList.RO = '" + empID + "' order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
@@ -126,6 +127,7 @@ namespace WorkerExitPass
                 }
             }
             return dt;
+
 
 
         }
