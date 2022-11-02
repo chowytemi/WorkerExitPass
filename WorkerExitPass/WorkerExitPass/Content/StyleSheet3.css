@@ -23,12 +23,12 @@
 h1 {
     margin-bottom: 0;
 }
-#backBtn {
-    border-radius: 0.9em;
+#ExitPermitBtn {
+    border-radius: 0.7em;
     border-style: none;
     color: white;
     height: 2.3em;
-    width: 5%;
+    /*width: 7%;*/
     font-family: 'Rubik', sans-serif;
     font-size: 1em;
     background-color: #004B7A;
@@ -57,7 +57,9 @@ h1 {
     .label, .labelData, .textbox {
         font-size: 0.8em;
     }
-    #backBtn {
-        width: 10%;
+
+    #ExitPermitBtn {
+        /*width: 10%;*/
         font-size: 0.8em;
     }
+}

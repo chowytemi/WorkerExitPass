@@ -489,20 +489,20 @@ namespace WorkerExitPass
                                                         if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                         {
                                                             //worker - email to RO
-                                                            //string ROname = dr[5].ToString();
-                                                            string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                                          "from Access, UserAccess, ARole, EmpList " +
-                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + RO + "'";
-                                                            //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                            string ROname = dr[5].ToString();
+                                                            //string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                            //              "from Access, UserAccess, ARole, EmpList " +
+                                                            //              "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                            //              "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                            //              "and Access.id = '" + RO + "'";
+                                                            string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                             using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
                                                             {
                                                                 using (SqlDataReader hoddr = hodcmd.ExecuteReader())
                                                                 {
                                                                     while (hoddr.Read())
                                                                     {
-                                                                        string ROid = hoddr[0].ToString();
+                                                                        //string ROid = hoddr[0].ToString();
                                                                         string ROcemail = hoddr[1].ToString();
 
                                                                         MailMessage mm = new MailMessage();
@@ -535,8 +535,8 @@ namespace WorkerExitPass
                                                                         else
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                            body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
-                                                                            
+                                                                            body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+
                                                                         }
 
                                                                         body1 += "<br /><br />This is an automatically generated email, please do not reply.";
@@ -564,7 +564,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' AND emplist.empid = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
@@ -645,74 +645,74 @@ namespace WorkerExitPass
                                                         }
 
                                                     }
-                                                    else //for testing
-                                                    {
-                                                        string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                                          "from Access, UserAccess, ARole, EmpList " +
-                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + RO + "'";
-                                                        using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
-                                                        {
-                                                            using (SqlDataReader hoddr = hodcmd.ExecuteReader())
-                                                            {
-                                                                while (hoddr.Read())
-                                                                {
-                                                                    string ROid = hoddr[0].ToString();
-                                                                    string ROcemail = hoddr[1].ToString();
+                                                    //else //for testing
+                                                    //{
+                                                    //    string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                    //                      "from Access, UserAccess, ARole, EmpList " +
+                                                    //                      "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                    //                      "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                    //                      "and Access.id = '" + RO + "'";
+                                                    //    using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
+                                                    //    {
+                                                    //        using (SqlDataReader hoddr = hodcmd.ExecuteReader())
+                                                    //        {
+                                                    //            while (hoddr.Read())
+                                                    //            {
+                                                    //                string ROid = hoddr[0].ToString();
+                                                    //                string ROcemail = hoddr[1].ToString();
 
-                                                                    MailMessage mm = new MailMessage();
-                                                                    mm.From = new MailAddress(MailFrom);
-                                                                    string body = "Hello,";
-                                                                    body += "<br /><br />The following application was submitted:";
-                                                                    body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                                                                    body += "<tr style=\" height: 0.5em;\">";
-                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
-                                                                    body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
-                                                                    body += "<tr style=\" height: 0.5em;\">";
-                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Project</th>";
-                                                                    body += "<td style=\" border: 1px solid\">" + project + "</td>";
-                                                                    body += "<tr style=\" height: 0.5em;\">";
-                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Reason</th>";
-                                                                    body += "<td style=\" border: 1px solid\">" + reason + "</td>";
-                                                                    body += "<tr style=\" height: 0.5em;\">";
-                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Requested time</th>";
-                                                                    body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                                                    body += "<tr style=\" height: 0.5em;\">";
-                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee name</th>";
-                                                                    body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
-                                                                    string body1 = "";
+                                                    //                MailMessage mm = new MailMessage();
+                                                    //                mm.From = new MailAddress(MailFrom);
+                                                    //                string body = "Hello,";
+                                                    //                body += "<br /><br />The following application was submitted:";
+                                                    //                body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                    //                body += "<tr style=\" height: 0.5em;\">";
+                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
+                                                    //                body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
+                                                    //                body += "<tr style=\" height: 0.5em;\">";
+                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Project</th>";
+                                                    //                body += "<td style=\" border: 1px solid\">" + project + "</td>";
+                                                    //                body += "<tr style=\" height: 0.5em;\">";
+                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Reason</th>";
+                                                    //                body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                                                    //                body += "<tr style=\" height: 0.5em;\">";
+                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Requested time</th>";
+                                                    //                body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                                    //                body += "<tr style=\" height: 0.5em;\">";
+                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee name</th>";
+                                                    //                body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
+                                                    //                string body1 = "";
 
-                                                                    if (ReasonDropdown.Text == "Medical Injury")
-                                                                    {
+                                                    //                if (ReasonDropdown.Text == "Medical Injury")
+                                                    //                {
 
-                                                                        mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                    //                    mm.Subject = "Early Exit Permit Medical Injury Notification";
 
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        mm.Subject = "Early Exit Permit Pending Test for Approval";
-                                                                        //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
-                                                                        //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
-                                                                        body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+                                                    //                }
+                                                    //                else
+                                                    //                {
+                                                    //                    mm.Subject = "Early Exit Permit Pending Test for Approval";
+                                                    //                    //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
+                                                    //                    //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
+                                                    //                    body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
 
-                                                                    }
+                                                    //                }
 
-                                                                    body1 += "<br /><br />This is an automatically generated email, please do not reply.";
-                                                                    mm.Body = body + body1;
-                                                                    mm.IsBodyHtml = true;
-                                                                    mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                                    mm.To.Add(new MailAddress(ROcemail));
-                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
-                                                                    smtp.EnableSsl = false;
-                                                                    mm.To.Add(new MailAddress(MailTo));
-                                                                    smtp.Send(mm);
+                                                    //                body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+                                                    //                mm.Body = body + body1;
+                                                    //                mm.IsBodyHtml = true;
+                                                    //                mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                                    //                mm.To.Add(new MailAddress(ROcemail));
+                                                    //                SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
+                                                    //                smtp.EnableSsl = false;
+                                                    //                mm.To.Add(new MailAddress(MailTo));
+                                                    //                smtp.Send(mm);
 
-                                                                }
-                                                            }
+                                                    //            }
+                                                    //        }
 
-                                                        }
-                                                    }
+                                                    //    }
+                                                    //}
                                                 }
                                             }
                                         }

@@ -72,8 +72,8 @@ namespace WorkerExitPass
             }
             else
             {
-                //string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
-                string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "' and EmpList.EmpID = '" + empID + "' ; ";
+                string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
+                //string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "' and EmpList.EmpID = '" + empID + "' ; ";
                 SqlCommand cmd2 = new SqlCommand(sql2, con);
                 SqlDataReader dr2 = cmd2.ExecuteReader();
                 if (dr2.HasRows)
@@ -124,17 +124,8 @@ namespace WorkerExitPass
                 DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
                 e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy");
 
-                //if ((e.Row.Cells[2].Text) == "&nbsp;")
-                //{
-
-                //    e.Row.Cells[2].Text = "NULL";
-
-                //}
-                //else
-                //{
-                    DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
-                    e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
-                //}
+                DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
+                e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
 
             }
         }
@@ -307,13 +298,13 @@ namespace WorkerExitPass
 
                         //for testing
                         //send email to person who created the application to update status
-                        //string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
-                        //  " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
-                        string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                                          "from Access, UserAccess, ARole, EmpList " +
-                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T202' OR EmpList.EmpID = 'T203'";
+                        string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
+                          " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
+                        //string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                        //                                                  "from Access, UserAccess, ARole, EmpList " +
+                        //                                                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                        //                                                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                        //                                                  "and Access.id = '" + PJM + "'";
 
                         using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
                         {
@@ -321,12 +312,11 @@ namespace WorkerExitPass
                             {
                                 while (dr2.Read())
                                 {
-                                    //string email = dr2[2].ToString();
-                                    string email = dr2[1].ToString();
+                                    string email = dr2[2].ToString();
+                                    //string email = dr2[1].ToString();
 
                                     MailMessage mm = new MailMessage();
                                     mm.From = new MailAddress(MailFrom);
-                                    //mm.Subject = "Early Exit Permit is " + status[0].ToString().ToUpper() + status.Substring(1, status.Length - 1);  
                                     mm.Subject = "Early Exit Permit Application Status is Updated";
                                     mm.Body = body;
                                     mm.IsBodyHtml = true;
