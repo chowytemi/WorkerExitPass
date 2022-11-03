@@ -466,6 +466,9 @@ namespace WorkerExitPass
                                                             string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                             using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
                                                             {
+                                                                MailMessage mm = new MailMessage();
+                                                                SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
+
                                                                 using (SqlDataReader hoddr = hodcmd.ExecuteReader())
                                                                 {
                                                                     while (hoddr.Read())
@@ -473,7 +476,7 @@ namespace WorkerExitPass
                                                                         string ROcemail = hoddr[0].ToString();
                                                                         //string ROcemail = hoddr[1].ToString(); //TESTING
 
-                                                                        MailMessage mm = new MailMessage();
+                                                                        //MailMessage mm = new MailMessage();
                                                                         mm.From = new MailAddress(MailFrom);
                                                                         //string body = "Hello,";
                                                                         String body = "The following application was submitted:";
@@ -512,14 +515,15 @@ namespace WorkerExitPass
                                                                         mm.IsBodyHtml = true;
                                                                         mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                         mm.To.Add(new MailAddress(ROcemail));
-                                                                        mm.To.Add(new MailAddress(MailTo));
-                                                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
+                                                                        //mm.To.Add(new MailAddress(MailTo));
+                                                                        //SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
                                                                         smtp.EnableSsl = false;
-                                                                        smtp.Send(mm);
+                                                                        //smtp.Send(mm);
 
                                                                     }
                                                                 }
-
+                                                                mm.To.Add(new MailAddress(MailTo));
+                                                                smtp.Send(mm);
                                                             }
                                                         }
 
@@ -535,19 +539,22 @@ namespace WorkerExitPass
                                                                           "and Access.id = '" + PJM + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
+                                                            MailMessage mm = new MailMessage();
+                                                            SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+
                                                             using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
                                                             {
                                                                 while (pjmdr.Read())
                                                                 {
 
-                                                                    SqlDataAdapter da = new SqlDataAdapter(pjmquery, conn);
-                                                                    DataSet ds = new DataSet();
-                                                                    da.Fill(ds);
-                                                                    DataTable dt = ds.Tables[0];
+                                                                    //SqlDataAdapter da = new SqlDataAdapter(pjmquery, conn);
+                                                                    //DataSet ds = new DataSet();
+                                                                    //da.Fill(ds);
+                                                                    //DataTable dt = ds.Tables[0];
                                                                     string name = pjmdr[0].ToString();
 
 
-                                                                    MailMessage mm = new MailMessage();
+                                                                    //MailMessage mm = new MailMessage();
                                                                     mm.From = new MailAddress(MailFrom);
                                                                     //string body = "Hello,";
                                                                     String body = "The following application was submitted:";
@@ -581,22 +588,28 @@ namespace WorkerExitPass
                                                                     }
                                                                     mm.Body = body + body1;
                                                                     mm.IsBodyHtml = true;
-                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                                                    //SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
                                                                     smtp.EnableSsl = false;
-                                                                    for (int i = 0; i < dt.Rows.Count; i++)
-                                                                    {
-                                                                        string pjmID = dt.Rows[i][1].ToString();
-                                                                        mm.To.Add(new MailAddress(pjmID));
-                                                                    }
-
-
-                                                                    mm.To.Add(new MailAddress(MailTo));
+                                                                    //for (int i = 0; i < dt.Rows.Count; i++)
+                                                                    //{
+                                                                    //    string pjmID = dt.Rows[i][1].ToString();
+                                                                    //    mm.To.Add(new MailAddress(pjmID));
+                                                                    //}
+                                                                    
+                                                                    string pjmID = pjmdr[1].ToString();
+                                                                    mm.To.Add(new MailAddress(pjmID));
+                                                                    
+                                                                    //mm.To.Add(new MailAddress(MailTo));
 
                                                                     smtp.UseDefaultCredentials = false;
-                                                                    smtp.Send(mm);
+                                                                    //smtp.Send(mm);
                                                                 }
 
                                                             }
+
+                                                            mm.To.Add(new MailAddress(MailTo));
+
+                                                            smtp.Send(mm);
                                                         }
 
                                                     }
