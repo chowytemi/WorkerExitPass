@@ -230,7 +230,7 @@ namespace WorkerExitPass
             dr.Close();
             conn.Close();
         }
-        
+
 
         protected void CheckSubmission()
         {
@@ -475,8 +475,8 @@ namespace WorkerExitPass
 
                                                                         MailMessage mm = new MailMessage();
                                                                         mm.From = new MailAddress(MailFrom);
-                                                                        string body = "Hello,";
-                                                                        body += "<br /><br />The following application was submitted:";
+                                                                        //string body = "Hello,";
+                                                                        String body = "The following application was submitted:";
                                                                         body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
                                                                         body += "<tr style=\" height: 0.5em;\">";
                                                                         body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
@@ -503,8 +503,8 @@ namespace WorkerExitPass
                                                                         else
                                                                         {
                                                                             mm.Subject = "Early Exit Permit Pending RO for Approval";
-                                                                        body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
-                                                                            
+                                                                            body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+
                                                                         }
 
                                                                         body1 += "<br /><br />This is an automatically generated email, please do not reply.";
@@ -539,13 +539,18 @@ namespace WorkerExitPass
                                                             {
                                                                 while (pjmdr.Read())
                                                                 {
+
+                                                                    SqlDataAdapter da = new SqlDataAdapter(pjmquery, conn);
+                                                                    DataSet ds = new DataSet();
+                                                                    da.Fill(ds);
+                                                                    DataTable dt = ds.Tables[0];
                                                                     string name = pjmdr[0].ToString();
 
 
                                                                     MailMessage mm = new MailMessage();
                                                                     mm.From = new MailAddress(MailFrom);
-                                                                    string body = "Hello,";
-                                                                    body += "<br /><br />The following application was submitted:";
+                                                                    //string body = "Hello,";
+                                                                    String body = "The following application was submitted:";
                                                                     body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
                                                                     body += "<tr style=\" height: 0.5em;\">";
                                                                     body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
@@ -573,39 +578,21 @@ namespace WorkerExitPass
                                                                     {
                                                                         mm.Subject = "Early Exit Permit Pending PJM for Approval";
                                                                         body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
-                                                                        //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + name + "'>here</a> to approve or reject the application.";
-
-                                                                        //body += "<br />Click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + name) + "'>here</a> to view the application or";
-                                                                        //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject this application</a>";
-                                                                        //body += "<div style=\" display: flex; flex-direction: row; justify-content: space-around; align-items: center;\">";
-                                                                        //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=1") + "'>Approve</a>";
-                                                                        //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + name + "&status=0") + "'>Reject</a>";
                                                                     }
-                                                                    body1 += "<br /><br />This is an automatically generated email, please do not reply.";
                                                                     mm.Body = body + body1;
                                                                     mm.IsBodyHtml = true;
-                                                                    mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
+                                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
                                                                     smtp.EnableSsl = false;
-
-                                                                    string pjmID = "";
-                                                                    if (!pjmdr.IsDBNull(1))
+                                                                    for (int i = 0; i < dt.Rows.Count; i++)
                                                                     {
-                                                                        pjmID = pjmdr.GetString(1);
+                                                                        string pjmID = dt.Rows[i][1].ToString();
                                                                         mm.To.Add(new MailAddress(pjmID));
-
-
-                                                                        //send to safety
-                                                                        //if (ReasonDropdown.Text == "Medical Injury")
-                                                                        //{
-                                                                        //    mm.To.Add(new MailAddress(pjmID));
-                                                                        //}
-
-                                                                        
-
-
                                                                     }
+
+
                                                                     mm.To.Add(new MailAddress(MailTo));
+
+                                                                    smtp.UseDefaultCredentials = false;
                                                                     smtp.Send(mm);
                                                                 }
 
@@ -705,7 +692,7 @@ namespace WorkerExitPass
 
         }
 
-        
+
 
 
     }

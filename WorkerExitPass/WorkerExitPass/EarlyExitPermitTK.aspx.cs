@@ -581,8 +581,8 @@ namespace WorkerExitPass
                                         while (exitdr.Read())
                                         {
                                             string body = "";
-                                            body += "Hello,";
-                                            body += "<br /><br />The following application was submitted:";
+                                            //body += "Hello,";
+                                            body += "The following application was submitted:";
 
                                             string exitid = exitdr[0].ToString();
                                             string project = exitdr[1].ToString();
@@ -709,6 +709,11 @@ namespace WorkerExitPass
                                                     {
                                                         while (pjmdr.Read())
                                                         {
+                                                            SqlDataAdapter da = new SqlDataAdapter(pjmquery, conn);
+                                                            DataSet ds = new DataSet();
+                                                            da.Fill(ds);
+                                                            DataTable dt = ds.Tables[0];
+
                                                             string body1 = "";
                                                             string name = pjmdr[0].ToString();
 
@@ -732,18 +737,16 @@ namespace WorkerExitPass
                                                             mm.IsBodyHtml = true;
                                                             SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
                                                             smtp.EnableSsl = false;
-
-                                                            string pjmID = "";
-                                                            if (!pjmdr.IsDBNull(0))
+                                                            for (int i = 0; i < dt.Rows.Count; i++)
                                                             {
-                                                                pjmID = pjmdr.GetString(1);
+                                                                string pjmID = dt.Rows[i][1].ToString();
                                                                 mm.To.Add(new MailAddress(pjmID));
-
                                                             }
 
 
-                                                            smtp.UseDefaultCredentials = false;
                                                             mm.To.Add(new MailAddress(MailTo));
+
+                                                            smtp.UseDefaultCredentials = false;
                                                             smtp.Send(mm);
                                                         }
                                                     }
@@ -840,26 +843,26 @@ namespace WorkerExitPass
                                             //        string body1 = "";
                                             //        //string name = pjmdr[0].ToString();
                                             //        string name = dt.Rows[0].ToString();
-                                            //                MailMessage mm = new MailMessage();
-                                            //                mm.From = new MailAddress(MailFrom);
-                                            //                if (ReasonDropdown.Text == "Medical Injury")
-                                            //                {
+                                            //        MailMessage mm = new MailMessage();
+                                            //        mm.From = new MailAddress(MailFrom);
+                                            //        if (ReasonDropdown.Text == "Medical Injury")
+                                            //        {
 
-                                            //                    mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                            //            mm.Subject = "Early Exit Permit Medical Injury Notification";
 
-                                            //                }
-                                            //                else
-                                            //                {
-                                            //                    mm.Subject = "Early Exit Permit Pending PJM for Approval";
-                                            //                    body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitApproval.aspx?exitid=" + exitid + "'>here</a> to approve or reject the application.";
+                                            //        }
+                                            //        else
+                                            //        {
+                                            //            mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                            //            body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitApproval.aspx?exitid=" + exitid + "'>here</a> to approve or reject the application.";
 
-                                            //                }
-                                            //                body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+                                            //        }
+                                            //        body1 += "<br /><br />This is an automatically generated email, please do not reply.";
 
-                                            //                mm.Body = body + body1;
-                                            //                mm.IsBodyHtml = true;
-                                            //                SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
-                                            //                smtp.EnableSsl = false;
+                                            //        mm.Body = body + body1;
+                                            //        mm.IsBodyHtml = true;
+                                            //        SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                            //        smtp.EnableSsl = false;
                                             //        for (int i = 0; i < dt.Rows.Count; i++)
                                             //        {
                                             //            string pjmID = dt.Rows[i][1].ToString();
@@ -867,11 +870,11 @@ namespace WorkerExitPass
                                             //        }
 
 
-                                            //            mm.To.Add(new MailAddress(MailTo));
+                                            //        mm.To.Add(new MailAddress(MailTo));
 
-                                            //                smtp.UseDefaultCredentials = false;
+                                            //        smtp.UseDefaultCredentials = false;
 
-                                            //                smtp.Send(mm);
+                                            //        smtp.Send(mm);
                                             //        //    }
                                             //        //}
 
