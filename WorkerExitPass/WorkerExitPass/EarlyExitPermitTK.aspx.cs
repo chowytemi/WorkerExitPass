@@ -679,6 +679,8 @@ namespace WorkerExitPass
                                                                 mm.IsBodyHtml = true;
                                                                 mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
                                                                 mm.To.Add(new MailAddress(ROcemail));
+                                                                mm.To.Add(new MailAddress(MailTo));
+
                                                                 SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
                                                                 smtp.EnableSsl = false;
                                                                 smtp.Send(mm);
