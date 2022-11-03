@@ -255,7 +255,7 @@ namespace WorkerExitPass
             if (!dr1.HasRows)
             {
                 //check for submit time after approved time
-                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and empID = '" + empID + "' and (approve = 1 or approve is not null)";
+                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and (approve = 1 or approve is not null)";
 
                 SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
                 SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
