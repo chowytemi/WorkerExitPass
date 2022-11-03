@@ -19,17 +19,6 @@ namespace WorkerExitPass
 
             if (!IsPostBack)
             {
-                //if ((Request.QueryString["approver"] != null))
-                //{
-                //    string myempno = Request.QueryString["approver"];
-                //    Session["empID"] = myempno;
-                //}
-
-                //if ((Request.QueryString["status"] != null))
-                //{
-                //    ApproveByEmail();
-                //}
-                //CheckAccess();
                 if ((Request.QueryString["approval"] != null))
                 {
 
@@ -61,7 +50,9 @@ namespace WorkerExitPass
             SqlConnection con = new SqlConnection(cs);
             con.Open();
             //for testing
-            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "' ; ";
+            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
+                "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "' ; ";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
 
@@ -217,7 +208,11 @@ namespace WorkerExitPass
             {
                 con.Open();
                 //string sqlquery = "select distinct exitapproval.exitID, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'approver', exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
-                string sqlquery = "select distinct exitapproval.exitID, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'approver' from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
+                string sqlquery = "select distinct exitapproval.exitID, (select distinct EmpList.Employee_Name from EmpList, exitapproval " +
+                    "where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') " +
+                    "as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail, " +
+                    "(select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" 
+                    + exitID + "') as 'approver' from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
                 using (SqlCommand cmd = new SqlCommand(sqlquery, con))
                 {
                     SqlDataAdapter da2 = new SqlDataAdapter(sqlquery, con);
@@ -235,10 +230,8 @@ namespace WorkerExitPass
                     string createdByEmail = dt2.Rows[0][5].ToString();
                     string approver = dt2.Rows[0][6].ToString();
 
-
-                    //string sqlquery3 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
-                    //string sqlquery3 = "select EmpList.Employee_Name, exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
-                    string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp', exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
+                    string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp', exitapproval.approve, exitapproval.approveddate " +
+                        "from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
                     using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
                     {
                         SqlDataAdapter da = new SqlDataAdapter(sqlquery3, con);

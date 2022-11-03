@@ -229,7 +229,9 @@ namespace WorkerExitPass
             {
                 //for testing
                 //string sql = "select EmpID from EmpList";
-                string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
+                string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name " +
+                    "from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid " +
+                    "and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + empID + "' ; ";
                 SqlCommand cmd = new SqlCommand(sql, con);
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.HasRows)
@@ -312,7 +314,8 @@ namespace WorkerExitPass
                     if (ReasonDropdown.Text == "Medical Injury")
                     {
                         //insert request
-                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                            "values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
                         {
@@ -339,7 +342,8 @@ namespace WorkerExitPass
                     else
                     {
                         //insert request
-                        string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                            "values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                         {
@@ -418,7 +422,8 @@ namespace WorkerExitPass
                         {
                             //get EmpID
                             //string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
-                            string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','" + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
+                            string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','" 
+                                + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
                             SqlCommand empcmd = new SqlCommand(empquery, appcon);
                             using (SqlDataReader empdr = empcmd.ExecuteReader())
                             {
@@ -429,16 +434,17 @@ namespace WorkerExitPass
                                         string insertsinglequery = "";
                                         if (ReasonDropdown.Text == "Medical Injury")
                                         {
-                                            insertsinglequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            insertsinglequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                "values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                         }
                                         else
                                         {
-                                            insertsinglequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            insertsinglequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                "values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                         }
 
 
                                         string employeeIDToExit = empdr[0].ToString();
-                                        //Label1.Text = employeeIDToExit;
                                         using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
                                         {
 
@@ -468,11 +474,13 @@ namespace WorkerExitPass
                                         string insertmultiplequery = "";
                                         if (ReasonDropdown.Text == "Medical Injury")
                                         {
-                                            insertmultiplequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            insertmultiplequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                         }
                                         else
                                         {
-                                            insertmultiplequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            insertmultiplequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                         }
 
 
@@ -582,7 +590,8 @@ namespace WorkerExitPass
                                             DateTime exittime = Convert.ToDateTime(exitdr[3].ToString());
                                             string exittime1 = exittime.ToString("dd/MM/yyyy hh:mm tt");
                                             //string query3 = "select EmpList.Employee_Name, exitapproval.exittime, exitapproval.reason from EmpList, exitapproval where EmpList.EmpID =  exitapproval.toexit and exitapproval.exitID= '" + exitid + "';";
-                                            string query3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) from EmpList, exitapproval where exitapproval.exitID = '" + exitid + "' and EmpList.EmpID = exitapproval.EmpID;";
+                                            string query3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) from EmpList, exitapproval where exitapproval.exitID = '" 
+                                                + exitid + "' and EmpList.EmpID = exitapproval.EmpID;";
 
                                             using (SqlCommand cmd3 = new SqlCommand(query3, conn))
                                             {
@@ -634,7 +643,7 @@ namespace WorkerExitPass
                                                     //                      "from Access, UserAccess, ARole, EmpList " +
                                                     //                      "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                     //                      "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                    //                      "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                    //                      "and Access.id = '" + PJM + "'";
 
 
                                                     using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
@@ -659,13 +668,7 @@ namespace WorkerExitPass
                                                                 {
                                                                     mm.Subject = "Early Exit Permit Pending RO for Approval";
                                                                     body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
-                                                                    //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
-
-                                                                    //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
-                                                                    //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve</a>";
-                                                                    //body += "<br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject</a>";
-                                                                    //body += "<br /><br /><a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=1") + "'>Approve this application</a>" + " or " + "<a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermitTK.aspx?exprmit=" + empID, "EarlyExitPermitApproval.aspx?exitid=" + exitid + "&approver=" + ROid + "&status=0") + "'>Reject this application</a>";
-
+                                                                    
                                                                 }
 
 
@@ -691,8 +694,7 @@ namespace WorkerExitPass
                                             else if (dr[2].ToString() == "SUBCON")
                                             {
                                                 //subcon - email to project managers
-
-                                                //for testing
+                                                
                                                 string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
@@ -1070,9 +1072,6 @@ namespace WorkerExitPass
                         else
                         {
                             CheckSubmissionTeam();
-                            //TeamSubmit();
-                            //sendEmailForApproval();
-                            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
                         }
 
                     }
@@ -1133,9 +1132,6 @@ namespace WorkerExitPass
                         else
                         {
                             CheckSubmissionSolo();
-                            //SoloSubmit();
-                            //sendEmailForApproval();
-                            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
                         }
 
                     }

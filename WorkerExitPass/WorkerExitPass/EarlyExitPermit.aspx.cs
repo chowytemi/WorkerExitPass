@@ -28,8 +28,6 @@ namespace WorkerExitPass
                     Session["empID"] = myempno;
 
                 }
-                //BindDataSetDataProjects();
-                //RetrieveDataFromLogin();
                 CheckAccess();
                 //CheckClockInEmp();
             }
@@ -84,9 +82,7 @@ namespace WorkerExitPass
             SqlDataReader drcheck = cmdline.ExecuteReader();
             if (drcheck.HasRows)
             {
-                //string sql = "select EmpID from  EmpList where IsActive = 1 and CEmail IS NOT NULL and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
-                //string sql = "select EmpID from EmpList where IsActive = 1 and JobCode IN('SUBCON', 'WK') and EmpID = '" + empID + "';";
-                string sql = "select EmpID from EmpList where IsActive = 1 and EmpID = '" + empID + "';";
+                string sql = "select EmpID from EmpList where IsActive = 1 and CEmail IS NOT NULL and EmpID = '" + empID + "';";
                 SqlCommand cmd = new SqlCommand(sql, con);
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (dr.HasRows)
@@ -161,8 +157,6 @@ namespace WorkerExitPass
                         else
                         {
                             CheckSubmission();
-                            //sendEmailForApproval();
-                            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
                         }
 
                     }
@@ -217,7 +211,6 @@ namespace WorkerExitPass
         //Get data from Login 
         protected void RetrieveDataFromLogin()
         {
-            //Connect to database
 
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
@@ -237,35 +230,7 @@ namespace WorkerExitPass
             dr.Close();
             conn.Close();
         }
-
-        protected void CheckFormInputs()
-        {
-            //var time = Request["timeInput"];
-            //var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-            //DateTime dateinput = DateTime.Parse(date);
-            //var currentdate = DateTime.Now;
-            //string projectInput = projectddl.Text;
-            //string nameInput = nametb.Text;
-            //string companyInput = companytb.Text;
-            //string reasonInput = ReasonDropdown.Text;
-            //string remarksInput = remarkstb.Text;
-
-            //if (projectInput != "" || nameInput != "" || companyInput != "")
-            //{
-            //    int compare = DateTime.Compare(dateinput, currentdate);
-            //    if (compare > 0)
-            //    {
-            //        Label1.Text = "After Current Time";
-            //    }
-            //    else if (compare <= 0)
-            //    {
-            //        ScriptManager.RegisterClientScriptBlock
-            //          (this, this.GetType(), "alertMessage", "alert" +
-            //          "('Please choose a time after the current time')", true);
-            //        return;
-            //    }
-            //}
-        }
+        
 
         protected void CheckSubmission()
         {
@@ -352,7 +317,8 @@ namespace WorkerExitPass
                     {
                         //insert request
                         //string sqlinsertapprovequery = "insert into exitapproval(approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                            "values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
                         {
@@ -377,7 +343,8 @@ namespace WorkerExitPass
                     {
                         //insert request
                         //string sqlinsertquery = "insert into exitapproval(createdby, createddate, toexit, company, reason, Remarks, exittime, projectdesc, projcode) values( @createdby, @createddate, @toexit, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                        string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertquery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                            "values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                         using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                         {
 
@@ -503,8 +470,8 @@ namespace WorkerExitPass
                                                                 {
                                                                     while (hoddr.Read())
                                                                     {
-                                                                        //string ROid = hoddr[0].ToString();
-                                                                        string ROcemail = hoddr[1].ToString();
+                                                                        string ROcemail = hoddr[0].ToString();
+                                                                        //string ROcemail = hoddr[1].ToString(); //TESTING
 
                                                                         MailMessage mm = new MailMessage();
                                                                         mm.From = new MailAddress(MailFrom);

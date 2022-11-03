@@ -51,7 +51,9 @@ namespace WorkerExitPass
             SqlConnection con = new SqlConnection(cs);
             con.Open();
             //for testing
-            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + PJM + "' and EmpList.EmpID = '" + empID + "' ; ";
+            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
+                "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid " +
+                "and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + PJM + "' and EmpList.EmpID = '" + empID + "' ; ";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
 
@@ -85,7 +87,8 @@ namespace WorkerExitPass
         {
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NULL order by exitID desc;";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval, EmpList " +
+                "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND (EmpList.RO IS NULL OR EmpList.RO = 'NONE') order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -100,8 +103,8 @@ namespace WorkerExitPass
                 }
             }
             return dt;
-            
-            
+
+
         }
         private DataTable GetPendingRO()
         {
@@ -111,67 +114,33 @@ namespace WorkerExitPass
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
 
-            //string ROid = "select distinct EmpList.RO from EmpList inner join exitapproval on EmpList.EmpID = exitapproval.createdby where exitapproval.createdby = '+';";
-            string sql = "select distinct exitapproval.exitID, exitapproval.approve, EmpList.RO, exitapproval.createdby from exitapproval, " +
-                "EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NOT NULL" +
-                " order by exitID desc; ";
-
-
-            //string ROsql = "select distinct EmpList.RO from EmpList inner join exitapproval on EmpList.EmpID = exitapproval.createdby where exitapproval.createdby = 'MI755' and EmpList.RO = 'M2113'"
-            //string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO from exitapproval,  EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO IS NOT NULL AND EmpList.RO = '" + empID + "' order by exitID desc;";
 
             using (SqlConnection conn = new SqlConnection(cs))
             {
-                using (SqlCommand cmd = new SqlCommand(sql))
+                
+                string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO, exitapproval.createdby " +
+                   "from exitapproval,  EmpList " +
+                   "where approve IS NULL AND reason NOT IN('Medical Injury') " +
+                   "and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' order by exitID desc;";
+
+                using (SqlCommand cmd3 = new SqlCommand(statussql, conn))
                 {
-                    cmd.Connection = conn;
-                    conn.Open();
-                    SqlDataReader dr = cmd.ExecuteReader();
-
-                    while (dr.Read())
+                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd3))
                     {
-                        string createdby = dr[3].ToString();
-                        string ROid = dr[2].ToString();
-
-                        string ROsql = "select distinct EmpList.RO from EmpList inner join exitapproval on EmpList.EmpID = exitapproval.createdby where exitapproval.createdby = '" + createdby + "' and EmpList.RO = '" + empID + "'";
-                        using (SqlCommand cmd2 = new SqlCommand(ROsql, conn))
-                        {
-                            using (SqlDataReader dr2 = cmd2.ExecuteReader())
-                            {
-                                if (dr2.HasRows)
-                                {
-                                    while (dr2.Read())
-                                    {
-                                        string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.approve, EmpList.RO, exitapproval.createdby " +
-                                       "from exitapproval,  EmpList " +
-                                       "where approve IS NULL AND reason NOT IN('Medical Injury') " +
-                                       "and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' order by exitID desc;";
-
-                                        using (SqlCommand cmd3 = new SqlCommand(statussql, conn))
-                                        {
-                                            using (SqlDataAdapter sda = new SqlDataAdapter(cmd3))
-                                            {
-                                                sda.Fill(dt);
-                                                GridView1.DataSource = dt;
-                                                GridView1.DataBind();
-                                            }
-                                            
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        sda.Fill(dt);
+                        GridView1.DataSource = dt;
+                        GridView1.DataBind();
 
                     }
+
                 }
-
             }
-            return dt;
 
+            return dt;
 
         }
 
-       
+
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -210,6 +179,6 @@ namespace WorkerExitPass
             GridView1.DataBind();
         }
 
-        
+
     }
 }
