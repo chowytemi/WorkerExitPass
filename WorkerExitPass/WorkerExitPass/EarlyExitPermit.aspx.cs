@@ -352,7 +352,7 @@ namespace WorkerExitPass
                     {
                         //insert request
                         //string sqlinsertapprovequery = "insert into exitapproval(approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
                         {
@@ -361,6 +361,7 @@ namespace WorkerExitPass
                             insert.CommandType = CommandType.Text;
                             insert.Parameters.AddWithValue("@createdby", empID);
                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                            insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
                             insert.Parameters.AddWithValue("@EmpID", empID);
                             insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));

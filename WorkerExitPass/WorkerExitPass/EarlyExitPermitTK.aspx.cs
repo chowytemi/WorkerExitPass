@@ -312,7 +312,7 @@ namespace WorkerExitPass
                     if (ReasonDropdown.Text == "Medical Injury")
                     {
                         //insert request
-                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                        string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
                         {
@@ -324,6 +324,7 @@ namespace WorkerExitPass
                             insert.CommandType = CommandType.Text;
                             insert.Parameters.AddWithValue("@createdby", empID);
                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                            insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
                             insert.Parameters.AddWithValue("@EmpID", empID);
                             insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
@@ -428,7 +429,7 @@ namespace WorkerExitPass
                                         string insertsinglequery = "";
                                         if (ReasonDropdown.Text == "Medical Injury")
                                         {
-                                            insertsinglequery = "insert into exitapproval(exitID, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            insertsinglequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                         }
                                         else
                                         {
@@ -448,6 +449,7 @@ namespace WorkerExitPass
                                             insert.CommandType = CommandType.Text;
                                             insert.Parameters.AddWithValue("@createdby", empID);
                                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                                            insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
                                             insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
                                             insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
                                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
@@ -466,7 +468,7 @@ namespace WorkerExitPass
                                         string insertmultiplequery = "";
                                         if (ReasonDropdown.Text == "Medical Injury")
                                         {
-                                            insertmultiplequery = "insert into exitapproval(exitID, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            insertmultiplequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                         }
                                         else
                                         {
@@ -485,6 +487,7 @@ namespace WorkerExitPass
                                             insert.CommandType = CommandType.Text;
                                             insert.Parameters.AddWithValue("@createdby", empID);
                                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                                            insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
                                             insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
                                             insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
                                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
@@ -694,7 +697,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
