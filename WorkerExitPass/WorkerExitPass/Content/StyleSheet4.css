@@ -75,7 +75,28 @@
     width: 30%;
 }
 
+#approval, #details {
+    width: 100%;
+    background-color: #FFFFFF;
+    box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
+    border-radius: 0.75em;
+    padding: 0.25em 1em 1em 1em;
+    margin-bottom: 1em;
+}
+/**/
 
+#lblApproval, #lblDetails {
+    margin-top: 0.5em;
+    font-size: 1.1em;
+}
+
+#statusWhenRow, #dateTimeRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 1em;
+}
 
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 768px) {

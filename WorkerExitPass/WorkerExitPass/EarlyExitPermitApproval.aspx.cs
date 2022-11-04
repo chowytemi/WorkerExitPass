@@ -363,9 +363,13 @@ namespace WorkerExitPass
             int approve = 1;
 
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(cs))
+            string exitPermitLink = ConfigurationManager.AppSettings["exitPermitLink"].ToString();
+            string myApp = ConfigurationManager.AppSettings["myApp"].ToString();
+            try
             {
-                conn.Open();
+                using (SqlConnection conn = new SqlConnection(cs))
+                {
+                    conn.Open();
 
                     foreach (ListItem li in CheckBoxList1.Items)
                     {
@@ -414,12 +418,22 @@ namespace WorkerExitPass
                     {
                         sendEmail();
                         mpeApproval.Hide();
+                        //Response.Redirect(exitPermitLink + "EarlyExitPermitView.aspx?approval=" + empID);
                         Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
                     }
-        
-                conn.Close();
-                
+
+                    conn.Close();
+
+                }
             }
+            catch
+            {
+                //Response.Redirect(myApp);
+                //Response.Redirect(exitPermitLink + "EarlyExitPermitView.aspx?approval=" + empID);
+                Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+            }
+
+
 
         }
 
@@ -430,89 +444,100 @@ namespace WorkerExitPass
             DateTime approveddate = DateTime.Now;
             var exitID = Request.QueryString["exitid"];
             int approve = 0;
-
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            using (SqlConnection conn = new SqlConnection(cs))
+            string exitPermitLink = ConfigurationManager.AppSettings["link"].ToString();
+            string myApp = ConfigurationManager.AppSettings["myApp"].ToString();
+            try
             {
-                conn.Open();
-                
-                foreach (ListItem li in CheckBoxList1.Items)
+                using (SqlConnection conn = new SqlConnection(cs))
                 {
-                    if (li.Selected == true)
+                    conn.Open();
+
+                    foreach (ListItem li in CheckBoxList1.Items)
                     {
-                        //insert to database, the value is in item.Value
-                        string getIDquery = "select EmpID from EmpList where Employee_Name = @empName;";
-
-                        using (SqlCommand select = new SqlCommand(getIDquery, conn))
+                        if (li.Selected == true)
                         {
-                            select.CommandType = CommandType.Text;
-                            select.Parameters.AddWithValue("@empName", li.Value);
-                            select.ExecuteNonQuery();
-                            using (SqlDataReader dr = select.ExecuteReader())
+                            //insert to database, the value is in item.Value
+                            string getIDquery = "select EmpID from EmpList where Employee_Name = @empName;";
+
+                            using (SqlCommand select = new SqlCommand(getIDquery, conn))
                             {
-                                while (dr.Read())
+                                select.CommandType = CommandType.Text;
+                                select.Parameters.AddWithValue("@empName", li.Value);
+                                select.ExecuteNonQuery();
+                                using (SqlDataReader dr = select.ExecuteReader())
                                 {
-                                    string selectedEmpID = dr[0].ToString();
-
-                                    string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'"
-                                     + "AND EmpID = '" + selectedEmpID + "'";
-
-                                    using (SqlCommand update = new SqlCommand(sqlquery, conn))
+                                    while (dr.Read())
                                     {
+                                        string selectedEmpID = dr[0].ToString();
 
-                                        update.ExecuteNonQuery();
+                                        string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + approve + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'"
+                                         + "AND EmpID = '" + selectedEmpID + "'";
+
+                                        using (SqlCommand update = new SqlCommand(sqlquery, conn))
+                                        {
+
+                                            update.ExecuteNonQuery();
 
 
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                string sql3 = "select createddate, exittime, projectdesc, company, reason, remarks from exitapproval where exitID = '" + exitID + "' and approve IS NULL;";
-                SqlCommand cmdlineno = new SqlCommand(sql3, conn);
-                SqlDataReader dr2 = cmdlineno.ExecuteReader();
+                    string sql3 = "select createddate, exittime, projectdesc, company, reason, remarks from exitapproval where exitID = '" + exitID + "' and approve IS NULL;";
+                    SqlCommand cmdlineno = new SqlCommand(sql3, conn);
+                    SqlDataReader dr2 = cmdlineno.ExecuteReader();
 
-                if (dr2.HasRows)
-                {
-                    GetApplicationById();
-                    dr2.Close();
+                    if (dr2.HasRows)
+                    {
+                        GetApplicationById();
+                        dr2.Close();
+                    }
+                    else
+                    {
+                        sendEmail();
+                        mpeApproval.Hide();
+                        //Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+                        Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+                    }
+                    conn.Close();
                 }
-                else
-                {
-                    sendEmail();
-                    mpeApproval.Hide();
-                    Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
-                }
-                conn.Close();
+            } catch
+            {
+                //Response.Redirect(myApp);
+                //Response.Redirect(exitPermitLink + "EarlyExitPermitView.aspx?approval=" + empID);
+                Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
             }
+
         }
 
         protected void ApproveByEmail()
         {
-            string empID = Session["empID"].ToString();
-            Session["empID"] = empID;
-            DateTime approveddate = DateTime.Now;
-            var exitID = Request.QueryString["exitid"];
-            var status = Request.QueryString["status"];
 
-            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection conn = new SqlConnection(cs);
-            conn.Open();
-            string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + status + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
+                string empID = Session["empID"].ToString();
+                Session["empID"] = empID;
+                DateTime approveddate = DateTime.Now;
+                var exitID = Request.QueryString["exitid"];
+                var status = Request.QueryString["status"];
+
+                string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+                SqlConnection conn = new SqlConnection(cs);
+                conn.Open();
+                string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + status + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
 
 
-            using (SqlCommand update = new SqlCommand(sqlquery, conn))
-            {
-                update.ExecuteNonQuery();
+                using (SqlCommand update = new SqlCommand(sqlquery, conn))
+                {
+                    update.ExecuteNonQuery();
 
-                conn.Close();
-            }
-            sendEmail();
-            mpeApproval.Hide();
-            Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
-
+                    conn.Close();
+                }
+                sendEmail();
+                mpeApproval.Hide();
+                Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
 
         }
         

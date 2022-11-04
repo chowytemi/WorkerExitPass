@@ -5,6 +5,21 @@
     font-size: 2.375em;
 }
 
+#ExitPermitBtn, #EserviceBtn {
+    border-radius: 0.7em;
+    border-style: none;
+    color: white;
+    height: 2.3em;
+    /*width: 7%;*/
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+    background-color: #004B7A;
+    margin-bottom: 1em;
+    margin-left: 5%;
+    /*display: block;
+    position: absolute;
+    bottom: 10%;*/
+}
 .table {
     width: 90%;
     margin: auto;
@@ -209,4 +224,8 @@
     /*.label, .labelData, .textbox {
         font-size: 0.8em;
     }*/
+    #ExitPermitBtn, #EserviceBtn {
+        /*width: 10%;*/
+        font-size: 0.8em;
+    }
 }

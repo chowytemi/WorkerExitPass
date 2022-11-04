@@ -24,8 +24,7 @@
         <div class="header">
             <asp:Button ID="ExitPermitBtn" runat="server" Text="Create New" OnClick="CreateNew_Click" />       
         </div>
-        
-        
+              
         <div>                
             <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" OnSelectedIndexChanged="GridView1_SelectedIndexChanged">
                 <Columns>

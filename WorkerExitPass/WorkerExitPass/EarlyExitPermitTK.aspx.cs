@@ -915,8 +915,8 @@ namespace WorkerExitPass
             catch (Exception ex)
             {
                 throw ex;
-            }
 
+            }
 
         }
 

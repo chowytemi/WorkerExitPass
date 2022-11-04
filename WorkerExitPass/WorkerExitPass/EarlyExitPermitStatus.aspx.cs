@@ -357,9 +357,10 @@ namespace WorkerExitPass
         }
 
         protected void btnBack_Click(object sender, EventArgs e)
-        {          
+        {
             Server.TransferRequest(Request.Url.AbsolutePath, false);
-
+            //mpePopUp.Hide();
+            //Response.Redirect(Request.RawUrl);
         }
 
         protected void InvalidatePermits()
