@@ -23,16 +23,19 @@
             <h1>Early Exit Permit Approval</h1>
         </div>
         <div class="header">
-            <asp:Button ID="EserviceBtn" runat="server" Text="DM E-Services" OnClick="Eservice_Click" />       
+            <asp:Button ID="EserviceBtn" runat="server" Text="DM E-Services" OnClick="Eservice_Click" />          
+            <asp:DropDownList ID="ddlStatus" class="dropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
+                <asp:ListItem Text="Pending" Value=""></asp:ListItem>
+                <asp:ListItem Text="Approved/Rejected"></asp:ListItem>     
+            </asp:DropDownList>
         </div>
         <div>
-            <div class="row">            
+<%--            <div class="row">            
                         <asp:DropDownList ID="ddlStatus" class="dropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
                             <asp:ListItem Text="Pending" Value=""></asp:ListItem>
                             <asp:ListItem Text="Approved/Rejected"></asp:ListItem>     
-<%--                            <asp:ListItem Text="Rejected" Value="0"></asp:ListItem>      --%>
                         </asp:DropDownList>
-                    </div>
+            </div>--%>
             <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" BackColor="#EBF6FE" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" DataKeyNames="exitID">
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />

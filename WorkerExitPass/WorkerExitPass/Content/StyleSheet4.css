@@ -75,6 +75,10 @@
     width: 30%;
 }
 
+.hide {
+    display: none;
+}
+
 #approval, #details {
     width: 100%;
     background-color: #FFFFFF;
