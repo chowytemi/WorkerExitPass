@@ -88,7 +88,8 @@ namespace WorkerExitPass
         {
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, EmpList.RO from exitapproval, EmpList " +
+            string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO " +
+                "from exitapproval, EmpList " +
                 "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND (EmpList.RO IS NULL OR EmpList.RO = 'NONE') order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
@@ -120,7 +121,7 @@ namespace WorkerExitPass
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 
-                string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, EmpList.RO, exitapproval.createdby " +
+                string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO, exitapproval.createdby " +
                    "from exitapproval,  EmpList " +
                    "where approve IS NULL AND reason NOT IN('Medical Injury') " +
                    "and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' order by exitID desc;";
@@ -148,7 +149,7 @@ namespace WorkerExitPass
             Session["empID"] = empID;
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitapproval.exitID, exitapproval.reason, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.reason, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -225,14 +226,14 @@ namespace WorkerExitPass
                 DateTime date1 = Convert.ToDateTime(e.Row.Cells[2].Text);
                 e.Row.Cells[2].Text = date1.ToString("dd/MM/yyyy hh:mm tt");
 
-                if ((e.Row.Cells[4].Text) == "True")
+                if ((e.Row.Cells[5].Text) == "True")
                 {
-                    e.Row.Cells[4].Text = "Approved";
+                    e.Row.Cells[5].Text = "Approved";
 
                 }
                 else
                 {
-                    e.Row.Cells[4].Text = "Rejected";
+                    e.Row.Cells[5].Text = "Rejected";
                 }
                 e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridView2, "Select$" + e.Row.RowIndex);
                 e.Row.ToolTip = "Click to select this row.";
@@ -265,7 +266,7 @@ namespace WorkerExitPass
             //try
             //{
             int exitID = Convert.ToInt32(GridView2.SelectedRow.Cells[0].Text);
-            string approve = GridView2.SelectedRow.Cells[4].Text;
+            string approve = GridView2.SelectedRow.Cells[5].Text;
             lblStatus.Text = approve;
             if (approve == "Approved")
             {

@@ -705,8 +705,10 @@ namespace WorkerExitPass
 
         }
 
-
-
-
+        protected void CancelBtn_Click(object sender, EventArgs e)
+        {
+            string myApp = ConfigurationManager.AppSettings["myApp"].ToString();
+            Response.Redirect(myApp);
+        }
     }
 }

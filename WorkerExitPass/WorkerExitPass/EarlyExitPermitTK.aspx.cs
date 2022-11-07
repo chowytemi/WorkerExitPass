@@ -636,14 +636,14 @@ namespace WorkerExitPass
                                                 if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                 {
                                                     //worker - email to HOD
-                                                    string ROname = dr[5].ToString();
-                                                    string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                    //string ROname = dr[5].ToString();
+                                                    //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                     //for testing
-                                                    //string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                    //                      "from Access, UserAccess, ARole, EmpList " +
-                                                    //                      "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                    //                      "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                    //                      "and Access.id = '" + PJM + "'";
+                                                    string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
 
                                                     using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
@@ -706,7 +706,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -770,63 +770,63 @@ namespace WorkerExitPass
                                                 }
 
                                             }
-                                            //else //for testing 
-                                            //{
+                                            else //for testing 
+                                            {
 
-                                            //    string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                            //                              "from Access, UserAccess, ARole, EmpList " +
-                                            //                              "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                            //                              "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                            //                              "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
 
-                                            //    using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
-                                            //    {
+                                                using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
+                                                {
 
-                                            //        using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
-                                            //        {
-                                            //            while (pjmdr.Read())
-                                            //            {
-                                            //                string body1 = "";
-                                            //                string name = pjmdr[0].ToString();
+                                                    using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
+                                                    {
+                                                        while (pjmdr.Read())
+                                                        {
+                                                            string body1 = "";
+                                                            string name = pjmdr[0].ToString();
 
-                                            //                MailMessage mm = new MailMessage();
-                                            //                mm.From = new MailAddress(MailFrom);
-                                            //                if (ReasonDropdown.Text == "Medical Injury")
-                                            //                {
+                                                            MailMessage mm = new MailMessage();
+                                                            mm.From = new MailAddress(MailFrom);
+                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            {
 
-                                            //                    mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                mm.Subject = "Early Exit Permit Medical Injury Notification";
 
-                                            //                }
-                                            //                else
-                                            //                {
-                                            //                    mm.Subject = "Early Exit Permit Pending Test for Approval";
-                                            //                    body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+                                                            }
+                                                            else
+                                                            {
+                                                                mm.Subject = "Early Exit Permit Pending Test for Approval";
+                                                                body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
 
-                                            //                }
-                                            //                body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+                                                            }
+                                                            body1 += "<br /><br />This is an automatically generated email, please do not reply.";
 
-                                            //                mm.Body = body + body1;
-                                            //                mm.IsBodyHtml = true;
-                                            //                SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
-                                            //                smtp.EnableSsl = false;
+                                                            mm.Body = body + body1;
+                                                            mm.IsBodyHtml = true;
+                                                            SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                                            smtp.EnableSsl = false;
 
-                                            //                string pjmID = "";
-                                            //                if (!pjmdr.IsDBNull(0))
-                                            //                {
-                                            //                    pjmID = pjmdr.GetString(1);
-                                            //                    mm.To.Add(new MailAddress(pjmID));
-                                            //                }
+                                                            string pjmID = "";
+                                                            if (!pjmdr.IsDBNull(0))
+                                                            {
+                                                                pjmID = pjmdr.GetString(1);
+                                                                mm.To.Add(new MailAddress(pjmID));
+                                                            }
 
-                                            //                smtp.UseDefaultCredentials = false;
-                                            //                mm.To.Add(new MailAddress(MailTo));
-                                            //                smtp.Send(mm);
-                                            //            }
-                                            //        }
+                                                            smtp.UseDefaultCredentials = false;
+                                                            mm.To.Add(new MailAddress(MailTo));
+                                                            smtp.Send(mm);
+                                                        }
+                                                    }
 
-                                            //    }
+                                                }
 
-                                            //}
+                                            }
                                             //sends one email, url need to log in
                                             //else if (dr[2].ToString() == "SUBCON")
                                             //{
@@ -1172,9 +1172,11 @@ namespace WorkerExitPass
             }
         }
 
-
-
-
+        protected void CancelBtn_Click(object sender, EventArgs e)
+        {
+            string myApp = ConfigurationManager.AppSettings["myApp"].ToString();
+            Response.Redirect(myApp);
+        }
     }
 
 

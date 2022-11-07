@@ -42,6 +42,7 @@
                     <asp:BoundField DataField="createddate" HeaderText="Requested Date" />
                     <asp:BoundField DataField="exittime" HeaderText="Requested Time" />
                     <asp:BoundField DataField="projectdesc" HeaderText="Project" />
+                    <asp:BoundField DataField="company" HeaderText="Company" />
                     <asp:BoundField DataField="reason" HeaderText="Reason" />                    
                     </Columns>
                     <PagerStyle HorizontalAlign = "Right" CssClass = "GridPager" />
@@ -53,6 +54,7 @@
                     <asp:BoundField DataField="reason" HeaderText="Reason" />
                     <asp:BoundField DataField="approveddate" HeaderText="Approved Date" />
                     <asp:BoundField DataField="projectdesc" HeaderText="Project" />
+                    <asp:BoundField DataField="company" HeaderText="Company" />
                     <asp:BoundField DataField="approve" HeaderText="Status" />
                 </Columns>
                 <HeaderStyle CssClass="thead" />

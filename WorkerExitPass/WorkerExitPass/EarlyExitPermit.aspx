@@ -34,7 +34,7 @@
                 <%--<div class="col-12">--%>
                     <div class="dateCol">
                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
-                        <input class="input" id="dateInput" type="date" readonly="true"/>
+                        <input class="input" id="dateInput" type="date"/>
                     </div>
      
                     <div class="timeCol">
@@ -90,7 +90,7 @@
           
             <div class="rowButtons">
 <%--                <div class="colCancelBtn">--%>
-                    <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
+                    <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" OnClick="CancelBtn_Click" />
 <%--                </div>
                 <div class="colSubmitBtn">--%>
                     <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="SubmitBtn_Click" />
@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        <asp:Label ID="Label1" runat="server"></asp:Label>
+        <%--<asp:Label ID="Label1" runat="server"></asp:Label>
         <asp:Label ID="Label2" runat="server"></asp:Label>
             
          <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False"  AllowPaging="True" PageSize="30"  CssClass="auto-style13">
@@ -108,7 +108,7 @@
                 <asp:BoundField DataField="exittime" HeaderText="Requested time" />
                 <asp:BoundField DataField="reason" HeaderText="Reason" />
             </Columns>
-       </asp:GridView>
+       </asp:GridView>--%>
                     
        
     </form>

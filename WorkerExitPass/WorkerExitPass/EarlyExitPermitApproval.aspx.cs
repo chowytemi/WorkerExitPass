@@ -32,6 +32,8 @@ namespace WorkerExitPass
                     string exitid = Request.QueryString["exprmtid"];
                     Session["exitid"] = exitid;
                 }
+
+
                 CheckAccess();
             }
 
@@ -84,10 +86,12 @@ namespace WorkerExitPass
         protected void IsApprove()
         {
             var exitID = Request.QueryString["exitid"];
+            string exitPermitLink = ConfigurationManager.AppSettings["exitPermitLink"].ToString();
+
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-            string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "'and approve IS NULL;";
+            string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "'";
             SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
             SqlDataReader dr = cmdlineno.ExecuteReader();
             while (dr.Read())
@@ -95,6 +99,14 @@ namespace WorkerExitPass
                 if (string.IsNullOrEmpty(dr[0].ToString()))
                 {
                     GetApplicationById();
+                }
+                else if (!string.IsNullOrEmpty(dr[0].ToString()))
+                {
+                    string empID = Session["empID"].ToString();
+                    Session["empID"] = empID;
+
+                    //Response.Redirect(exitPermitLink + "EarlyExitPermitView.aspx?approval=" + empID);
+                    Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
                 }
                 else
                 {
@@ -291,13 +303,13 @@ namespace WorkerExitPass
 
                         //for testing
                         //send email to person who created the application to update status
-                        string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
-                          " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
-                        //string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                        //                                                  "from Access, UserAccess, ARole, EmpList " +
-                        //                                                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                        //                                                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                        //                                                  "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                        //string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
+                        ////  " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
+                        string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
                         using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
                         {
@@ -305,8 +317,8 @@ namespace WorkerExitPass
                             {
                                 while (dr2.Read())
                                 {
-                                    string email = dr2[2].ToString();
-                                    //string email = dr2[1].ToString();
+                                    //string email = dr2[2].ToString();
+                                    string email = dr2[1].ToString();
 
                                     MailMessage mm = new MailMessage();
                                     mm.From = new MailAddress(MailFrom);
@@ -500,8 +512,10 @@ namespace WorkerExitPass
                     {
                         sendEmail();
                         mpeApproval.Hide();
-                        //Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
                         Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+                        //Response.Redirect(exitPermitLink + "EarlyExitPermitView.aspx?approval=" + empID);
+
+                        //Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
                     }
                     conn.Close();
                 }

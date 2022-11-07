@@ -47,7 +47,7 @@
 
                     <div class="dateCol">
                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
-                        <input class="input" id="dateInput" type="date" readonly="true"/>
+                        <input class="input" id="dateInput" type="date"/>
                     </div>
      
                     <div class="timeCol">
@@ -111,7 +111,7 @@
                 </div>
 
                 <div class="rowButtons">
-                        <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" />
+                        <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" OnClick="CancelBtn_Click" />
 <%--                        <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="Submit" />--%>
                         <asp:Button class="button" ID="submitAsTeam" runat="server" Text="Submit" Visible="false" OnClick="SubmitAsTeam_Click" />
                         <asp:Button class="button" ID="submitAsSolo" runat="server" Text="Submit" OnClick="SubmitAsSolo_Click" />
