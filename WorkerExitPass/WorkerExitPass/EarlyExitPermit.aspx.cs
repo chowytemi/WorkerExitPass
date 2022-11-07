@@ -167,7 +167,7 @@ namespace WorkerExitPass
                             }
                             else
                             {
-                                CheckSubmissionSolo();
+                                CheckSubmission();
                             }
                         }
                         else if (compare <= 0)
