@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EarlyExitPermitTK.aspx.cs" Inherits="WorkerExitPass.WebForm2" %>
-
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -11,6 +11,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet" />
         <link href="Content/main.css" rel="stylesheet" type="text/css" />
         <link href="Content/StyleSheet2.css" rel="stylesheet" type="text/css" />
+        <link href="Content/font-awesome.css" rel="stylesheet" type="text/css" />
+        <link href="Content/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script>
@@ -43,6 +45,9 @@
             </div>
 
             <div class="form">
+                <div class="rowIcon">
+                    <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-info-circle fa-2x' aria-hidden='true'></i>" OnClick="btnHelp_Click"/>
+                </div>  
                 <div class="dateTimeRow">
 
                     <div class="dateCol">
@@ -93,12 +98,6 @@
                             <asp:Label class="label" ID="reason" runat="server" Text="Reason for Leaving Yard"></asp:Label>
 
                                 <asp:DropDownList class="dropdown" ID="ReasonDropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ReasonDropdown_SelectedIndexChanged">
-                                <%--<asp:ListItem Text="Select" Value="Select"></asp:ListItem>
-                                <asp:ListItem Text="Medical injury" Value="Medical Injury"></asp:ListItem>
-                                <asp:ListItem Text="Weather conditions" Value="Weather Conditions"></asp:ListItem>
-                                <asp:ListItem Text="Emergency" Value="Emergency"></asp:ListItem>
-                                <asp:ListItem Text="Go office" Value="Go office"></asp:ListItem>
-                                <asp:ListItem Text="Others" Value="Others"></asp:ListItem>--%>
                             </asp:DropDownList>
                     </div>
                 </div>
@@ -118,6 +117,37 @@
                 </div>
             </div>   
         </div>
+           <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
+            <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+            <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground">
+            </ajaxToolkit:ModalPopupExtender>
+            <asp:Panel ID="Panel1" runat="server">
+                <div class="rowIcon">
+                    <asp:LinkButton ID="btnBack" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>" OnClick="btnBack_Click"/>
+                </div>                 
+                <div class="content">
+                    <asp:Label ID="labelHelp" runat="server" Text="When to apply for Early Exit Permit?"></asp:Label>    
+                    <div class="contentRow">
+                        <ol>
+                            <li>You cannot apply from 5pm to 6pm.</li>
+                            <li>You cannot leave earlier than the exit timing you applied for.</li>
+                            <li>Once exit permit is approved, you have to exit within an hour from the exit time.</li>
+                            <li>If your early exit permit has been approved but you did not exit within the valid exit time, please apply again.</li>
+                        </ol>
+                    </div>
+                </div>
+        </asp:Panel>   
+
+         <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+            <ajaxToolkit:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="Label1" PopupControlID="Panel2" BackgroundCssClass="modalBackground1">
+            </ajaxToolkit:ModalPopupExtender>
+            <asp:Panel ID="Panel2" runat="server">             
+                <div class="contentRow">
+                    <asp:Label ID="labelSuccess" runat="server" Text="Success!"></asp:Label>
+                    <asp:Label class="labelMsg" ID="valid" runat="server" Text="You will receive an email once it has been approved or rejected. </br> Once approved, please exit before "></asp:Label>
+                    <asp:Button ID="viewStatusBtn" runat="server" Text="View Status" OnClick="viewStatus_Click" />
+                </div>
+        </asp:Panel>   
     </form>
                             <asp:Label ID="Label12" runat="server"></asp:Label>
 

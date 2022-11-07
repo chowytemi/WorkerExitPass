@@ -39,10 +39,11 @@
             <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" BackColor="#EBF6FE" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" DataKeyNames="exitID">
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />
-                    <asp:BoundField DataField="createddate" HeaderText="Requested Date" />
-                    <asp:BoundField DataField="exittime" HeaderText="Requested Time" />
+                    <%--<asp:BoundField DataField="createddate" HeaderText="Requested Date" />--%>
+                    <asp:BoundField DataField="exittime" HeaderText="Requested Date/Time" />
                     <asp:BoundField DataField="projectdesc" HeaderText="Project" />
                     <asp:BoundField DataField="company" HeaderText="Company" />
+                    <asp:BoundField DataField="no of emp" HeaderText="No of Employees" />
                     <asp:BoundField DataField="reason" HeaderText="Reason" />                    
                     </Columns>
                     <PagerStyle HorizontalAlign = "Right" CssClass = "GridPager" />
@@ -62,7 +63,7 @@
                 <PagerStyle HorizontalAlign = "Right" CssClass = "GridPager" />
             </asp:GridView>
 
-                        <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
+            <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
             <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground">
             </ajaxToolkit:ModalPopupExtender>

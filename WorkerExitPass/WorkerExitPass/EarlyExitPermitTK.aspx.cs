@@ -371,7 +371,11 @@ namespace WorkerExitPass
                 conn.Close();
                 appcon.Close();
                 sendEmailForApproval();
-                Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                DateTime timeinput = Convert.ToDateTime(time);
+                DateTime permitexpiry = timeinput.AddHours(1);
+                valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                ModalPopupExtender1.Show();
+                //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
             {
@@ -522,8 +526,11 @@ namespace WorkerExitPass
             conn.Close();
             appcon.Close();
             sendEmailForApproval();
-            Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
-
+            DateTime timeinput = Convert.ToDateTime(time);
+            DateTime permitexpiry = timeinput.AddHours(1);
+            valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+            ModalPopupExtender1.Show();
+            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             //}
             //catch (Exception ex)
             //{
@@ -907,6 +914,10 @@ namespace WorkerExitPass
                 if (!drcheck.HasRows)
                 {
                     SoloSubmit();
+                    //DateTime timeinput = Convert.ToDateTime(time);
+                    //DateTime permitexpiry = timeinput.AddHours(1);
+                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                    //ModalPopupExtender1.Show();
                 }
                 else if (drcheck.HasRows)
                 {
@@ -976,6 +987,10 @@ namespace WorkerExitPass
                                 if (!drcheck.HasRows)
                                 {
                                     TeamSubmit();
+                                    //DateTime timeinput = Convert.ToDateTime(time);
+                                    //DateTime permitexpiry = timeinput.AddHours(1);
+                                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                    //ModalPopupExtender1.Show();
                                 }
                                 else if (drcheck.HasRows)
                                 {
@@ -1165,6 +1180,22 @@ namespace WorkerExitPass
         {
             string myApp = ConfigurationManager.AppSettings["myApp"].ToString();
             Response.Redirect(myApp);
+        }
+
+        protected void btnHelp_Click(object sender, EventArgs e)
+        {
+            mpePopUp.Show();
+        }
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            mpePopUp.Hide();
+        }
+        protected void viewStatus_Click(object sender, EventArgs e)
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+
         }
     }
 

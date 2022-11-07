@@ -18,7 +18,7 @@ h1 {
     font-size: 1.125em;
     line-height: 1.875em;
     display: block;
-    margin-top: 1.25em;
+    /*margin-top: 1.25em;*/
 }
 
 h1, .label {
@@ -49,22 +49,6 @@ h1, .label {
     width: 33%;
 }
 
-/*.inputtest {
-    width: 50%;
-}
-
-.dateCol {
-    align-items: flex-start;
-    width: 100%;
-}
-
-.timeCol {
-    justify-content: flex-end;
-    align-items: flex-end;
-    width: 100%;
-}
-*/
-/**/
 #dateInput, #timeInput {
     width: 100%;
 }
@@ -84,6 +68,7 @@ h1, .label {
     display: flex;
     justify-content: center !important;
     overflow: auto;
+    margin-bottom: 1.25em;
 }
 
 .inputFields:hover, .dropdown:hover {
@@ -116,10 +101,6 @@ h1, .label {
     width: 15%;
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
-    /*margin-top: 1em;
-    display: block;
-    position: absolute;
-    bottom: 10%;*/
 }
 
 .button:hover {
@@ -134,6 +115,92 @@ h1, .label {
     background-color: #E83333;
 }
 
+.rowIcon {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-bottom: 0;
+}
+
+#btnHelp, #btnBack {
+    color: #004B7A;
+    float: right;
+    margin-top: 2%;
+    margin-right: 4%;
+}
+
+#labelHelp, #labelSuccess {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #004B7A;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+}
+
+#labelSuccess {
+    margin-top: 1.25em;
+}
+.modalBackground, .modalBackground1 {
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+}
+
+#Panel1, #Panel2 {
+    background-color: white;
+    width: 30%;
+    overflow: auto;
+    border-radius: 0.5em;
+    z-index: 10001;
+}
+#Panel1 {
+    height: 35%;
+}
+#Panel2 {
+    height: 30%;
+}
+.contentRow {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+}
+li {
+    margin-bottom: 1em;
+}
+.labelMsg {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    margin-top: 2em;
+}
+
+#viewStatusBtn {
+    background-color: #004B7A;
+    width: 30%;
+    margin: 2em auto auto auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 0.9375em;
+    border-style: none;
+    color: white;
+    height: 3.5em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+}
 /* Medium devices (landscape tablets, 992px and down) */
 @media only screen and (max-width: 992px) {
     .container {
@@ -152,7 +219,7 @@ h1, .label {
         margin-left: 10%;
         margin-right: 10%;
     }
-    .button {
+    .button, #viewStatusBtn {
         height: 3.55em;
         /*width: 8em;*/
         bottom: 3%;
@@ -166,8 +233,12 @@ h1, .label {
 
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 768px) {
-    .button {
+    .button, #viewStatusBtn {
         width: 30%;
+    }
+    #Panel1, #Panel2 {
+        width: 70%;
+        height: 40%;
     }
 }
 
@@ -190,8 +261,15 @@ h1, .label {
         justify-content: center;
         align-items: center;
     }
-    .button { 
+    .button, #viewStatusBtn {
         width: 50%;
         margin-top: 2%;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    #Panel1, #Panel2 {
+        width: 90%;
     }
 }

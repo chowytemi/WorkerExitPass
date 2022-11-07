@@ -88,9 +88,12 @@ namespace WorkerExitPass
         {
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO " +
-                "from exitapproval, EmpList " +
-                "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND (EmpList.RO IS NULL OR EmpList.RO = 'NONE') order by exitID desc;";
+            //string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO " +
+            //    "from exitapproval, EmpList " +
+            //    "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND (EmpList.RO IS NULL OR EmpList.RO = 'NONE') order by exitID desc;";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' " +
+                "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') " +
+                "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -120,11 +123,14 @@ namespace WorkerExitPass
 
             using (SqlConnection conn = new SqlConnection(cs))
             {
-                
-                string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO, exitapproval.createdby " +
-                   "from exitapproval,  EmpList " +
-                   "where approve IS NULL AND reason NOT IN('Medical Injury') " +
-                   "and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' order by exitID desc;";
+
+                //string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO, exitapproval.createdby " +
+                //   "from exitapproval,  EmpList " +
+                //   "where approve IS NULL AND reason NOT IN('Medical Injury') " +
+                //   "and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' order by exitID desc;";
+                string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' " +
+                    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' " +
+                    "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
 
                 using (SqlCommand cmd3 = new SqlCommand(statussql, conn))
                 {
@@ -192,11 +198,11 @@ namespace WorkerExitPass
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
-                e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy");
+                //DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
+                //e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy");
 
-                DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
-                e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
+                DateTime time1 = Convert.ToDateTime(e.Row.Cells[1].Text);
+                e.Row.Cells[1].Text = time1.ToString("dd/MM/yyyy hh:mm tt");
 
                 e.Row.Attributes["onclick"] = $"location.href = 'EarlyExitPermitApproval.aspx?exitid={GridView1.DataKeys[e.Row.RowIndex]["exitID"]}&approval={empID}'";
                 e.Row.ToolTip = "Click to select this row.";

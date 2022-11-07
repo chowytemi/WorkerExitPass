@@ -90,6 +90,7 @@ namespace WorkerExitPass
                     RetrieveDataFromLogin();
                     BindDataSetDataProjects();
                     BindDataSetDataReason();
+                    mpePopUp.Show();
                 }
                 else
                 {
@@ -283,6 +284,10 @@ namespace WorkerExitPass
                 if (!drcheck.HasRows)
                 {
                     submitForm();
+                    //DateTime timeinput = Convert.ToDateTime(time);
+                    //DateTime permitexpiry = timeinput.AddHours(1);
+                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                    //ModalPopupExtender1.Show();
                 }
                 else if (drcheck.HasRows)
                 {
@@ -393,7 +398,11 @@ namespace WorkerExitPass
                 conn.Close();
 
                 sendEmailForApproval();
-                Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                DateTime timeinput = Convert.ToDateTime(time);
+                DateTime permitexpiry = timeinput.AddHours(1);
+                valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                ModalPopupExtender1.Show();
+                //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
 
             }
             catch (Exception ex)
@@ -565,7 +574,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             MailMessage mm = new MailMessage();
@@ -748,5 +757,23 @@ namespace WorkerExitPass
             string myApp = ConfigurationManager.AppSettings["myApp"].ToString();
             Response.Redirect(myApp);
         }
+
+        protected void btnHelp_Click(object sender, EventArgs e)
+        {
+            mpePopUp.Show();
+        }
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            mpePopUp.Hide();
+        }
+
+        protected void viewStatus_Click(object sender, EventArgs e)
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+
+        }
+
     }
 }
