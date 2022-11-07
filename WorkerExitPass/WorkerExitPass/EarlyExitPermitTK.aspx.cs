@@ -542,6 +542,7 @@ namespace WorkerExitPass
             string RO = ConfigurationManager.AppSettings["RO"].ToString();
             string MailFrom = ConfigurationManager.AppSettings["MailFrom"].ToString();
             string MailTo = ConfigurationManager.AppSettings["MailTo"].ToString();
+            string MailToSafety = ConfigurationManager.AppSettings["MailToSafety"].ToString();
             //string EmailPassword = ConfigurationManager.AppSettings["Password"].ToString();
             string smtpserver = ConfigurationManager.AppSettings["smtpserver"].ToString();
             string smtport = ConfigurationManager.AppSettings["smtport"].ToString();
@@ -682,16 +683,8 @@ namespace WorkerExitPass
                                                                 mm.Body = body + body1;
                                                                 mm.IsBodyHtml = true;
                                                                 mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                                if (ReasonDropdown.Text == "Medical Injury")
-                                                                {
-                                                                    //mm.To.Add(new MailAddress(ROcemail));
-                                                                    mm.To.Add(new MailAddress(ROcemail));
-                                                                }
-                                                                else
-                                                                {
-                                                                    mm.To.Add(new MailAddress(ROcemail));
-                                                                }
-                                                                //mm.To.Add(new MailAddress(ROcemail));
+                                                               
+                                                                mm.To.Add(new MailAddress(ROcemail));
                                                                 //mm.To.Add(new MailAddress(MailTo));
 
                                                                 //SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
@@ -701,7 +694,16 @@ namespace WorkerExitPass
 
                                                             }
                                                         }
-                                                        mm.To.Add(new MailAddress(MailTo));
+                                                        if (ReasonDropdown.Text == "Medical Injury")
+                                                        {
+                                                            mm.To.Add(new MailAddress(MailTo));
+                                                            mm.To.Add(new MailAddress(MailToSafety));
+                                                        }
+                                                        else
+                                                        {
+                                                            mm.To.Add(new MailAddress(MailTo));
+                                                        }
+                                                        
                                                         smtp.Send(mm);
                                                     }
                                                 }
@@ -761,29 +763,24 @@ namespace WorkerExitPass
                                                             //    string pjmID = dt.Rows[i][1].ToString();
                                                             //    mm.To.Add(new MailAddress(pjmID));
                                                             //}
-
-
+                                                            
                                                             string pjmID = pjmdr[1].ToString();
-
-                                                            if (ReasonDropdown.Text == "Medical Injury")
-                                                            {
-                                                                //mm.To.Add(new MailAddress(ROcemail));
-                                                                mm.To.Add(new MailAddress(pjmID));
-
-                                                            }
-                                                            else
-                                                            {
-                                                                mm.To.Add(new MailAddress(pjmID));
-
-                                                            }
-
-                                                            //string pjmID = pjmdr[1].ToString();
-                                                            //mm.To.Add(new MailAddress(pjmID));
+                                                            mm.To.Add(new MailAddress(pjmID));
 
                                                             smtp.UseDefaultCredentials = false;
                                                         }
                                                     }
-                                                    mm.To.Add(new MailAddress(MailTo));
+                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                    {
+                                                        mm.To.Add(new MailAddress(MailTo));
+                                                        //mm.To.Add(new MailAddress(MailToSafety));
+                                                        mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
+
+                                                    }
+                                                    else
+                                                    {
+                                                        mm.To.Add(new MailAddress(MailTo));
+                                                    }
 
                                                     smtp.Send(mm);
 
@@ -1021,7 +1018,7 @@ namespace WorkerExitPass
             var time6pm = DateTime.Now.ToString("yyyy-MM-dd ") + "18:00:00.000";
             DateTime date6pm = DateTime.Parse(time6pm);
 
-            //var testtime = DateTime.Now.ToString("yyyy-MM-dd ") + "17:30:00.000";
+            //var testtime = DateTime.Now.ToString("yyyy-MM-dd ") + "19:30:00.000";
             //DateTime currentdate = DateTime.Parse(testtime);
 
             DateTime dateinput = DateTime.Parse(date);
@@ -1035,10 +1032,9 @@ namespace WorkerExitPass
             if (projectInput != "" || nameInput != "" || companyInput != "")
             {
                 int compare = DateTime.Compare(dateinput, currentdate);
-                int compare2 = DateTime.Compare(currentdate, date5pm);
-                int compare3 = DateTime.Compare(currentdate, date6pm);
 
-                if (compare2 < 0 && compare3 > 0)
+                //if (compare2 < 0 && compare3 > 0)
+                if (currentdate < date5pm || currentdate > date6pm)
                 {
                     if (compare > 0)
                     {
@@ -1064,7 +1060,7 @@ namespace WorkerExitPass
                             else
                             {
                                 CheckSubmissionTeam();
-                                
+
                             }
 
                         }
@@ -1122,10 +1118,8 @@ namespace WorkerExitPass
                 if (projectInput != "" || nameInput != "" || companyInput != "")
                 {
                     int compare = DateTime.Compare(dateinput, currentdate);
-                    int compare2 = DateTime.Compare(currentdate, date5pm);
-                    int compare3 = DateTime.Compare(currentdate, date6pm);
 
-                    if (compare2 < 0 && compare3 > 0)
+                    if (currentdate < date5pm || currentdate > date6pm)
                     {
                         if (compare > 0)
                         {

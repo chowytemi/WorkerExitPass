@@ -136,6 +136,14 @@ namespace WorkerExitPass
                 var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
                 DateTime dateinput = DateTime.Parse(date);
                 var currentdate = DateTime.Now;
+
+
+                var time5pm = DateTime.Now.ToString("yyyy-MM-dd ") + "17:00:00.000";
+                DateTime date5pm = DateTime.Parse(time5pm);
+                var time6pm = DateTime.Now.ToString("yyyy-MM-dd ") + "18:00:00.000";
+                DateTime date6pm = DateTime.Parse(time6pm);
+
+
                 string projectInput = projectddl.Text;
                 string nameInput = nametb.Text;
                 string companyInput = companytb.Text;
@@ -145,26 +153,38 @@ namespace WorkerExitPass
                 if (projectInput != "" || nameInput != "" || companyInput != "")
                 {
                     int compare = DateTime.Compare(dateinput, currentdate);
-                    if (compare > 0)
+
+                    if (currentdate < date5pm || currentdate > date6pm)
                     {
-                        if (ReasonDropdown.SelectedValue == "Select")
+                        if (compare > 0)
+                        {
+                            if (ReasonDropdown.SelectedValue == "Select")
+                            {
+                                ScriptManager.RegisterClientScriptBlock
+                                  (this, this.GetType(), "alertMessage", "alert" +
+                                  "('Please choose a valid reason')", true);
+                                return;
+                            }
+                            else
+                            {
+                                CheckSubmissionSolo();
+                            }
+                        }
+                        else if (compare <= 0)
                         {
                             ScriptManager.RegisterClientScriptBlock
                               (this, this.GetType(), "alertMessage", "alert" +
-                              "('Please choose a valid reason')", true);
+                              "('Please choose a time after the current time')", true);
                             return;
                         }
-                        else
-                        {
-                            CheckSubmission();
-                        }
+
 
                     }
-                    else if (compare <= 0)
+                    else
                     {
                         ScriptManager.RegisterClientScriptBlock
-                          (this, this.GetType(), "alertMessage", "alert" +
-                          "('Please choose a time after the current time')", true);
+                             (this, this.GetType(), "alertMessage", "alert" +
+                             "('Unable to submit permit between 5PM to 6PM. Please try again after 6PM')", true);
                         return;
                     }
                 }
@@ -402,6 +422,7 @@ namespace WorkerExitPass
             int smtpport = Convert.ToInt32(smtport);
             string link = ConfigurationManager.AppSettings["link"].ToString();
             string MailTo = ConfigurationManager.AppSettings["MailTo"].ToString();
+            string MailToSafety = ConfigurationManager.AppSettings["MailToSafety"].ToString();
 
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -522,7 +543,15 @@ namespace WorkerExitPass
 
                                                                     }
                                                                 }
-                                                                mm.To.Add(new MailAddress(MailTo));
+                                                                if (ReasonDropdown.Text == "Medical Injury")
+                                                                {
+                                                                    mm.To.Add(new MailAddress(MailTo));
+                                                                    mm.To.Add(new MailAddress(MailToSafety));
+                                                                }
+                                                                else
+                                                                {
+                                                                    mm.To.Add(new MailAddress(MailTo));
+                                                                }
                                                                 smtp.Send(mm);
                                                             }
                                                         }
@@ -607,7 +636,16 @@ namespace WorkerExitPass
 
                                                             }
 
-                                                            mm.To.Add(new MailAddress(MailTo));
+                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            {
+                                                                mm.To.Add(new MailAddress(MailTo));
+                                                                //mm.To.Add(new MailAddress(MailToSafety));
+                                                                mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
+                                                            }
+                                                            else
+                                                            {
+                                                                mm.To.Add(new MailAddress(MailTo));
+                                                            }
 
                                                             smtp.Send(mm);
                                                         }
