@@ -89,38 +89,31 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-            string sql = "select approve from exitapproval where exitID = '" + exitID + "'";
+            string sql = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL";
             SqlCommand cmd = new SqlCommand(sql, conn);
             SqlDataReader dr = cmd.ExecuteReader();
-            while (dr.Read())
+
+            if (dr.HasRows)
             {
-                if (string.IsNullOrEmpty(dr[0].ToString()))
+                string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
+                SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
+                SqlDataReader dr2 = cmdlineno.ExecuteReader();
+                if (dr2.HasRows)
                 {
-                    string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
-                    SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
-                    SqlDataReader dr2 = cmdlineno.ExecuteReader();
-                    if (dr2.HasRows)
-                    {
-                        GetApplicationById();
+                    GetApplicationById();
 
-                    } else
-                    {
-                        labelExpiry.Text = "This early exit permit application has expired.";
-                        ModalPopupExtender1.Show();
-                    }
-                    dr2.Close();
                 }
-                else if (!string.IsNullOrEmpty(dr[0].ToString()))
+                else
                 {
-                    //string empID = Session["empID"].ToString();
-                    //Session["empID"] = empID;
-
-                    //Response.Redirect(exitPermitLink + "EarlyExitPermitView.aspx?approval=" + empID);
-                    //Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
-                    labelExpiry.Text = "This early exit permit application has been approved/rejected.";
+                    labelExpiry.Text = "This early exit permit application has expired.";
                     ModalPopupExtender1.Show();
                 }
-
+                dr2.Close();
+            }
+            else
+            {
+                labelExpiry.Text = "This early exit permit application has been approved/rejected.";
+                ModalPopupExtender1.Show();
             }
 
             dr.Close();
