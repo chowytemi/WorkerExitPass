@@ -289,7 +289,9 @@ namespace WorkerExitPass
             {
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
-
+                
+                var time = Request["timeInput"];
+                var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
                 string description = projectddl.Text;
                 string projectInput = projectddl.Text;
 
@@ -320,8 +322,8 @@ namespace WorkerExitPass
                         using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
                         {
 
-                            var time = Request["timeInput"];
-                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                            //var time = Request["timeInput"];
+                            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
 
                             insert.CommandType = CommandType.Text;
@@ -348,8 +350,8 @@ namespace WorkerExitPass
                         using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                         {
 
-                            var time = Request["timeInput"];
-                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                            //var time = Request["timeInput"];
+                            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
 
                             insert.CommandType = CommandType.Text;
@@ -389,6 +391,9 @@ namespace WorkerExitPass
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
+
+            var time = Request["timeInput"];
+            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
             string description = projectddl.Text;
             string projectInput = projectddl.Text;
@@ -452,8 +457,8 @@ namespace WorkerExitPass
                                         using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
                                         {
 
-                                            var time = Request["timeInput"];
-                                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                                            //var time = Request["timeInput"];
+                                            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
 
                                             insert.CommandType = CommandType.Text;
@@ -492,8 +497,8 @@ namespace WorkerExitPass
                                         using (SqlCommand insert = new SqlCommand(insertmultiplequery, appcon))
                                         {
 
-                                            var time = Request["timeInput"];
-                                            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                                            //var time = Request["timeInput"];
+                                            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
 
 
                                             insert.CommandType = CommandType.Text;
