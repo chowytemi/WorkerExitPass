@@ -96,17 +96,22 @@
     opacity: 0.3;
 }
 
-#Panel1 {
-    /*background-color: #FAFDFF;
-    background-color: #F1FAFF;*/
+#Panel1, #Panel2 {
     background-color: white;
-    width: 40%;
-    height: 95%;
+    /*width: 40%;*/
     overflow: auto;
     border-radius: 0.5em;
     z-index: 10001;
 }
+#Panel1 {
+    width: 40%;
+    height: 95%;
+}
 
+#Panel2 {
+    width: 30%;
+    height: 20%;
+}
 .rowIcon {
     width: 100%;
     display: flex;

@@ -32,8 +32,6 @@ namespace WorkerExitPass
                     string exitid = Request.QueryString["exprmtid"];
                     Session["exitid"] = exitid;
                 }
-
-
                 CheckAccess();
             }
 
@@ -91,7 +89,7 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-            string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "'";
+            string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
             SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
             SqlDataReader dr = cmdlineno.ExecuteReader();
             while (dr.Read())
@@ -110,7 +108,8 @@ namespace WorkerExitPass
                 }
                 else
                 {
-                    Response.Redirect("http://eservices.dyna-mac.com/error");
+                    ModalPopupExtender1.Show();
+                    //Response.Redirect("http://eservices.dyna-mac.com/error");
                 }
 
             }
@@ -557,6 +556,13 @@ namespace WorkerExitPass
         
 
         protected void btnBack_Click(object sender, EventArgs e)
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+
+        }
+        protected void continueBtn_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;

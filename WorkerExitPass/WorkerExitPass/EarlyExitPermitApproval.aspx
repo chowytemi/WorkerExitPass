@@ -94,6 +94,17 @@
                     </div>
                 </div>   
             </asp:Panel>
+
+            <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+            <ajaxToolkit:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="Label1" PopupControlID="Panel2" BackgroundCssClass="modalBackground1">
+            </ajaxToolkit:ModalPopupExtender>
+            <asp:Panel ID="Panel2" runat="server">             
+                <div class="contentRow">
+                    <asp:Label ID="labelExpiry" runat="server" Text="This early exit permit application has expired."></asp:Label>
+<%--                    <asp:Label class="labelMsg" ID="valid" runat="server" Text="You will receive an email once it has been approved or rejected. </br> Once approved, please exit before "></asp:Label>--%>
+                    <asp:Button ID="continueBtn" runat="server" Text="View Status" OnClick="continueBtn_Click" />
+                </div>
+        </asp:Panel> 
         </div>
     </form>
 </body>

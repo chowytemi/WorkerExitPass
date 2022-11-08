@@ -101,6 +101,40 @@
     justify-content: space-between;
     margin-top: 1em;
 }
+#labelExpiry {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #004B7A;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+    margin-top: 1.25em;
+}
+
+/*.contentRow {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+}*/
+#continueBtn {
+    background-color: #004B7A;
+    width: 30%;
+    margin: 2em auto auto auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 0.9375em;
+    border-style: none;
+    color: white;
+    height: 3.5em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1em;
+}
 
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 768px) {
