@@ -240,7 +240,7 @@ namespace WorkerExitPass
                     BindDataSetDataProjects();
                     GetListOfEmployees();
                     BindDataSetDataReason();
-                    mpePopUp.Show();
+                    //mpePopUp.Show();
                 }
                 else
                 {
@@ -374,10 +374,11 @@ namespace WorkerExitPass
                 conn.Close();
                 appcon.Close();
                 sendEmailForApproval();
-                DateTime timeinput = Convert.ToDateTime(time);
-                DateTime permitexpiry = timeinput.AddHours(1);
-                valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
-                ModalPopupExtender1.Show();
+                //DateTime timeinput = Convert.ToDateTime(time);
+                //DateTime permitexpiry = timeinput.AddHours(1);
+                //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                //ModalPopupExtender1.Show();
+                mpePopUp.Show();
                 //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
@@ -408,11 +409,11 @@ namespace WorkerExitPass
             SqlConnection appcon = new SqlConnection(connectionstring);
             appcon.Open();
 
-            //try
-            //{
+            try
+            {
 
-            //get code
-            string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
+                //get code
+                string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
             SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
             using (SqlDataReader dr = cmdlineno.ExecuteReader())
             {
@@ -527,21 +528,23 @@ namespace WorkerExitPass
 
                     }
                 }
+
             }
 
             conn.Close();
             appcon.Close();
             sendEmailForApproval();
-            DateTime timeinput = Convert.ToDateTime(time);
-            DateTime permitexpiry = timeinput.AddHours(1);
-            valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
-            ModalPopupExtender1.Show();
-            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
+                //DateTime timeinput = Convert.ToDateTime(time);
+                //DateTime permitexpiry = timeinput.AddHours(1);
+                //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                //ModalPopupExtender1.Show();
+                mpePopUp.Show();
+                //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
 
         }
@@ -1188,14 +1191,14 @@ namespace WorkerExitPass
             Response.Redirect(myApp);
         }
 
-        protected void btnHelp_Click(object sender, EventArgs e)
-        {
-            mpePopUp.Show();
-        }
-        protected void btnBack_Click(object sender, EventArgs e)
-        {
-            mpePopUp.Hide();
-        }
+        //protected void btnHelp_Click(object sender, EventArgs e)
+        //{
+        //    //mpePopUp.Show();
+        //}
+        //protected void btnBack_Click(object sender, EventArgs e)
+        //{
+        //    mpePopUp.Hide();
+        //}
         protected void viewStatus_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();

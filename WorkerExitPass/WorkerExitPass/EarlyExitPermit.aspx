@@ -33,11 +33,11 @@
         <div class="container">
 
             <div class="rowIcon">
-                <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-info-circle fa-2x' aria-hidden='true'></i>" OnClick="btnHelp_Click"/>
+<%--                <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-question-circle fa-2x' aria-hidden='true'></i>" OnClick="btnHelp_Click"/>--%>
+                    <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-question-circle fa-2x' aria-hidden='true'></i>"/>
             </div>   
 
             <div class="dateTimeRow">
-                <%--<div class="col-12">--%>
                     <div class="dateCol">
                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
                         <input class="input" id="dateInput" type="date"/>
@@ -46,9 +46,7 @@
                     <div class="timeCol">
                         <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
                         <input class="input" id="timeInput" type="time" runat="server"/>
-<%--                        <asp:Label class="label" ID="valid" runat="server"></asp:Label>--%>
                     </div>
-                <%--</div>--%>
             </div>
             
             <div class="row">
@@ -89,22 +87,18 @@
             </div>
           
             <div class="rowButtons">
-<%--                <div class="colCancelBtn">--%>
                     <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" OnClick="CancelBtn_Click" />
-<%--                </div>
-                <div class="colSubmitBtn">--%>
                     <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="SubmitBtn_Click" />
-<%--                </div>--%>
             </div>
         </div>
                     
-         <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
+<%--         <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>--%>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-            <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground">
+            <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="btnHelp" PopupControlID="Panel1" CancelControlID="btnBack" BackgroundCssClass="modalBackground">
             </ajaxToolkit:ModalPopupExtender>
             <asp:Panel ID="Panel1" runat="server">
                 <div class="rowIcon">
-                    <asp:LinkButton ID="btnBack" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>" OnClick="btnBack_Click"/>
+                    <asp:LinkButton ID="btnBack" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>"/>
                 </div>                 
                 <div class="content">
                     <asp:Label ID="labelHelp" runat="server" Text="When to apply for Early Exit Permit?"></asp:Label>    

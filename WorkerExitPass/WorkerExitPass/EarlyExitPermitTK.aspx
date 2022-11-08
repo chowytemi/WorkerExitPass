@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EarlyExitPermitTK.aspx.cs" Inherits="WorkerExitPass.WebForm2" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EarlyExitPermitTK.aspx.cs" Inherits="WorkerExitPass.WebForm2" EnableEventValidation = "false"%>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>
 
@@ -46,7 +46,9 @@
 
             <div class="form">
                 <div class="rowIcon">
-                    <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-info-circle fa-2x' aria-hidden='true'></i>" OnClick="btnHelp_Click"/>
+                        <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-question-circle fa-2x' aria-hidden='true'></i>"/>
+
+<%--                    <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-question-circle fa-2x' aria-hidden='true'></i>" OnClick="btnHelp_Click"/>--%>
                 </div>  
                 <div class="dateTimeRow">
 
@@ -111,19 +113,18 @@
 
                 <div class="rowButtons">
                         <asp:Button class="button" ID="cancelBtn" runat="server" Text="Cancel" OnClick="CancelBtn_Click" />
-<%--                        <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="Submit" />--%>
                         <asp:Button class="button" ID="submitAsTeam" runat="server" Text="Submit" Visible="false" OnClick="SubmitAsTeam_Click" />
                         <asp:Button class="button" ID="submitAsSolo" runat="server" Text="Submit" OnClick="SubmitAsSolo_Click" />
                 </div>
             </div>   
         </div>
-           <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>
+<%--           <asp:Label ID="lblHidden" runat="server" Text=""></asp:Label>--%>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-            <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="lblHidden" PopupControlID="Panel1" BackgroundCssClass="modalBackground">
+            <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="btnHelp" PopupControlID="Panel1" CancelControlID="btnBack" BackgroundCssClass="modalBackground">
             </ajaxToolkit:ModalPopupExtender>
             <asp:Panel ID="Panel1" runat="server">
                 <div class="rowIcon">
-                    <asp:LinkButton ID="btnBack" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>" OnClick="btnBack_Click"/>
+                    <asp:LinkButton ID="btnBack" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>"/>
                 </div>                 
                 <div class="content">
                     <asp:Label ID="labelHelp" runat="server" Text="When to apply for Early Exit Permit?"></asp:Label>    
@@ -138,7 +139,7 @@
                 </div>
         </asp:Panel>   
 
-         <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+         <asp:Label ID="Label1" runat="server" style="display:none"></asp:Label>
             <ajaxToolkit:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="Label1" PopupControlID="Panel2" BackgroundCssClass="modalBackground1">
             </ajaxToolkit:ModalPopupExtender>
             <asp:Panel ID="Panel2" runat="server">             
@@ -149,7 +150,7 @@
                 </div>
         </asp:Panel>   
     </form>
-                            <asp:Label ID="Label12" runat="server"></asp:Label>
+<%--                            <asp:Label ID="Label12" runat="server"></asp:Label>--%>
 
 </body>
 </html>

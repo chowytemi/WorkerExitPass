@@ -758,14 +758,14 @@ namespace WorkerExitPass
             Response.Redirect(myApp);
         }
 
-        protected void btnHelp_Click(object sender, EventArgs e)
-        {
-            mpePopUp.Show();
-        }
-        protected void btnBack_Click(object sender, EventArgs e)
-        {
-            mpePopUp.Hide();
-        }
+        //protected void btnHelp_Click(object sender, EventArgs e)
+        //{
+        //    mpePopUp.Show();
+        //}
+        //protected void btnBack_Click(object sender, EventArgs e)
+        //{
+        //    mpePopUp.Hide();
+        //}
 
         protected void viewStatus_Click(object sender, EventArgs e)
         {

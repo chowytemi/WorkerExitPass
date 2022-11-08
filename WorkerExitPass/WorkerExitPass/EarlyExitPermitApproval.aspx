@@ -100,9 +100,9 @@
             </ajaxToolkit:ModalPopupExtender>
             <asp:Panel ID="Panel2" runat="server">             
                 <div class="contentRow">
-                    <asp:Label ID="labelExpiry" runat="server" Text="This early exit permit application has expired."></asp:Label>
+                    <asp:Label ID="labelExpiry" runat="server"></asp:Label>
 <%--                    <asp:Label class="labelMsg" ID="valid" runat="server" Text="You will receive an email once it has been approved or rejected. </br> Once approved, please exit before "></asp:Label>--%>
-                    <asp:Button ID="continueBtn" runat="server" Text="View Status" OnClick="continueBtn_Click" />
+                    <asp:Button ID="continueBtn" runat="server" Text="Continue" OnClick="continueBtn_Click" />
                 </div>
         </asp:Panel> 
         </div>

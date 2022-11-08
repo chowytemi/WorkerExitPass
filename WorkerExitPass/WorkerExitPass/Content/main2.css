@@ -203,10 +203,13 @@
         margin: auto;
     }
 
-
-    #Panel1 {
+    #Panel1, #Panel2 {
         width: 70%;
+        height: 25%;
     }
+    /*#Panel1 {
+        width: 70%;
+    }*/
 }
 
 /* Extra small devices (phones, 600px and down) */
