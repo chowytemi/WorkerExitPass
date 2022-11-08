@@ -115,7 +115,7 @@
 #continueBtn {
     background-color: #004B7A;
     width: 30%;
-    margin: 2em auto auto auto;
+    margin: 2em auto 2em auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -151,5 +151,12 @@
     #ddlStatus {
         font-size: 0.8em;
         width: 25%;
+    }
+
+    #continueBtn {
+        width: 40%;
+    }
+    #labelExpiry {
+        font-size: 1em;
     }
 }

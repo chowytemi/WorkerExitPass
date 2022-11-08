@@ -378,7 +378,7 @@ namespace WorkerExitPass
                 //DateTime permitexpiry = timeinput.AddHours(1);
                 //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                 //ModalPopupExtender1.Show();
-                mpePopUp.Show();
+                //mpePopUp.Show();
                 //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
@@ -538,7 +538,7 @@ namespace WorkerExitPass
                 //DateTime permitexpiry = timeinput.AddHours(1);
                 //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                 //ModalPopupExtender1.Show();
-                mpePopUp.Show();
+                //mpePopUp.Show();
                 //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
@@ -1003,6 +1003,8 @@ namespace WorkerExitPass
                                 }
                                 else if (drcheck.HasRows)
                                 {
+                                    //ModalPopupExtender1.Hide();
+                                    //mpePopUp.Hide();
                                     ScriptManager.RegisterClientScriptBlock
                                          (this, this.GetType(), "alertMessage", "alert" +
                                          "('There is already an approved permit before submitted time')", true);
@@ -1011,6 +1013,8 @@ namespace WorkerExitPass
                             }
                             else
                             {
+                                //ModalPopupExtender1.Hide();
+                                //mpePopUp.Hide();
                                 ScriptManager.RegisterClientScriptBlock
                                        (this, this.GetType(), "alertMessage", "alert" +
                                        "('Duplicate Submission of time')", true);

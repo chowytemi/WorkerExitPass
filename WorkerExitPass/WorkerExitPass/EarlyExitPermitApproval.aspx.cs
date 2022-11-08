@@ -244,6 +244,9 @@ namespace WorkerExitPass
                     string createdByEmail = dt2.Rows[0][5].ToString();
                     string approver = dt2.Rows[0][6].ToString();
 
+                    DateTime permitexpiry = date.AddHours(1);
+                    string validTill = permitexpiry.ToString("dd/MM/yyyy hh:mm tt");
+
                     string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp', exitapproval.approve, exitapproval.approveddate " +
                         "from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
                     using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
@@ -284,7 +287,7 @@ namespace WorkerExitPass
                             string status = dt.Rows[i][1].ToString();
                             if (status == "True")
                             {
-                                status = "Approved";
+                                status = "Approved (Valid Till: " + validTill + ")";
                             }
                             else
                             {

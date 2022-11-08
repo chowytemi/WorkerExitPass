@@ -158,13 +158,14 @@ h1, .label {
     overflow: auto;
     border-radius: 0.5em;
     z-index: 10001;
+    height: auto;
 }
-#Panel1 {
+/*#Panel1 {
     height: 35%;
 }
 #Panel2 {
     height: 30%;
-}
+}*/
 .contentRow {
     width: 90%;
     margin: auto;
@@ -238,7 +239,7 @@ li {
     }
     #Panel1, #Panel2 {
         width: 70%;
-        height: 40%;
+        /*height: 40%;*/
     }
 }
 
