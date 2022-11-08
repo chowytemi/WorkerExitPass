@@ -91,9 +91,14 @@ namespace WorkerExitPass
             //string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO " +
             //    "from exitapproval, EmpList " +
             //    "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND (EmpList.RO IS NULL OR EmpList.RO = 'NONE') order by exitID desc;";
-            string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' " +
-                "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') " +
-                "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
+
+            //string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' " +
+            //    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') " +
+            //    "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
+
+            string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
+            "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') and DATEADD(hour,1,exittime) > CAST(GETDATE() as date) " +
+            "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -128,10 +133,14 @@ namespace WorkerExitPass
                 //   "from exitapproval,  EmpList " +
                 //   "where approve IS NULL AND reason NOT IN('Medical Injury') " +
                 //   "and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' order by exitID desc;";
-                string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' " +
-                    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' " +
-                    "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
 
+                //string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' " +
+                //    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' " +
+                //    "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
+
+                string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
+                    "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' + and DATEADD(hour, 1, exittime) > CAST(GETDATE() as date) " +
+                    "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
                 using (SqlCommand cmd3 = new SqlCommand(statussql, conn))
                 {
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd3))
