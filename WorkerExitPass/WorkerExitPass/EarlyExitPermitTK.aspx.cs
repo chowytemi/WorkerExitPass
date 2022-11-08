@@ -240,6 +240,7 @@ namespace WorkerExitPass
                     BindDataSetDataProjects();
                     GetListOfEmployees();
                     BindDataSetDataReason();
+                    mpePopUp.Show();
                 }
                 else
                 {
