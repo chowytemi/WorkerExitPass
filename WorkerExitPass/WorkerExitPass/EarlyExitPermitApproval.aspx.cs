@@ -58,7 +58,8 @@ namespace WorkerExitPass
 
             if (dr.HasRows)
             {
-                IsApprove();
+                //IsApprove();
+                CheckApprovalAccess();
                 dr.Close();
             }
             else
@@ -69,7 +70,8 @@ namespace WorkerExitPass
                 SqlDataReader dr2 = cmd2.ExecuteReader();
                 if (dr2.HasRows)
                 {
-                    IsApprove();
+                    //IsApprove();
+                    CheckApprovalAccess();
                 }
                 else
                 {
@@ -86,36 +88,58 @@ namespace WorkerExitPass
             var exitID = Request.QueryString["exitid"];
             string exitPermitLink = ConfigurationManager.AppSettings["exitPermitLink"].ToString();
 
+
+
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-            string sql = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL";
+
+
+
+            string sql = "select approve from exitapproval where exitID = '" + exitID + "'";
             SqlCommand cmd = new SqlCommand(sql, conn);
             SqlDataReader dr = cmd.ExecuteReader();
-
             if (dr.HasRows)
             {
-                string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
-                SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
-                SqlDataReader dr2 = cmdlineno.ExecuteReader();
-                if (dr2.HasRows)
+                while (dr.Read())
                 {
-                    GetApplicationById();
 
+
+
+                    string approve = dr[0].ToString();
+                    if (approve == "True" || approve == "False")
+                    {
+                        labelExpiry.Text = "This early exit permit application has been approved/rejected.";
+                        ModalPopupExtender1.Show();
+                    }
+                    else
+                    {
+                        string sql2 = "select approve from exitapproval where exitID = '" + exitID + "' and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
+                        SqlCommand cmd2 = new SqlCommand(sql2, conn);
+                        SqlDataReader dr2 = cmd2.ExecuteReader();
+                        if (dr2.HasRows)
+                        {
+                            GetApplicationById();
+
+
+
+                        }
+                        else
+                        {
+                            labelExpiry.Text = "This early exit permit application has expired.";
+                            ModalPopupExtender1.Show();
+                        }
+                        dr2.Close();
+                    }
                 }
-                else
-                {
-                    labelExpiry.Text = "This early exit permit application has expired.";
-                    ModalPopupExtender1.Show();
-                }
-                dr2.Close();
             }
             else
             {
-                labelExpiry.Text = "This early exit permit application has been approved/rejected.";
-                ModalPopupExtender1.Show();
-            }
+                Response.Redirect("http://eservices.dyna-mac.com/error");
 
+
+
+            }
             dr.Close();
             conn.Close();
         }
@@ -192,11 +216,11 @@ namespace WorkerExitPass
                 //}
                 //else
                 //{
-                    CheckBoxList1.DataSource = dt2;
-                    CheckBoxList1.DataTextField = "Employee_Name";
-                    CheckBoxList1.DataValueField = "Employee_Name";
-                    CheckBoxList1.DataBind();
-                    tbName.Visible = false;
+                CheckBoxList1.DataSource = dt2;
+                CheckBoxList1.DataTextField = "Employee_Name";
+                CheckBoxList1.DataValueField = "Employee_Name";
+                CheckBoxList1.DataBind();
+                tbName.Visible = false;
                 //}
 
 
@@ -225,7 +249,7 @@ namespace WorkerExitPass
                 string sqlquery = "select distinct exitapproval.exitID, (select distinct EmpList.Employee_Name from EmpList, exitapproval " +
                     "where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') " +
                     "as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail, " +
-                    "(select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" 
+                    "(select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '"
                     + exitID + "') as 'approver' from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
                 using (SqlCommand cmd = new SqlCommand(sqlquery, con))
                 {
@@ -524,7 +548,8 @@ namespace WorkerExitPass
                     }
                     conn.Close();
                 }
-            } catch
+            }
+            catch
             {
                 //Response.Redirect(myApp);
                 //Response.Redirect(exitPermitLink + "EarlyExitPermitView.aspx?approval=" + empID);
@@ -536,30 +561,30 @@ namespace WorkerExitPass
         protected void ApproveByEmail()
         {
 
-                string empID = Session["empID"].ToString();
-                Session["empID"] = empID;
-                DateTime approveddate = DateTime.Now;
-                var exitID = Request.QueryString["exitid"];
-                var status = Request.QueryString["status"];
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+            DateTime approveddate = DateTime.Now;
+            var exitID = Request.QueryString["exitid"];
+            var status = Request.QueryString["status"];
 
-                string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-                SqlConnection conn = new SqlConnection(cs);
-                conn.Open();
-                string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + status + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection conn = new SqlConnection(cs);
+            conn.Open();
+            string sqlquery = "update exitapproval set approver = '" + empID + "', approve = " + status + ", approveddate = '" + approveddate + "' where exitID = '" + exitID + "'";
 
 
-                using (SqlCommand update = new SqlCommand(sqlquery, conn))
-                {
-                    update.ExecuteNonQuery();
+            using (SqlCommand update = new SqlCommand(sqlquery, conn))
+            {
+                update.ExecuteNonQuery();
 
-                    conn.Close();
-                }
-                sendEmail();
-                mpeApproval.Hide();
-                Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
+                conn.Close();
+            }
+            sendEmail();
+            mpeApproval.Hide();
+            Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
 
         }
-        
+
 
         protected void btnBack_Click(object sender, EventArgs e)
         {
@@ -575,5 +600,51 @@ namespace WorkerExitPass
             Response.Redirect("EarlyExitPermitView.aspx?approval=" + empID);
 
         }
+
+        protected void CheckApprovalAccess()
+        {
+            string myempno = Request.QueryString["approval"];
+            Session["empID"] = myempno;
+            var exitID = Request.QueryString["exitid"];
+            string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
+            string RO = ConfigurationManager.AppSettings["RO"].ToString();
+
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                conn.Open();
+                string sqlquery = "select exitapproval.createdby, EmpList.EmpID, EmpList.RO from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitID = '" + exitID + "' " +
+                    "and EmpList.RO = '" + myempno + "'";
+                SqlCommand cmd = new SqlCommand(sqlquery, conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+
+                    IsApprove();
+                }
+                else
+                {
+                    //for testing
+                    string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
+                        "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                        "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + myempno + "'";
+                    SqlCommand cmd1 = new SqlCommand(sql, conn);
+                    SqlDataReader dr1 = cmd1.ExecuteReader();
+                    if (dr1.HasRows)
+                    {
+                        IsApprove();
+                    }
+                    else
+                    {
+                        Response.Redirect("http://eservices.dyna-mac.com/error");
+                    }
+                }
+
+
+
+            }
+        }
     }
+
 }
