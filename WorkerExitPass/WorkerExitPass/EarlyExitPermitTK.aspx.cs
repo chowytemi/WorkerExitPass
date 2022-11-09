@@ -240,7 +240,8 @@ namespace WorkerExitPass
                     BindDataSetDataProjects();
                     GetListOfEmployees();
                     BindDataSetDataReason();
-                    //mpePopUp.Show();
+                    mpePopUp.Show();
+                    Panel1.Visible = true;
                 }
                 else
                 {
@@ -379,7 +380,7 @@ namespace WorkerExitPass
                 //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                 //ModalPopupExtender1.Show();
                 //mpePopUp.Show();
-                //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+         //       Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
             {
@@ -411,7 +412,6 @@ namespace WorkerExitPass
 
             try
             {
-
                 //get code
                 string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
             SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
@@ -534,12 +534,16 @@ namespace WorkerExitPass
             conn.Close();
             appcon.Close();
             sendEmailForApproval();
-                //DateTime timeinput = Convert.ToDateTime(time);
-                //DateTime permitexpiry = timeinput.AddHours(1);
-                //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
-                //ModalPopupExtender1.Show();
-                //mpePopUp.Show();
-                //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                //ScriptManager.RegisterClientScriptBlock
+                //      (this, this.GetType(), "alertMessage", "alert" +
+                //      "('Submitted')", true);
+                //return;
+                //datetime timeinput = convert.todatetime(time);
+                //datetime permitexpiry = timeinput.addhours(1);
+                //valid.text += permitexpiry.tostring("dd/mm/yyyy hh:mm tt") + ".";
+                
+                //mpepopup.show();
+            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
             {
@@ -721,6 +725,10 @@ namespace WorkerExitPass
                                                         }
                                                         
                                                         smtp.Send(mm);
+                                                        DateTime timeinput = Convert.ToDateTime(time);
+                                                        DateTime permitexpiry = timeinput.AddHours(1);
+                                                        valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                        ModalPopupExtender1.Show();
                                                     }
                                                 }
 
@@ -799,6 +807,10 @@ namespace WorkerExitPass
                                                     }
 
                                                     smtp.Send(mm);
+                                                    DateTime timeinput = Convert.ToDateTime(time);
+                                                    DateTime permitexpiry = timeinput.AddHours(1);
+                                                    valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                    ModalPopupExtender1.Show();
 
                                                 }
 
@@ -915,26 +927,28 @@ namespace WorkerExitPass
             if (!dr1.HasRows)
             {
                 //check for submit time after approved time
-                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and (approve = 1 or approve is not null)  ";
+                //string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and (approve = 1 or approve is not null)  ";
 
-                SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
-                SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
+                //SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
+                //SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
 
-                if (!drcheck.HasRows)
-                {
-                    SoloSubmit();
-                    //DateTime timeinput = Convert.ToDateTime(time);
-                    //DateTime permitexpiry = timeinput.AddHours(1);
-                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
-                    //ModalPopupExtender1.Show();
-                }
-                else if (drcheck.HasRows)
-                {
-                    ScriptManager.RegisterClientScriptBlock
-                         (this, this.GetType(), "alertMessage", "alert" +
-                         "('There is already an approved permit before submitted time')", true);
-                    return;
-                }
+                //if (!drcheck.HasRows)
+                //{
+                //    SoloSubmit();
+                //    //DateTime timeinput = Convert.ToDateTime(time);
+                //    //DateTime permitexpiry = timeinput.AddHours(1);
+                //    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                //    //ModalPopupExtender1.Show();
+                //}
+                //else if (drcheck.HasRows)
+                //{
+                //    ScriptManager.RegisterClientScriptBlock
+                //         (this, this.GetType(), "alertMessage", "alert" +
+                //         "('There is already an approved permit before submitted time')", true);
+                //    return;
+                //}
+
+                SoloSubmit();
             }
             else
             {
@@ -986,39 +1000,43 @@ namespace WorkerExitPass
                             if (!dr1.HasRows)
                             {
                                 //check for submit time after approved time
-                                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) " +
-                                    "and CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) " +
-                                    "and empID = '" + checkEmpID + "' and (approve = 1 or approve is not null)  ";
+                                //string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) " +
+                                //    "and CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) " +
+                                //    "and empID = '" + checkEmpID + "' and (approve = 1 or approve is not null)  ";
 
-                                SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
-                                SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
+                                //SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
+                                //SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
 
-                                if (!drcheck.HasRows)
-                                {
-                                    TeamSubmit();
-                                    //DateTime timeinput = Convert.ToDateTime(time);
-                                    //DateTime permitexpiry = timeinput.AddHours(1);
-                                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
-                                    //ModalPopupExtender1.Show();
-                                }
-                                else if (drcheck.HasRows)
-                                {
-                                    //ModalPopupExtender1.Hide();
-                                    //mpePopUp.Hide();
-                                    ScriptManager.RegisterClientScriptBlock
-                                         (this, this.GetType(), "alertMessage", "alert" +
-                                         "('There is already an approved permit before submitted time')", true);
-                                    return;
-                                }
+                                //if (!drcheck.HasRows)
+                                //{
+                                //    TeamSubmit();
+                                //    //DateTime timeinput = Convert.ToDateTime(time);
+                                //    //DateTime permitexpiry = timeinput.AddHours(1);
+                                //    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                //    //ModalPopupExtender1.Show();
+                                //}
+                                //else if (drcheck.HasRows)
+                                //{
+                                //    //ModalPopupExtender1.Hide();
+                                //    //mpePopUp.Hide();
+                                //    ScriptManager.RegisterClientScriptBlock
+                                //         (this, this.GetType(), "alertMessage", "alert" +
+                                //         "('There is already an approved permit before submitted time')", true);
+                                //    return;
+                                //}
+
+
+                                TeamSubmit();
                             }
                             else
                             {
                                 //ModalPopupExtender1.Hide();
-                                //mpePopUp.Hide();
+                                // mpePopUp.Hide();
+                                //Panel1.Visible = false;
                                 ScriptManager.RegisterClientScriptBlock
-                                       (this, this.GetType(), "alertMessage", "alert" +
-                                       "('Duplicate Submission of time')", true);
-                                return;
+                       (this, this.GetType(), "alertMessage", "alert" +
+                       "('Duplicate Submission of time')", true);
+                                return; 
                             }
                         }
                     }
@@ -1199,16 +1217,22 @@ namespace WorkerExitPass
         //{
         //    //mpePopUp.Show();
         //}
-        //protected void btnBack_Click(object sender, EventArgs e)
-        //{
-        //    mpePopUp.Hide();
-        //}
+        protected void btnContinue_Click(object sender, EventArgs e)
+        {
+            ModalPopupExtender1.Hide();
+            Panel2.Visible = false;
+        }
         protected void viewStatus_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
             Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
 
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            Panel1.Visible = false;
         }
     }
 

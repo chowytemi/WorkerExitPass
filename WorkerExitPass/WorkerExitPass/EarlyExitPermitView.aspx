@@ -44,7 +44,7 @@
                     <asp:BoundField DataField="projectdesc" HeaderText="Project" />
                     <asp:BoundField DataField="company" HeaderText="Company" />
                     <asp:BoundField DataField="no of emp" HeaderText="No of Employees" />
-                    <asp:BoundField DataField="reason" HeaderText="Reason" />                    
+<%--                    <asp:BoundField DataField="reason" HeaderText="Reason" />                    --%>
                     </Columns>
                     <PagerStyle HorizontalAlign = "Right" CssClass = "GridPager" />
             </asp:GridView>
@@ -52,7 +52,7 @@
             <asp:GridView ID="GridView2" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" AllowPaging="True" OnRowDataBound="GridView2_RowDataBound" OnPageIndexChanging="GridView2_PageIndexChanging" OnSelectedIndexChanged="GridView2_SelectedIndexChanged">
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />
-                    <asp:BoundField DataField="reason" HeaderText="Reason" />
+<%--                    <asp:BoundField DataField="reason" HeaderText="Reason" />--%>
                     <asp:BoundField DataField="approveddate" HeaderText="Approved Date" />
                     <asp:BoundField DataField="projectdesc" HeaderText="Project" />
                     <asp:BoundField DataField="company" HeaderText="Company" />

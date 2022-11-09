@@ -32,6 +32,8 @@
                     <asp:BoundField DataField="createddate" HeaderText="Date" />
                     <asp:BoundField DataField="exittime" HeaderText="Time" />
                     <asp:BoundField DataField="approve" HeaderText="Status" />
+                    <asp:BoundField DataField="expiry" HeaderText="Expiry Time" />
+
                 </Columns>
                 <HeaderStyle CssClass="thead" />
                 <RowStyle CssClass="tr" />

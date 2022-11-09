@@ -57,7 +57,7 @@ namespace WorkerExitPass
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
             //string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by exitID desc;";
-            string statussql = "select distinct exitID, createddate, exittime, approve from exitapproval where EmpID = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
+            string statussql = "select distinct exitID, createddate, exittime, approve, DATEADD(hour,1,exittime) as expiry from exitapproval where EmpID = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
 
             SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
             using (DataTable dt = new DataTable())
@@ -108,18 +108,19 @@ namespace WorkerExitPass
                 DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
                 e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy");
 
-                if ((e.Row.Cells[2].Text) == "&nbsp;")
-                {
+                //if ((e.Row.Cells[2].Text) == "&nbsp;")
+                //{
                     
-                    e.Row.Cells[2].Text = "NULL";
+                //    e.Row.Cells[2].Text = "NULL";
 
-                }
-                else
-                {
+                //}
+                //else
+                //{
                     DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
                     e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
-                }
-                
+                //}
+                DateTime expirytime = Convert.ToDateTime(e.Row.Cells[4].Text);
+                e.Row.Cells[4].Text = expirytime.ToString("dd/MM/yyyy hh:mm tt");
 
                 if ((e.Row.Cells[3].Text) == "True")
                 {
@@ -174,7 +175,7 @@ namespace WorkerExitPass
                 bool isApprove = Convert.ToBoolean(approve);
                 //string sql = "select distinct exitapproval.approve, (select distinct EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
                 string sql = "select distinct (select distinct EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" 
-                + exitID + "') AS 'approver', exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, " +
+                + exitID + "') AS 'approver', exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason," +
                 "exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();

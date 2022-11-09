@@ -96,7 +96,7 @@ namespace WorkerExitPass
             //    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') " +
             //    "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
 
-            string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
+            string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
             "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP " +
             "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
             using (SqlConnection conn = new SqlConnection(cs))
@@ -138,8 +138,8 @@ namespace WorkerExitPass
                 //    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' " +
                 //    "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
 
-                string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
-                    "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' + and DATEADD(hour, 1, exittime) > CURRENT_TIMESTAMP " +
+                string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
+                    "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' and DATEADD(hour, 1, exittime) > CURRENT_TIMESTAMP " +
                     "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
                 using (SqlCommand cmd3 = new SqlCommand(statussql, conn))
                 {
@@ -164,7 +164,7 @@ namespace WorkerExitPass
             Session["empID"] = empID;
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitapproval.exitID, exitapproval.reason, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -238,17 +238,17 @@ namespace WorkerExitPass
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                DateTime date1 = Convert.ToDateTime(e.Row.Cells[2].Text);
-                e.Row.Cells[2].Text = date1.ToString("dd/MM/yyyy hh:mm tt");
+                DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
+                e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy hh:mm tt");
 
-                if ((e.Row.Cells[5].Text) == "True")
+                if ((e.Row.Cells[4].Text) == "True")
                 {
-                    e.Row.Cells[5].Text = "Approved";
+                    e.Row.Cells[4].Text = "Approved";
 
                 }
                 else
                 {
-                    e.Row.Cells[5].Text = "Rejected";
+                    e.Row.Cells[4].Text = "Rejected";
                 }
                 e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridView2, "Select$" + e.Row.RowIndex);
                 e.Row.ToolTip = "Click to select this row.";
@@ -281,7 +281,7 @@ namespace WorkerExitPass
             //try
             //{
             int exitID = Convert.ToInt32(GridView2.SelectedRow.Cells[0].Text);
-            string approve = GridView2.SelectedRow.Cells[5].Text;
+            string approve = GridView2.SelectedRow.Cells[4].Text;
             lblStatus.Text = approve;
             if (approve == "Approved")
             {

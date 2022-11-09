@@ -276,26 +276,27 @@ namespace WorkerExitPass
             if (!dr1.HasRows)
             {
                 //check for submit time after approved time
-                string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and (approve = 1 or approve is not null)";
+                //string sqlquerycheck = "select exitid from exitapproval where cast('" + dateInput + "' as time) > cast(exittime as time) and CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and (approve = 1 or approve is not null)";
 
-                SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
-                SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
+                //SqlCommand cmdlinenocheck = new SqlCommand(sqlquerycheck, appcon);
+                //SqlDataReader drcheck = cmdlinenocheck.ExecuteReader();
 
-                if (!drcheck.HasRows)
-                {
-                    submitForm();
-                    //DateTime timeinput = Convert.ToDateTime(time);
-                    //DateTime permitexpiry = timeinput.AddHours(1);
-                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
-                    //ModalPopupExtender1.Show();
-                }
-                else if (drcheck.HasRows)
-                {
-                    ScriptManager.RegisterClientScriptBlock
-                         (this, this.GetType(), "alertMessage", "alert" +
-                         "('There is already an approved permit before submitted time')", true);
-                    return;
-                }
+                //if (!drcheck.HasRows)
+                //{
+                //    submitForm();
+                //    //DateTime timeinput = Convert.ToDateTime(time);
+                //    //DateTime permitexpiry = timeinput.AddHours(1);
+                //    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                //    //ModalPopupExtender1.Show();
+                //}
+                //else if (drcheck.HasRows)
+                //{
+                //    ScriptManager.RegisterClientScriptBlock
+                //         (this, this.GetType(), "alertMessage", "alert" +
+                //         "('There is already an approved permit before submitted time')", true);
+                //    return;
+                //}
+                submitForm();
             }
             else
             {
