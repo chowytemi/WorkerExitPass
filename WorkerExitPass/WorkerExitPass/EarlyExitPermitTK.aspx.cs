@@ -797,70 +797,82 @@ namespace WorkerExitPass
 
 
                                             }
-                                            //else //for testing 
-                                            //{
+                                            else //for testing 
+                                            {
 
-                                            //    string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                            //                              "from Access, UserAccess, ARole, EmpList " +
-                                            //                              "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                            //                              "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                            //                              "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
 
-                                            //    using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
-                                            //    {
+                                                using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
+                                                {
+                                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                                    MailMessage mm = new MailMessage();
+                                                    using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
+                                                    {
+                                                        while (pjmdr.Read())
+                                                        {
+                                                            string body1 = "";
+                                                            string name = pjmdr[0].ToString();
 
-                                            //        using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
-                                            //        {
-                                            //            while (pjmdr.Read())
-                                            //            {
-                                            //                string body1 = "";
-                                            //                string name = pjmdr[0].ToString();
+                                                            //MailMessage mm = new MailMessage();
+                                                            mm.From = new MailAddress(MailFrom);
+                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            {
 
-                                            //                MailMessage mm = new MailMessage();
-                                            //                mm.From = new MailAddress(MailFrom);
-                                            //                if (ReasonDropdown.Text == "Medical Injury")
-                                            //                {
+                                                                mm.Subject = "Early Exit Permit Medical Injury Notification";
 
-                                            //                    mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                            }
+                                                            else
+                                                            {
+                                                                mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                                                body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
 
-                                            //                }
-                                            //                else
-                                            //                {
-                                            //                    mm.Subject = "Early Exit Permit Pending Test for Approval";
-                                            //                    body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+                                                            }
+                                                            body1 += "<br /><br />This is an automatically generated email, please do not reply.";
 
-                                            //                }
-                                            //                body1 += "<br /><br />This is an automatically generated email, please do not reply.";
+                                                            mm.Body = body + body1;
+                                                            mm.IsBodyHtml = true;
+                                                            //SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                                            smtp.EnableSsl = false;
+                                                            //for (int i = 0; i < dt.Rows.Count; i++)
+                                                            //{
+                                                            //    string pjmID = dt.Rows[i][1].ToString();
+                                                            //    mm.To.Add(new MailAddress(pjmID));
+                                                            //}
 
-                                            //                mm.Body = body + body1;
-                                            //                mm.IsBodyHtml = true;
-                                            //                SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
-                                            //                smtp.EnableSsl = false;
+                                                            string pjmID = pjmdr[1].ToString();
+                                                            mm.To.Add(new MailAddress(pjmID));
 
-                                            //                string pjmID = pjmdr[1].ToString();
+                                                            smtp.UseDefaultCredentials = false;
+                                                        }
+                                                    }
+                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                    {
+                                                        mm.To.Add(new MailAddress(MailTo));
+                                                        //mm.To.Add(new MailAddress(MailToSafety));
+                                                        mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
 
-                                            //                if (ReasonDropdown.Text == "Medical Injury")
-                                            //                {
-                                            //                    //mm.To.Add(new MailAddress(ROcemail));
-                                            //                    mm.To.Add(new MailAddress(pjmID));
+                                                    }
+                                                    else
+                                                    {
+                                                        mm.To.Add(new MailAddress(MailTo));
+                                                    }
 
-                                            //                }
-                                            //                else
-                                            //                {
-                                            //                    mm.To.Add(new MailAddress(pjmID));
+                                                    smtp.Send(mm);
+                                                    DateTime timeinput = Convert.ToDateTime(time);
+                                                    DateTime permitexpiry = timeinput.AddHours(1);
+                                                    labelSuccess.Text = "Success!";
+                                                    valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                    ModalPopupExtender1.Show();
 
-                                            //                }
+                                                }
 
-                                            //                smtp.UseDefaultCredentials = false;
-                                            //                mm.To.Add(new MailAddress(MailTo));
-                                            //                smtp.Send(mm);
-                                            //            }
-                                            //        }
-
-                                            //    }
-
-                                            //}
+                                            }
 
                                         }
                                     }

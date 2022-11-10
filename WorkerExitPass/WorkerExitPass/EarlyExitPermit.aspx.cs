@@ -655,96 +655,91 @@ namespace WorkerExitPass
                                                         }
 
                                                     }
-                                                    //else //for testing
-                                                    //{
-                                                    //    string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                    //                      "from Access, UserAccess, ARole, EmpList " +
-                                                    //                      "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                    //                      "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                    //                      "and Access.id = '" + RO + "'";
-                                                    //    using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
-                                                    //    {
-                                                    //        using (SqlDataReader hoddr = hodcmd.ExecuteReader())
-                                                    //        {
-                                                    //            while (hoddr.Read())
-                                                    //            {
-                                                    //                string ROid = hoddr[0].ToString();
-                                                    //                string ROcemail = hoddr[1].ToString();
+                                                    else //for testing
+                                                    {
+                                                        string pjmquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                          "from Access, UserAccess, ARole, EmpList " +
+                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                        using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
+                                                        {
+                                                            MailMessage mm = new MailMessage();
+                                                            SmtpClient smtp = new SmtpClient(smtpserver, smtpport);                                                                      
 
-                                                    //                MailMessage mm = new MailMessage();
-                                                    //                mm.From = new MailAddress(MailFrom);
-                                                    //                string body = "Hello,";
-                                                    //                body += "<br /><br />The following application was submitted:";
-                                                    //                body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                                                    //                body += "<tr style=\" height: 0.5em;\">";
-                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
-                                                    //                body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
-                                                    //                body += "<tr style=\" height: 0.5em;\">";
-                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Project</th>";
-                                                    //                body += "<td style=\" border: 1px solid\">" + project + "</td>";
-                                                    //                body += "<tr style=\" height: 0.5em;\">";
-                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Reason</th>";
-                                                    //                body += "<td style=\" border: 1px solid\">" + reason + "</td>";
-                                                    //                body += "<tr style=\" height: 0.5em;\">";
-                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Requested time</th>";
-                                                    //                body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                                                    //                body += "<tr style=\" height: 0.5em;\">";
-                                                    //                body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee name</th>";
-                                                    //                body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
-                                                    //                string body1 = "";
+                                                            using (SqlDataReader pjmdr = pjmcmd.ExecuteReader())
+                                                            {
+                                                                while (pjmdr.Read())
+                                                                {
+                                                                    string name = pjmdr[0].ToString();
 
-                                                    //                if (ReasonDropdown.Text == "Medical Injury")
-                                                    //                {
+                                                                    
+                                                                    mm.From = new MailAddress(MailFrom);
+                                                                    String body = "The following application was submitted:";
+                                                                    body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit ID</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitid + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Project</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + project + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Reason</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Exit Time</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                                                                    body += "<tr style=\" height: 0.5em;\">";
+                                                                    body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee Name</th>";
+                                                                    body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
+                                                                    string body1 = "";
+                                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                                    {
 
-                                                    //                    mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                        mm.Subject = "Early Exit Permit Medical Injury Notification";
 
-                                                    //                }
-                                                    //                else
-                                                    //                {
-                                                    //                    mm.Subject = "Early Exit Permit Pending Test for Approval";
-                                                    //                    //body += "<br />Please click <a href = '" + Request.Url.AbsoluteUri.Replace("EarlyExitPermit.aspx?exprmit=" + empID, "EarlyExitPermitView.aspx?approval=" + ROid) + "'>here</a> to approve or reject the application.";
-                                                    //                    //body1 += "<br />Please click <a href = '" + link + "EarlyExitPermitView.aspx?approval=" + ROid + "'>here</a> to approve or reject the application.";
-                                                    //                    body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        mm.Subject = "Early Exit Permit Pending PJM for Approval";
+                                                                        body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
+                                                                    }
+                                                                    mm.Body = body + body1;
+                                                                    mm.IsBodyHtml = true;                                                                       
+                                                                    smtp.EnableSsl = false;
+                                                                    string pjmID = pjmdr[1].ToString();
+                                                                    mm.To.Add(new MailAddress(pjmID));
 
-                                                    //                }
+                                                                    smtp.UseDefaultCredentials = false;
+                                                                }
 
-                                                    //                body1 += "<br /><br />This is an automatically generated email, please do not reply.";
-                                                    //                mm.Body = body + body1;
-                                                    //                mm.IsBodyHtml = true;
-                                                    //                mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                    //                mm.To.Add(new MailAddress(ROcemail));
-                                                    //                SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
-                                                    //                smtp.EnableSsl = false;
-                                                    //                mm.To.Add(new MailAddress(MailTo));
-                                                    //                smtp.Send(mm);
+                                                            }
 
-                                                    //            }
-                                                    //        }
+                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            {
+                                                                mm.To.Add(new MailAddress(MailTo));
+                                                                //mm.To.Add(new MailAddress(MailToSafety));
+                                                                mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
+                                                            }
+                                                            else
+                                                            {
+                                                                mm.To.Add(new MailAddress(MailTo));
+                                                            }
 
-                                                    //    }
-                                                    //}
+                                                            smtp.Send(mm);
+                                                        }
+                                                        
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-
-
-
                                 }
-
                             }
-
                         }
-
-
-
                     }
-
                 }
-
-
             }
-
         }
 
         protected void CancelBtn_Click(object sender, EventArgs e)
