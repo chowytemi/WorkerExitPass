@@ -57,7 +57,7 @@ namespace WorkerExitPass
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
             //string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by exitID desc;";
-            string statussql = "select distinct exitID, createddate, exittime, approve, DATEADD(hour,1,exittime) as expiry from exitapproval where EmpID = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
+            string statussql = "select distinct exitID, createddate, exittime, approve from exitapproval where EmpID = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
 
             SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
             using (DataTable dt = new DataTable())
@@ -119,8 +119,8 @@ namespace WorkerExitPass
                     DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
                     e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
                 //}
-                DateTime expirytime = Convert.ToDateTime(e.Row.Cells[4].Text);
-                e.Row.Cells[4].Text = expirytime.ToString("dd/MM/yyyy hh:mm tt");
+                //DateTime expirytime = Convert.ToDateTime(e.Row.Cells[4].Text);
+                //e.Row.Cells[4].Text = expirytime.ToString("dd/MM/yyyy hh:mm tt");
 
                 if ((e.Row.Cells[3].Text) == "True")
                 {
@@ -161,16 +161,26 @@ namespace WorkerExitPass
             //{
                 int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
                 string approve = GridView1.SelectedRow.Cells[3].Text;
-                lblStatus.Text = approve;
+
+                DateTime exittime = Convert.ToDateTime(GridView1.SelectedRow.Cells[2].Text);
+                string expirytime = Convert.ToDateTime(exittime).AddHours(1).ToString("hh:mm tt");
+                
                 if (approve == "Approved")
                 {
+                    lblStatus.Text = approve + " (Valid Till: " + expirytime + ")";
                     approve = "True";
+                    
+
                 } else if (approve == "Rejected")
                 {
-                    approve = "False";
+                    lblStatus.Text = approve;
+                    approve = "False"; 
+
                 } else if (approve == "Pending")
                 {
+                    lblStatus.Text = approve;
                     approve = null;
+                   
                 }
                 bool isApprove = Convert.ToBoolean(approve);
                 //string sql = "select distinct exitapproval.approve, (select distinct EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
