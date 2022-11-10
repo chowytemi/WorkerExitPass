@@ -161,9 +161,8 @@ namespace WorkerExitPass
                         {
                             if (ReasonDropdown.SelectedValue == "Select")
                             {
-                                ScriptManager.RegisterClientScriptBlock
-                                  (this, this.GetType(), "alertMessage", "alert" +
-                                  "('Please choose a valid reason')", true);
+                                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                               "<script language='javascript'>alert('Please select a valid reason');</script>");
                                 return;
                             }
                             else
@@ -173,19 +172,15 @@ namespace WorkerExitPass
                         }
                         else if (compare <= 0)
                         {
-                            ScriptManager.RegisterClientScriptBlock
-                              (this, this.GetType(), "alertMessage", "alert" +
-                              "('Please choose a time after the current time')", true);
+                            Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Please choose a time after the current time');</script>");
                             return;
                         }
-
-
                     }
                     else
                     {
-                        ScriptManager.RegisterClientScriptBlock
-                             (this, this.GetType(), "alertMessage", "alert" +
-                             "('Unable to submit permit between 5PM to 6PM. Please try again after 6PM')", true);
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                 "<script language='javascript'>alert('Unable to submit permits from 5PM to 6PM. Please try again after 6PM');</script>");
                         return;
                     }
                 }
@@ -300,9 +295,8 @@ namespace WorkerExitPass
             }
             else
             {
-                ScriptManager.RegisterClientScriptBlock
-                       (this, this.GetType(), "alertMessage", "alert" +
-                       "('Duplicate Submission of time')", true);
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Duplicate Submission of time');</script>");
                 return;
             }
 
@@ -634,10 +628,10 @@ namespace WorkerExitPass
                                                                     //    string pjmID = dt.Rows[i][1].ToString();
                                                                     //    mm.To.Add(new MailAddress(pjmID));
                                                                     //}
-                                                                    
+
                                                                     string pjmID = pjmdr[1].ToString();
                                                                     mm.To.Add(new MailAddress(pjmID));
-                                                                    
+
                                                                     //mm.To.Add(new MailAddress(MailTo));
 
                                                                     smtp.UseDefaultCredentials = false;
@@ -767,7 +761,11 @@ namespace WorkerExitPass
         //{
         //    mpePopUp.Hide();
         //}
-
+        protected void btnContinue_Click(object sender, EventArgs e)
+        {
+            ModalPopupExtender1.Hide();
+            Panel2.Visible = false;
+        }
         protected void viewStatus_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();

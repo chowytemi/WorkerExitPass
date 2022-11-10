@@ -42,6 +42,7 @@ namespace WorkerExitPass
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
+            var exitID = Request.QueryString["exitid"];
             //using test access 87, pjm access 83
             string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
             string Test = ConfigurationManager.AppSettings["Test"].ToString();
@@ -49,39 +50,107 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            //for testing
-            string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
-                "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "' ; ";
-            SqlCommand cmd = new SqlCommand(sql, con);
-            SqlDataReader dr = cmd.ExecuteReader();
 
-            if (dr.HasRows)
+            string sql3 = "select exitapproval.createdby, EmpList.JobCode, EmpList.RO from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "'";
+            SqlCommand cmd3 = new SqlCommand(sql3, con);
+            SqlDataReader dr3 = cmd3.ExecuteReader();
+
+
+
+            while (dr3.Read())
             {
-                //IsApprove();
-                CheckApprovalAccess();
-                dr.Close();
-            }
-            else
-            {
-                string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
-                //string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "' and EmpList.EmpID = '" + empID + "' ; ";
-                SqlCommand cmd2 = new SqlCommand(sql2, con);
-                SqlDataReader dr2 = cmd2.ExecuteReader();
-                if (dr2.HasRows)
+                string ROid = dr3[2].ToString();
+                
+                //check if worker or subcon
+                if (dr3[1].ToString() == "WK")
                 {
-                    //IsApprove();
-                    CheckApprovalAccess();
+                    string sql = "select exitapproval.createdby, EmpList.RO from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitID = '" + exitID + "' and EmpList.RO = '" + empID + "';";
+                    SqlCommand cmd = new SqlCommand(sql, con);
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    
+
+                    if (dr.HasRows)
+                    {
+                        IsApprove();
+                        //CheckApprovalAccess();
+                        dr.Close();
+                    }
+                    else
+                    {
+                        Response.Redirect("http://eservices.dyna-mac.com/error");
+                    }
+                }
+                else if (dr3[1].ToString() == "SUBCON")
+                {
+                    string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
+                                        "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                        "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "';";
+                    SqlCommand cmd2 = new SqlCommand(sql2, con);
+                    SqlDataReader dr2 = cmd2.ExecuteReader();
+                    if (dr2.HasRows)
+                    {
+                        IsApprove();
+                        //CheckApprovalAccess();
+                        dr2.Close();
+                    }
+                    else
+                    {
+                        Response.Redirect("http://eservices.dyna-mac.com/error");
+                    }
                 }
                 else
                 {
                     Response.Redirect("http://eservices.dyna-mac.com/error");
                 }
-                dr2.Close();
-
             }
+            
             con.Close();
         }
+
+        //protected void CheckAccess()
+        //{
+        //    string empID = Session["empID"].ToString();
+        //    Session["empID"] = empID;
+        //    //using test access 87, pjm access 83
+        //    string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
+        //    string Test = ConfigurationManager.AppSettings["Test"].ToString();
+        //    string RO = ConfigurationManager.AppSettings["RO"].ToString();
+        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+        //    SqlConnection con = new SqlConnection(cs);
+        //    con.Open();
+        //    //for testing
+        //    string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
+        //        "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+        //        "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "' ; ";
+        //    SqlCommand cmd = new SqlCommand(sql, con);
+        //    SqlDataReader dr = cmd.ExecuteReader();
+
+        //    if (dr.HasRows)
+        //    {
+        //        //IsApprove();
+        //        CheckApprovalAccess();
+        //        dr.Close();
+        //    }
+        //    else
+        //    {
+        //        string sql2 = "select distinct RO from EmpList where RO IS NOT NULL AND RO = '" + empID + "';";
+        //        //string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "' and EmpList.EmpID = '" + empID + "' ; ";
+        //        SqlCommand cmd2 = new SqlCommand(sql2, con);
+        //        SqlDataReader dr2 = cmd2.ExecuteReader();
+        //        if (dr2.HasRows)
+        //        {
+        //            //IsApprove();
+        //            CheckApprovalAccess();
+        //        }
+        //        else
+        //        {
+        //            Response.Redirect("http://eservices.dyna-mac.com/error");
+        //        }
+        //        dr2.Close();
+
+        //    }
+        //    con.Close();
+        //}
 
         protected void IsApprove()
         {
@@ -201,7 +270,8 @@ namespace WorkerExitPass
                     tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
 
-                string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.EmpID = EmpList.EmpID and exitapproval.exitID = '" + exitID + "' and approve IS NULL;";
+                string sql2 = "select CONCAT(EmpList.Employee_Name, ' (', RTRIM(EmpList.EmpID), ')') AS 'empNameID' " +
+                    "from EmpList, exitapproval where exitapproval.EmpID = EmpList.EmpID and exitapproval.exitID = '" + exitID + "' and approve IS NULL;";
                 //string sql2 = "select EmpList.Employee_Name from EmpList, exitapproval where exitapproval.EmpID = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
 
                 SqlDataAdapter da2 = new SqlDataAdapter(sql2, conn);
@@ -217,8 +287,8 @@ namespace WorkerExitPass
                 //else
                 //{
                 CheckBoxList1.DataSource = dt2;
-                CheckBoxList1.DataTextField = "Employee_Name";
-                CheckBoxList1.DataValueField = "Employee_Name";
+                CheckBoxList1.DataTextField = "empNameID";
+                CheckBoxList1.DataValueField = "empNameID";
                 CheckBoxList1.DataBind();
                 tbName.Visible = false;
                 //}
@@ -416,7 +486,7 @@ namespace WorkerExitPass
                     {
                         if (li.Selected == true)
                         {
-                            string getIDquery = "select EmpID from EmpList where Employee_Name = @empName;";
+                            string getIDquery = "select EmpID from EmpList where Employee_Name = LEFT(@empName, CHARINDEX('(', @empName) - 1);";
 
                             using (SqlCommand select = new SqlCommand(getIDquery, conn))
                             {
@@ -499,7 +569,7 @@ namespace WorkerExitPass
                         if (li.Selected == true)
                         {
                             //insert to database, the value is in item.Value
-                            string getIDquery = "select EmpID from EmpList where Employee_Name = @empName;";
+                            string getIDquery = "select EmpID from EmpList where Employee_Name = LEFT(@empName, CHARINDEX('(', @empName) - 1);";
 
                             using (SqlCommand select = new SqlCommand(getIDquery, conn))
                             {
@@ -645,6 +715,7 @@ namespace WorkerExitPass
 
             }
         }
+
     }
 
 }

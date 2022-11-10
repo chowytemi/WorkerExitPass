@@ -123,7 +123,7 @@ h1, .label {
     margin-bottom: 0;
 }
 
-#btnHelp, #btnBack {
+#btnHelp, #btnBack, #btnContinue {
     color: #004B7A;
     float: right;
     margin-top: 2%;
@@ -190,7 +190,7 @@ li {
 #viewStatusBtn {
     background-color: #004B7A;
     width: 30%;
-    margin: 2em auto auto auto;
+    margin: 2em auto 2em auto;
     display: flex;
     justify-content: center;
     align-items: center;

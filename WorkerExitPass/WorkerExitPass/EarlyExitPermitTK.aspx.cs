@@ -291,7 +291,7 @@ namespace WorkerExitPass
             {
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
-                
+
                 var time = Request["timeInput"];
                 var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
                 string description = projectddl.Text;
@@ -351,11 +351,6 @@ namespace WorkerExitPass
 
                         using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                         {
-
-                            //var time = Request["timeInput"];
-                            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-
-
                             insert.CommandType = CommandType.Text;
                             insert.Parameters.AddWithValue("@createdby", empID);
                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
@@ -380,7 +375,7 @@ namespace WorkerExitPass
                 //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                 //ModalPopupExtender1.Show();
                 //mpePopUp.Show();
-         //       Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                //       Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
             {
@@ -414,126 +409,111 @@ namespace WorkerExitPass
             {
                 //get code
                 string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
-            SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
-            using (SqlDataReader dr = cmdlineno.ExecuteReader())
-            {
-                while (dr.Read())
+                SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
+                using (SqlDataReader dr = cmdlineno.ExecuteReader())
                 {
-                    string projectcode = dr[0].ToString();
-
-                    //insert request
-
-                    int counter = 0;
-
-                    for (int i = 0; i < namesddl.Items.Count; i++)
+                    while (dr.Read())
                     {
-
-
-                        if (namesddl.Items[i].Selected)
+                        string projectcode = dr[0].ToString();
+                        int counter = 0;
+                        for (int i = 0; i < namesddl.Items.Count; i++)
                         {
-                            //get EmpID
-                            //string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
-                            string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','"
-                                + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
-                            SqlCommand empcmd = new SqlCommand(empquery, appcon);
-                            using (SqlDataReader empdr = empcmd.ExecuteReader())
+
+
+                            if (namesddl.Items[i].Selected)
                             {
-                                while (empdr.Read())
+                                //get EmpID
+                                //string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
+                                string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','"
+                                    + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
+                                SqlCommand empcmd = new SqlCommand(empquery, appcon);
+                                using (SqlDataReader empdr = empcmd.ExecuteReader())
                                 {
-                                    if (counter == 0)
+                                    while (empdr.Read())
                                     {
-                                        string insertsinglequery = "";
-                                        if (ReasonDropdown.Text == "Medical Injury")
+                                        if (counter == 0)
                                         {
-                                            insertsinglequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
-                                                "values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            string insertsinglequery = "";
+                                            if (ReasonDropdown.Text == "Medical Injury")
+                                            {
+                                                insertsinglequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                    "values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            }
+                                            else
+                                            {
+                                                insertsinglequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                    "values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            }
+
+
+                                            string employeeIDToExit = empdr[0].ToString();
+                                            using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
+                                            {
+
+                                                insert.CommandType = CommandType.Text;
+                                                insert.Parameters.AddWithValue("@createdby", empID);
+                                                insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                                                insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
+                                                insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
+                                                insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                                insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                                                insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                                                insert.Parameters.AddWithValue("@exittime", dateInput);
+                                                insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                                                insert.Parameters.AddWithValue("@projectcode", projectcode);
+
+                                                insert.ExecuteNonQuery();
+
+                                                counter += 1;
+                                            }
                                         }
-                                        else
+                                        else if (counter > 0)
                                         {
-                                            insertsinglequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
-                                                "values((NEXT VALUE FOR exitID_Sequence), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                                        }
+                                            string insertmultiplequery = "";
+                                            if (ReasonDropdown.Text == "Medical Injury")
+                                            {
+                                                insertmultiplequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                    "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            }
+                                            else
+                                            {
+                                                insertmultiplequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
+                                                    "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+                                            }
 
 
-                                        string employeeIDToExit = empdr[0].ToString();
-                                        using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
-                                        {
+                                            string employeeIDToExit = empdr[0].ToString();
+                                            using (SqlCommand insert = new SqlCommand(insertmultiplequery, appcon))
+                                            {
+                                                insert.CommandType = CommandType.Text;
+                                                insert.Parameters.AddWithValue("@createdby", empID);
+                                                insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                                                insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
+                                                insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
+                                                insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                                insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
+                                                insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                                                insert.Parameters.AddWithValue("@exittime", dateInput);
+                                                insert.Parameters.AddWithValue("@projectdesc", projectInput);
+                                                insert.Parameters.AddWithValue("@projectcode", projectcode);
 
-                                            //var time = Request["timeInput"];
-                                            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                                                insert.ExecuteNonQuery();
 
-
-                                            insert.CommandType = CommandType.Text;
-                                            insert.Parameters.AddWithValue("@createdby", empID);
-                                            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                                            insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
-                                            insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
-                                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
-                                            insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
-                                            insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
-                                            insert.Parameters.AddWithValue("@exittime", dateInput);
-                                            insert.Parameters.AddWithValue("@projectdesc", projectInput);
-                                            insert.Parameters.AddWithValue("@projectcode", projectcode);
-
-                                            insert.ExecuteNonQuery();
-
-                                            counter += 1;
+                                                counter += 1;
+                                            }
                                         }
                                     }
-                                    else if (counter > 0)
-                                    {
-                                        string insertmultiplequery = "";
-                                        if (ReasonDropdown.Text == "Medical Injury")
-                                        {
-                                            insertmultiplequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
-                                                "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                                        }
-                                        else
-                                        {
-                                            insertmultiplequery = "insert into exitapproval(exitID, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
-                                                "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
-                                        }
-
-
-                                        string employeeIDToExit = empdr[0].ToString();
-                                        using (SqlCommand insert = new SqlCommand(insertmultiplequery, appcon))
-                                        {
-
-                                            //var time = Request["timeInput"];
-                                            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-
-
-                                            insert.CommandType = CommandType.Text;
-                                            insert.Parameters.AddWithValue("@createdby", empID);
-                                            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                                            insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
-                                            insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
-                                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
-                                            insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
-                                            insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
-                                            insert.Parameters.AddWithValue("@exittime", dateInput);
-                                            insert.Parameters.AddWithValue("@projectdesc", projectInput);
-                                            insert.Parameters.AddWithValue("@projectcode", projectcode);
-
-                                            insert.ExecuteNonQuery();
-
-                                            counter += 1;
-                                        }
-                                    }
-
-
                                 }
                             }
-                        }
 
+                        }
                     }
+
                 }
 
-            }
-
-            conn.Close();
-            appcon.Close();
-            sendEmailForApproval();
+                conn.Close();
+                appcon.Close();
+                sendEmailForApproval();
                 //ScriptManager.RegisterClientScriptBlock
                 //      (this, this.GetType(), "alertMessage", "alert" +
                 //      "('Submitted')", true);
@@ -541,9 +521,9 @@ namespace WorkerExitPass
                 //datetime timeinput = convert.todatetime(time);
                 //datetime permitexpiry = timeinput.addhours(1);
                 //valid.text += permitexpiry.tostring("dd/mm/yyyy hh:mm tt") + ".";
-                
+
                 //mpepopup.show();
-            //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
+                //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
             }
             catch (Exception ex)
             {
@@ -679,7 +659,7 @@ namespace WorkerExitPass
                                                             {
                                                                 string body1 = "";
                                                                 //string ROid = hoddr[0].ToString();
-                                                                string ROcemail = hoddr[0].ToString();
+                                                                string ROcemail = hoddr[1].ToString();
 
                                                                 //MailMessage mm = new MailMessage();
                                                                 mm.From = new MailAddress(MailFrom);
@@ -703,7 +683,7 @@ namespace WorkerExitPass
                                                                 mm.Body = body + body1;
                                                                 mm.IsBodyHtml = true;
                                                                 mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                                               
+
                                                                 mm.To.Add(new MailAddress(ROcemail));
                                                                 //mm.To.Add(new MailAddress(MailTo));
 
@@ -723,11 +703,13 @@ namespace WorkerExitPass
                                                         {
                                                             mm.To.Add(new MailAddress(MailTo));
                                                         }
-                                                        
+
                                                         smtp.Send(mm);
                                                         DateTime timeinput = Convert.ToDateTime(time);
                                                         DateTime permitexpiry = timeinput.AddHours(1);
-                                                        valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                        labelSuccess.Text = "Success!";
+                                                        valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                        //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                         ModalPopupExtender1.Show();
                                                     }
                                                 }
@@ -787,7 +769,7 @@ namespace WorkerExitPass
                                                             //    string pjmID = dt.Rows[i][1].ToString();
                                                             //    mm.To.Add(new MailAddress(pjmID));
                                                             //}
-                                                            
+
                                                             string pjmID = pjmdr[1].ToString();
                                                             mm.To.Add(new MailAddress(pjmID));
 
@@ -809,10 +791,13 @@ namespace WorkerExitPass
                                                     smtp.Send(mm);
                                                     DateTime timeinput = Convert.ToDateTime(time);
                                                     DateTime permitexpiry = timeinput.AddHours(1);
-                                                    valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                    labelSuccess.Text = "Success!";
+                                                    valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                    //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                     ModalPopupExtender1.Show();
 
                                                 }
+
 
                                             }
                                             //else //for testing 
@@ -879,7 +864,7 @@ namespace WorkerExitPass
                                             //    }
 
                                             //}
-                                           
+
                                         }
                                     }
                                 }
@@ -952,9 +937,12 @@ namespace WorkerExitPass
             }
             else
             {
-                ScriptManager.RegisterClientScriptBlock
-                       (this, this.GetType(), "alertMessage", "alert" +
-                       "('Duplicate Submission of time')", true);
+                //ScriptManager.RegisterClientScriptBlock
+                //       (this, this.GetType(), "alertMessage", "alert" +
+                //       "('Duplicate Submission of time')", true);
+                //return;
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Duplicate Submission of time');</script>");
                 return;
             }
 
@@ -1031,24 +1019,29 @@ namespace WorkerExitPass
                             else
                             {
                                 //ModalPopupExtender1.Hide();
-                                // mpePopUp.Hide();
+                                //mpePopUp.Hide();
                                 //Panel1.Visible = false;
-                                ScriptManager.RegisterClientScriptBlock
-                       (this, this.GetType(), "alertMessage", "alert" +
-                       "('Duplicate Submission of time')", true);
-                                return; 
+                                //Panel2.Visible = false;
+                                //         ScriptManager.RegisterClientScriptBlock
+                                //(this, this.GetType(), "alertMessage", "alert" +
+                                //"('Duplicate Submission of time')", true);
+                                //         return; 
+                                //DateTime timeinput = Convert.ToDateTime(time);
+                                //DateTime permitexpiry = timeinput.AddHours(1);
+                                //labelSuccess.Text = "Error";
+                                //valid.Text = "Duplicate submission of time. Please select a different timing.";
+                                ////valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                //ModalPopupExtender1.Show();
+                                ////Panel2.Visible = true;
+                                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Duplicate Submission of time');</script>");
+                                return;
                             }
                         }
                     }
                 }
             }
-
-
-
         }
-
-
-
         protected void SubmitAsTeam_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
@@ -1098,9 +1091,8 @@ namespace WorkerExitPass
                         {
                             if (ReasonDropdown.SelectedValue == "Select")
                             {
-                                ScriptManager.RegisterClientScriptBlock
-                                  (this, this.GetType(), "alertMessage", "alert" +
-                                  "('Please choose a valid reason')", true);
+                                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Please select a valid reason');</script>");
                                 return;
                             }
                             else
@@ -1112,33 +1104,26 @@ namespace WorkerExitPass
                         }
                         else if (counter == 0)
                         {
-                            ScriptManager.RegisterClientScriptBlock
-                         (this, this.GetType(), "alertMessage", "alert" +
-                         "('Please select names of workers')", true);
+                            Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                  "<script language='javascript'>alert('Please select names of workers');</script>");
                             return;
                         }
                     }
                     else if (compare <= 0)
                     {
-                        ScriptManager.RegisterClientScriptBlock
-                          (this, this.GetType(), "alertMessage", "alert" +
-                          "('Please choose a time after the current time')", true);
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Please choose a time after the current time');</script>");
                         return;
                     }
-
-
                 }
                 else
                 {
-                    ScriptManager.RegisterClientScriptBlock
-                         (this, this.GetType(), "alertMessage", "alert" +
-                         "('Unable to submit permit between 5PM to 6PM. Please try again after 6PM')", true);
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                 "<script language='javascript'>alert('Unable to submit permits from 5PM to 6PM. Please try again after 6PM');</script>");
                     return;
                 }
             }
         }
-
-
         protected void SubmitAsSolo_Click(object sender, EventArgs e)
         {
             try
@@ -1171,9 +1156,8 @@ namespace WorkerExitPass
                         {
                             if (ReasonDropdown.SelectedValue == "Select")
                             {
-                                ScriptManager.RegisterClientScriptBlock
-                                  (this, this.GetType(), "alertMessage", "alert" +
-                                  "('Please choose a valid reason')", true);
+                                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                               "<script language='javascript'>alert('Please select a valid reason');</script>");
                                 return;
                             }
                             else
@@ -1183,9 +1167,8 @@ namespace WorkerExitPass
                         }
                         else if (compare <= 0)
                         {
-                            ScriptManager.RegisterClientScriptBlock
-                              (this, this.GetType(), "alertMessage", "alert" +
-                              "('Please choose a time after the current time')", true);
+                            Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                 "<script language='javascript'>alert('Please choose a time after the current time');</script>");
                             return;
                         }
 
@@ -1193,9 +1176,8 @@ namespace WorkerExitPass
                     }
                     else
                     {
-                        ScriptManager.RegisterClientScriptBlock
-                             (this, this.GetType(), "alertMessage", "alert" +
-                             "('Unable to submit permit between 5PM to 6PM. Please try again after 6PM')", true);
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                 "<script language='javascript'>alert('Unable to submit permits from 5PM to 6PM. Please try again after 6PM');</script>");
                         return;
                     }
                 }
@@ -1217,11 +1199,15 @@ namespace WorkerExitPass
         //{
         //    //mpePopUp.Show();
         //}
-        protected void btnContinue_Click(object sender, EventArgs e)
-        {
-            ModalPopupExtender1.Hide();
-            Panel2.Visible = false;
-        }
+        //protected void btnContinue_Click(object sender, EventArgs e)
+        //{
+        //    //ModalPopupExtender1.Hide();
+        //    //Panel2.Visible = false;
+        //    //string empID = Session["empID"].ToString();
+        //    //Session["empID"] = empID;
+        //    //Response.Redirect("EarlyExitPermitTK.aspx?exprmit=" + empID);
+        //    //Response.Redirect(Request.RawUrl);
+        //}
         protected void viewStatus_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
@@ -1234,7 +1220,7 @@ namespace WorkerExitPass
         {
             Panel1.Visible = false;
         }
+
+
     }
-
-
 }

@@ -116,7 +116,10 @@
          <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
             <ajaxToolkit:ModalPopupExtender ID="ModalPopupExtender1" runat="server" TargetControlID="Label1" PopupControlID="Panel2" BackgroundCssClass="modalBackground1">
             </ajaxToolkit:ModalPopupExtender>
-            <asp:Panel ID="Panel2" runat="server">             
+            <asp:Panel ID="Panel2" runat="server">  
+                <div class="rowIcon">
+                    <asp:LinkButton ID="btnContinue" runat="server" OnClick="btnContinue_Click" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>"/>
+                </div>  
                 <div class="contentRow">
                     <asp:Label ID="labelSuccess" runat="server" Text="Success!"></asp:Label>
                     <asp:Label class="labelMsg" ID="valid" runat="server" Text="You will receive an email once it has been approved or rejected. </br> Once approved, please exit before "></asp:Label>
