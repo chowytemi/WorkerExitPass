@@ -180,53 +180,39 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection conn = new SqlConnection(cs);
             conn.Open();
-
-
-
-            string sql = "select approve from exitapproval where exitID = '" + exitID + "'";
+            string sql = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL";
             SqlCommand cmd = new SqlCommand(sql, conn);
             SqlDataReader dr = cmd.ExecuteReader();
+
+
+
             if (dr.HasRows)
             {
-                while (dr.Read())
+                string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
+                SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
+                SqlDataReader dr2 = cmdlineno.ExecuteReader();
+                if (dr2.HasRows)
                 {
+                    GetApplicationById();
 
 
 
-                    string approve = dr[0].ToString();
-                    if (approve == "True" || approve == "False")
-                    {
-                        labelExpiry.Text = "This early exit permit application has been approved/rejected.";
-                        ModalPopupExtender1.Show();
-                    }
-                    else
-                    {
-                        string sql2 = "select approve from exitapproval where exitID = '" + exitID + "' and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
-                        SqlCommand cmd2 = new SqlCommand(sql2, conn);
-                        SqlDataReader dr2 = cmd2.ExecuteReader();
-                        if (dr2.HasRows)
-                        {
-                            GetApplicationById();
-
-
-
-                        }
-                        else
-                        {
-                            labelExpiry.Text = "This early exit permit application has expired.";
-                            ModalPopupExtender1.Show();
-                        }
-                        dr2.Close();
-                    }
                 }
+                else
+                {
+                    labelExpiry.Text = "This early exit permit application has expired.";
+                    ModalPopupExtender1.Show();
+                }
+                dr2.Close();
             }
             else
             {
-                Response.Redirect("http://eservices.dyna-mac.com/error");
-
-
-
+                labelExpiry.Text = "This early exit permit application has been approved/rejected.";
+                ModalPopupExtender1.Show();
             }
+
+
+
             dr.Close();
             conn.Close();
         }
