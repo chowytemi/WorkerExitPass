@@ -761,11 +761,11 @@ namespace WorkerExitPass
         //{
         //    mpePopUp.Hide();
         //}
-        protected void btnContinue_Click(object sender, EventArgs e)
-        {
-            ModalPopupExtender1.Hide();
-            Panel2.Visible = false;
-        }
+        //protected void btnContinue_Click(object sender, EventArgs e)
+        //{
+        //    ModalPopupExtender1.Hide();
+        //    Panel2.Visible = false;
+        //}
         protected void viewStatus_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();

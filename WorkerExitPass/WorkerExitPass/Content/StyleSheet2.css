@@ -29,6 +29,7 @@
     display: block;
     font-size: 1.3em;
     margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 .submitAsButton {
     display: block;
@@ -37,15 +38,16 @@
     border-radius: 0.625em;
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
-    
+    background-color: #E9F4FB;
+    color: #004B7A;
     border: none;
     margin: auto;
     margin-top: 1.25em;
 }
-.submitAsButton:active {
+/*.submitAsButton:active {
     background-color: #E9F4FB;
     color: #004B7A;
-}
+}*/
 /*#SoloBtn {
     background-color: #E9F4FB;
     color: #004B7A;
@@ -57,8 +59,8 @@
     border-radius: 0.625em;
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
-    background-color: #E9F4FB;
-    color: #004B7A;
+    background-color: #004B7A;
+    color: white;
     border: none;
     margin: auto;
     margin-top: 1.25em;
