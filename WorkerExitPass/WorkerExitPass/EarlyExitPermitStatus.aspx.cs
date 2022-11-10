@@ -106,7 +106,7 @@ namespace WorkerExitPass
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
-                e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy");
+                e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy hh:mm tt");
 
                 //if ((e.Row.Cells[2].Text) == "&nbsp;")
                 //{
@@ -117,7 +117,7 @@ namespace WorkerExitPass
                 //else
                 //{
                     DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
-                    e.Row.Cells[2].Text = time1.ToString("hh:mm tt");
+                    e.Row.Cells[2].Text = time1.ToString("dd/MM/yyyy hh:mm tt");
                 //}
                 //DateTime expirytime = Convert.ToDateTime(e.Row.Cells[4].Text);
                 //e.Row.Cells[4].Text = expirytime.ToString("dd/MM/yyyy hh:mm tt");
@@ -289,7 +289,7 @@ namespace WorkerExitPass
                 DateTime time = Convert.ToDateTime(dt.Rows[0]["exittime"]);
 
                 lblDate.Text = date.ToString("dd/MM/yyyy");
-                lblTime.Text = time.ToString("hh:mm tt");
+                lblTime.Text = time.ToString("dd/MM/yyyy hh:mm tt");
                 lblProject.Text = dt.Rows[0]["projectdesc"].ToString();
                 lblCompany.Text = dt.Rows[0]["company"].ToString();
                 lblReason.Text = dt.Rows[0]["reason"].ToString();

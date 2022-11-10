@@ -134,7 +134,8 @@ namespace WorkerExitPass
                 Session["empID"] = empID;
 
                 var time = Request["timeInput"];
-                var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                //var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                var date = Request["dateInput"] + " " + time;
                 DateTime dateinput = DateTime.Parse(date);
                 var currentdate = DateTime.Now;
 
@@ -251,7 +252,9 @@ namespace WorkerExitPass
         protected void CheckSubmission()
         {
             var time = Request["timeInput"];
-            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            var date = Request["dateInput"] + " " + time;
+            DateTime dateInput = DateTime.Parse(date);
 
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
@@ -308,7 +311,9 @@ namespace WorkerExitPass
                 string description = projectddl.Text;
                 string projectInput = projectddl.Text;
                 var time = Request["timeInput"];
-                var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                var date = Request["dateInput"] + " " + time;
+                DateTime dateparse = DateTime.Parse(date);
+                var dateInput = dateparse.ToString();
 
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
@@ -413,7 +418,9 @@ namespace WorkerExitPass
         {
 
             var time = Request["timeInput"];
-            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            var date1 = Request["dateInput"] + " " + time;
+            DateTime dateparse = DateTime.Parse(date1);
+            var dateInput = dateparse.ToString();
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
@@ -550,13 +557,20 @@ namespace WorkerExitPass
                                                                 if (ReasonDropdown.Text == "Medical Injury")
                                                                 {
                                                                     mm.To.Add(new MailAddress(MailTo));
-                                                                    mm.To.Add(new MailAddress(MailToSafety));
+                                                                    //mm.To.Add(new MailAddress(MailToSafety));
+                                                                    mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
                                                                 }
                                                                 else
                                                                 {
                                                                     mm.To.Add(new MailAddress(MailTo));
                                                                 }
                                                                 smtp.Send(mm);
+                                                                DateTime timeinput = Convert.ToDateTime(dateparse);
+                                                                DateTime permitexpiry = timeinput.AddHours(1);
+                                                                labelSuccess.Text = "Success!";
+                                                                valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                                //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                                ModalPopupExtender1.Show();
                                                             }
                                                         }
 
@@ -569,7 +583,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             MailMessage mm = new MailMessage();
@@ -620,22 +634,13 @@ namespace WorkerExitPass
                                                                         body1 += "<br />Please click <a href = '" + link + "default.aspx?exprmtid=" + exitid + "'>here</a> to approve or reject the application.";
                                                                     }
                                                                     mm.Body = body + body1;
-                                                                    mm.IsBodyHtml = true;
-                                                                    //SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
+                                                                    mm.IsBodyHtml = true;                                                                  
                                                                     smtp.EnableSsl = false;
-                                                                    //for (int i = 0; i < dt.Rows.Count; i++)
-                                                                    //{
-                                                                    //    string pjmID = dt.Rows[i][1].ToString();
-                                                                    //    mm.To.Add(new MailAddress(pjmID));
-                                                                    //}
 
                                                                     string pjmID = pjmdr[1].ToString();
                                                                     mm.To.Add(new MailAddress(pjmID));
-
-                                                                    //mm.To.Add(new MailAddress(MailTo));
-
+                                                                    
                                                                     smtp.UseDefaultCredentials = false;
-                                                                    //smtp.Send(mm);
                                                                 }
 
                                                             }
@@ -652,6 +657,12 @@ namespace WorkerExitPass
                                                             }
 
                                                             smtp.Send(mm);
+                                                            DateTime timeinput = Convert.ToDateTime(dateparse);
+                                                            DateTime permitexpiry = timeinput.AddHours(1);
+                                                            labelSuccess.Text = "Success!";
+                                                            valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                            //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                            ModalPopupExtender1.Show();
                                                         }
 
                                                     }
@@ -661,7 +672,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             MailMessage mm = new MailMessage();
@@ -727,6 +738,12 @@ namespace WorkerExitPass
                                                             }
 
                                                             smtp.Send(mm);
+                                                            DateTime timeinput = Convert.ToDateTime(dateparse);
+                                                            DateTime permitexpiry = timeinput.AddHours(1);
+                                                            labelSuccess.Text = "Success!";
+                                                            valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                            //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                            ModalPopupExtender1.Show();
                                                         }
                                                         
                                                     }

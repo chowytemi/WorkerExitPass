@@ -29,8 +29,8 @@
             <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" OnSelectedIndexChanged="GridView1_SelectedIndexChanged">
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />
-                    <asp:BoundField DataField="createddate" HeaderText="Date" />
-                    <asp:BoundField DataField="exittime" HeaderText="Time" />
+                    <asp:BoundField DataField="createddate" HeaderText="Created Date" />
+                    <asp:BoundField DataField="exittime" HeaderText="Exit Time" />
                     <asp:BoundField DataField="approve" HeaderText="Status" />
                     <%--<asp:BoundField DataField="expiry" HeaderText="Expiry Time" />--%>
 
@@ -85,7 +85,7 @@
 
                                 </div>
                                 <div class="col">
-                                        <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
+                                        <asp:Label class="label" ID="time" runat="server" Text="Exit Time"></asp:Label>
                                         <%--<asp:TextBox class="textbox" ID="tbTime" runat="server"></asp:TextBox>--%>
                                         <asp:Label class="labelData" ID="lblTime" runat="server"></asp:Label>
 

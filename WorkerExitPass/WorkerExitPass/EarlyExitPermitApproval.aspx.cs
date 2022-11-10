@@ -420,13 +420,13 @@ namespace WorkerExitPass
 
                         //for testing
                         //send email to person who created the application to update status
-                        //string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
-                        ////  " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
-                        string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                                          "from Access, UserAccess, ARole, EmpList " +
-                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                        string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
+                          " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
+                        //string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                        //                                                  "from Access, UserAccess, ARole, EmpList " +
+                        //                                                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                        //                                                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                        //                                                  "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
                         using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
                         {
@@ -434,8 +434,8 @@ namespace WorkerExitPass
                             {
                                 while (dr2.Read())
                                 {
-                                    //string email = dr2[2].ToString();
-                                    string email = dr2[1].ToString();
+                                    string email = dr2[2].ToString();
+                                    //string email = dr2[1].ToString();
 
                                     MailMessage mm = new MailMessage();
                                     mm.From = new MailAddress(MailFrom);

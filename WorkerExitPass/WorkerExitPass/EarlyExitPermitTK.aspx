@@ -54,7 +54,7 @@
 
                     <div class="dateCol">
                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
-                        <input class="input" id="dateInput" type="date"/>
+                        <input class="input" id="dateInput" type="date" runat="server" />
                     </div>
      
                     <div class="timeCol">
@@ -153,7 +153,7 @@
                 </div>
         </asp:Panel>   
     </form>
-<%--                            <asp:Label ID="Label12" runat="server"></asp:Label>--%>
+                            <asp:Label ID="Label12" runat="server"></asp:Label>
 
 </body>
 </html>

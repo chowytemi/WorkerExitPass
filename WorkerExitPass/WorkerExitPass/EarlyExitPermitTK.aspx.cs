@@ -290,7 +290,10 @@ namespace WorkerExitPass
                 Session["empID"] = empID;
 
                 var time = Request["timeInput"];
-                var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                var date = Request["dateInput"] + " " + time;
+                DateTime dateparse = DateTime.Parse(date);
+                var dateInput = dateparse.ToString();
+
                 string description = projectddl.Text;
                 string projectInput = projectddl.Text;
 
@@ -388,7 +391,9 @@ namespace WorkerExitPass
             Session["empID"] = empID;
 
             var time = Request["timeInput"];
-            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            var date = Request["dateInput"] + " " + time;
+            DateTime dateparse = DateTime.Parse(date);
+            var dateInput = dateparse.ToString();
 
             string description = projectddl.Text;
             string projectInput = projectddl.Text;
@@ -402,8 +407,8 @@ namespace WorkerExitPass
             SqlConnection appcon = new SqlConnection(connectionstring);
             appcon.Open();
 
-            try
-            {
+            //try
+            //{
                 //get code
                 string sqlquery = " select code from PROJECT where description = '" + description + "' and IsActive = 1";
                 SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
@@ -521,11 +526,11 @@ namespace WorkerExitPass
 
                 //mpepopup.show();
                 //Response.Redirect("EarlyExitPermitStatus.aspx?exprmitstatus=" + empID);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
 
 
         }
@@ -546,7 +551,9 @@ namespace WorkerExitPass
             int smtpport = Convert.ToInt32(smtport);
             string link = ConfigurationManager.AppSettings["link"].ToString();
             var time = Request["timeInput"];
-            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            var date = Request["dateInput"] + " " + time;
+            DateTime dateparse = DateTime.Parse(date);
+            var dateInput = dateparse.ToString();
 
             try
             {
@@ -634,14 +641,14 @@ namespace WorkerExitPass
                                                 if (!string.IsNullOrEmpty(dr[5].ToString()))
                                                 {
                                                     //worker - email to HOD
-                                                    //string ROname = dr[5].ToString();
-                                                    //string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
+                                                    string ROname = dr[5].ToString();
+                                                    string hodquery = "select cemail from EmpList where EmpID='" + ROname + "' and isActive = 1";
                                                     //for testing
-                                                    string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                                                                          "from Access, UserAccess, ARole, EmpList " +
-                                                                          "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                                                          "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                    //string hodquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                    //                      "from Access, UserAccess, ARole, EmpList " +
+                                                    //                      "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                    //                      "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                    //                      "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
 
 
                                                     using (SqlCommand hodcmd = new SqlCommand(hodquery, conn))
@@ -655,8 +662,8 @@ namespace WorkerExitPass
                                                             while (hoddr.Read())
                                                             {
                                                                 string body1 = "";
-                                                                //string ROid = hoddr[0].ToString();
-                                                                string ROcemail = hoddr[1].ToString();
+                                                                //string ROcemail = hoddr[0].ToString();
+                                                                string ROcemail = hoddr[0].ToString();
 
                                                                 //MailMessage mm = new MailMessage();
                                                                 mm.From = new MailAddress(MailFrom);
@@ -675,18 +682,14 @@ namespace WorkerExitPass
 
 
                                                                 body1 += "<br /><br />This is an automatically generated email, please do not reply.";
-
-                                                                //mm.Body = body;
+                                                                
                                                                 mm.Body = body + body1;
                                                                 mm.IsBodyHtml = true;
                                                                 mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
 
                                                                 mm.To.Add(new MailAddress(ROcemail));
-                                                                //mm.To.Add(new MailAddress(MailTo));
-
-                                                                //SmtpClient smtp = new SmtpClient(smtpserver, smtpport);
+                                                                
                                                                 smtp.EnableSsl = false;
-                                                                //smtp.Send(mm);
 
 
                                                             }
@@ -694,7 +697,9 @@ namespace WorkerExitPass
                                                         if (ReasonDropdown.Text == "Medical Injury")
                                                         {
                                                             mm.To.Add(new MailAddress(MailTo));
-                                                            mm.To.Add(new MailAddress(MailToSafety));
+                                                            //mm.To.Add(new MailAddress(MailToSafety));
+                                                            mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
+
                                                         }
                                                         else
                                                         {
@@ -702,7 +707,8 @@ namespace WorkerExitPass
                                                         }
 
                                                         smtp.Send(mm);
-                                                        DateTime timeinput = Convert.ToDateTime(time);
+
+                                                        DateTime timeinput = Convert.ToDateTime(dateparse);
                                                         DateTime permitexpiry = timeinput.AddHours(1);
                                                         labelSuccess.Text = "Success!";
                                                         valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
@@ -720,7 +726,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -733,15 +739,10 @@ namespace WorkerExitPass
                                                     {
                                                         while (pjmdr.Read())
                                                         {
-                                                            //SqlDataAdapter da = new SqlDataAdapter(pjmquery, conn);
-                                                            //DataSet ds = new DataSet();
-                                                            //da.Fill(ds);
-                                                            //DataTable dt = ds.Tables[0];
 
                                                             string body1 = "";
                                                             string name = pjmdr[0].ToString();
-
-                                                            //MailMessage mm = new MailMessage();
+                                                            
                                                             mm.From = new MailAddress(MailFrom);
                                                             if (ReasonDropdown.Text == "Medical Injury")
                                                             {
@@ -786,7 +787,7 @@ namespace WorkerExitPass
                                                     }
 
                                                     smtp.Send(mm);
-                                                    DateTime timeinput = Convert.ToDateTime(time);
+                                                    DateTime timeinput = Convert.ToDateTime(dateparse);
                                                     DateTime permitexpiry = timeinput.AddHours(1);
                                                     labelSuccess.Text = "Success!";
                                                     valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
@@ -804,7 +805,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -838,11 +839,6 @@ namespace WorkerExitPass
                                                             mm.IsBodyHtml = true;
                                                             //SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp                                                                        
                                                             smtp.EnableSsl = false;
-                                                            //for (int i = 0; i < dt.Rows.Count; i++)
-                                                            //{
-                                                            //    string pjmID = dt.Rows[i][1].ToString();
-                                                            //    mm.To.Add(new MailAddress(pjmID));
-                                                            //}
 
                                                             string pjmID = pjmdr[1].ToString();
                                                             mm.To.Add(new MailAddress(pjmID));
@@ -863,7 +859,7 @@ namespace WorkerExitPass
                                                     }
 
                                                     smtp.Send(mm);
-                                                    DateTime timeinput = Convert.ToDateTime(time);
+                                                    DateTime timeinput = Convert.ToDateTime(dateparse);
                                                     DateTime permitexpiry = timeinput.AddHours(1);
                                                     labelSuccess.Text = "Success!";
                                                     valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
@@ -901,7 +897,11 @@ namespace WorkerExitPass
         protected void CheckSubmissionSolo()
         {
             var time = Request["timeInput"];
-            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            var date = Request["dateInput"] + " " + time;
+            DateTime dateInput = DateTime.Parse(date);
+
+
 
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
@@ -960,7 +960,10 @@ namespace WorkerExitPass
         protected void CheckSubmissionTeam()
         {
             var time = Request["timeInput"];
-            var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            var date = Request["dateInput"] + " " + time;
+            DateTime dateInput = DateTime.Parse(date);
+
             string companyInput = companytb.Text;
 
             
@@ -1060,7 +1063,7 @@ namespace WorkerExitPass
             //try
             //{
             var time = Request["timeInput"];
-            var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+            var date = Request["dateInput"] + " " + time;
 
             var time5pm = DateTime.Now.ToString("yyyy-MM-dd ") + "17:00:00.000";
             DateTime date5pm = DateTime.Parse(time5pm);
@@ -1069,9 +1072,10 @@ namespace WorkerExitPass
 
             //var testtime = DateTime.Now.ToString("yyyy-MM-dd ") + "19:30:00.000";
             //DateTime currentdate = DateTime.Parse(testtime);
-
+            
             DateTime dateinput = DateTime.Parse(date);
             var currentdate = DateTime.Now;
+
             string projectInput = projectddl.Text;
             string nameInput = nametb.Text;
             string companyInput = companytb.Text;
@@ -1124,6 +1128,8 @@ namespace WorkerExitPass
                         Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                                 "<script language='javascript'>alert('Please choose a time after the current time');</script>");
                         return;
+
+                        //Label12.Text = dateinput.ToString();
                     }
                 }
                 else
@@ -1131,6 +1137,7 @@ namespace WorkerExitPass
                     Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                                  "<script language='javascript'>alert('Unable to submit permits from 5PM to 6PM. Please try again after 6PM');</script>");
                     return;
+
                 }
             }
         }
@@ -1140,8 +1147,10 @@ namespace WorkerExitPass
             {
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
+
                 var time = Request["timeInput"];
-                var date = DateTime.Now.ToString("yyyy-MM-dd ") + time;
+                var date = Request["dateInput"] + " " + time;
+
                 DateTime dateinput = DateTime.Parse(date);
                 var currentdate = DateTime.Now;
 
