@@ -140,9 +140,9 @@ h1, .label {
     font-size: 1.25em;
 }
 
-#labelSuccess {
+/*#labelSuccess {
     margin-top: 1.25em;
-}
+}*/
 .modalBackground, .modalBackground1 {
     z-index: 10000;
     top: 0;
@@ -184,7 +184,7 @@ li {
     justify-content: space-around;
     align-items: center;
     text-align: center;
-    margin-top: 2em;
+    margin-top: 1em;
 }
 
 #viewStatusBtn {
@@ -243,6 +243,16 @@ li {
     }
 }
 
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    #Panel1, #Panel2 {
+        width: 90%;
+    }
+    #viewStatusBtn {
+        width: 50%;
+    }
+}
+
 /* Medium devices (landscape tablets, 320px and down) */
 @media only screen and (max-width: 320px) {
     .dateTimeRow {
@@ -262,15 +272,8 @@ li {
         justify-content: center;
         align-items: center;
     }
-    .button, #viewStatusBtn {
+    .button {
         width: 50%;
         margin-top: 2%;
-    }
-}
-
-/* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
-    #Panel1, #Panel2 {
-        width: 90%;
     }
 }

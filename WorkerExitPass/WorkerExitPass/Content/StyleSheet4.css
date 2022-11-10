@@ -40,7 +40,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 2em;
+    /*margin-bottom: 2em;*/
     flex-direction: row;
     width: 100%;
 }
@@ -128,7 +128,15 @@
     font-family: 'Rubik', sans-serif;
     font-size: 1em;
 }
-
+.contentRow {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 768px) {
 
