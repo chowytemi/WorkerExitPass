@@ -312,7 +312,7 @@ namespace WorkerExitPass
             }     
 
             string sql3 = "select distinct exitapproval.approve, exitapproval.approveddate, CONCAT(RTRIM(EmpList.EmpID), ' - ', EmpList.Employee_Name) as 'emp' " +
-            "from exitapproval, EmpList where EmpList.EmpID = exitapproval.EmpID and exitapproval.exitID = '" + exitID + "' and exitapproval.approve = '" + isApprove + "' order by emp";
+            "from exitapproval, EmpList where EmpList.EmpID = exitapproval.EmpID and exitapproval.exitID = '" + exitID + "' and exitapproval.approve = '" + isApprove + "' AND exitapproval.approver = '" + empID + "' order by emp";
             SqlDataAdapter da3 = new SqlDataAdapter(sql3, conn);
             DataSet ds3 = new DataSet();
             da3.Fill(ds3);
@@ -326,7 +326,7 @@ namespace WorkerExitPass
             for (int i = 0; i < dt3.Rows.Count; i++)
             {
 
-                empname += dt3.Rows[i][2].ToString() + "<BR />";
+                empname += dt3.Rows[i][2].ToString() + "<br />";
             }
 
             lblEmpName.Text = empname;

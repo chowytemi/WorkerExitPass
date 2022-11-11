@@ -580,7 +580,7 @@ namespace WorkerExitPass
                                                                 DateTime timeinput = Convert.ToDateTime(dateparse);
                                                                 DateTime permitexpiry = timeinput.AddHours(1);
                                                                 labelSuccess.Text = "Success!";
-                                                                valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                                valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                                 //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                                 ModalPopupExtender1.Show();
                                                             }
@@ -693,7 +693,7 @@ namespace WorkerExitPass
                                                             DateTime timeinput = Convert.ToDateTime(dateparse);
                                                             DateTime permitexpiry = timeinput.AddHours(1);
                                                             labelSuccess.Text = "Success!";
-                                                            valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                            valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                             //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                             ModalPopupExtender1.Show();
                                                         }
@@ -788,7 +788,7 @@ namespace WorkerExitPass
                                                             DateTime timeinput = Convert.ToDateTime(dateparse);
                                                             DateTime permitexpiry = timeinput.AddHours(1);
                                                             labelSuccess.Text = "Success!";
-                                                            valid.Text = "You will receive an email once it has been approved or rejected. </br> Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
+                                                            valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                             //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                             ModalPopupExtender1.Show();
                                                         }

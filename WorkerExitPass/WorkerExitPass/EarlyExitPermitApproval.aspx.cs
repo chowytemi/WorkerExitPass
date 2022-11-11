@@ -322,9 +322,8 @@ namespace WorkerExitPass
                 //string sqlquery = "select distinct exitapproval.exitID, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail, (select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') as 'approver', exitapproval.approve, exitapproval.approveddate from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
                 string sqlquery = "select distinct exitapproval.exitID, (select distinct EmpList.Employee_Name from EmpList, exitapproval " +
                     "where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') " +
-                    "as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail, " +
-                    "(select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '"
-                    + exitID + "') as 'approver' from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
+                    "as 'createdBy', exitapproval.projectdesc, exitapproval.exittime, exitapproval.reason, EmpList.CEmail " +
+                    "from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' AND EmpList.EmpID = exitapproval.createdby;";
                 using (SqlCommand cmd = new SqlCommand(sqlquery, con))
                 {
                     SqlDataAdapter da2 = new SqlDataAdapter(sqlquery, con);
@@ -340,105 +339,125 @@ namespace WorkerExitPass
                     string exittime = date.ToString("dd/MM/yyyy hh:mm tt");
                     string reason = dt2.Rows[0][4].ToString();
                     string createdByEmail = dt2.Rows[0][5].ToString();
-                    string approver = dt2.Rows[0][6].ToString();
+
+                    //string approver = dt2.Rows[0][6].ToString();
 
                     DateTime permitexpiry = date.AddHours(1);
                     string validTill = permitexpiry.ToString("dd/MM/yyyy hh:mm tt");
 
-                    string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp', exitapproval.approve, exitapproval.approveddate " +
-                        "from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
-                    using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
+                    string approverquery = "select distinct EmpList.Employee_Name from EmpList, exitapproval where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '"
+                    + exitID + "'";
+                    using (SqlCommand cmd4 = new SqlCommand(approverquery, con))
                     {
-                        SqlDataAdapter da = new SqlDataAdapter(sqlquery3, con);
-                        DataSet ds = new DataSet();
-                        da.Fill(ds);
-                        DataTable dt = ds.Tables[0];
+                        SqlDataAdapter da4 = new SqlDataAdapter(approverquery, con);
+                        DataSet ds4 = new DataSet();
+                        da4.Fill(ds4);
+                        DataTable dt4 = ds4.Tables[0];
 
-                        //string exitNames = "";
-                        string body = "";
-                        body += "Hello, " + createdByName + ".";
-                        body += "<br /><br />Your application status for early exit permit on " + exittime + " has been updated.";
-                        body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                        body += "<tr style=\" height: 0.5em;\">";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Exit ID</th>";
-                        body += "<td style=\" border: 1px solid\">" + id + "</td>";
-                        body += "<tr style=\" height: 0.5em;\">";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Project</th>";
-                        body += "<td style=\" border: 1px solid\">" + project + "</td>";
-                        body += "<tr style=\" height: 0.5em;\">";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Reason</th>";
-                        body += "<td style=\" border: 1px solid\">" + reason + "</td>";
-                        body += "<tr style=\" height: 0.5em;\">";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Exit Time</th>";
-                        body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
-                        body += "<tr style=\" height: 0.5em;\">";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Approver</th>";
-                        body += "<td style=\" border: 1px solid\">" + approver + "</td></tr></table>";
-
-                        body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
-                        body += "<tr style=\" height: 0.5em;\">";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Employee Name(s)</th>";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Status</th>";
-                        body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Approval Date</th></tr>";
-                        for (int i = 0; i < dt.Rows.Count; i++)
+                        string approver = "";
+                        for (int i = 0; i < dt4.Rows.Count; i++)
                         {
-                            string status = dt.Rows[i][1].ToString();
-                            if (status == "True")
-                            {
-                                status = "Approved (Valid Till: " + validTill + ")";
-                            }
-                            else
-                            {
-                                status = "Rejected";
-                            }
-                            DateTime date1 = Convert.ToDateTime(dt.Rows[i][2]);
-                            string approveddate = date1.ToString("dd/MM/yyyy hh:mm tt");
-                            body += "<tr><td style=\" border: 1px solid\">" + dt.Rows[i][0].ToString() + "</td>";
-                            body += "<td style=\" border: 1px solid\">" + status + "</td>";
-                            body += "<td style=\" border: 1px solid\">" + approveddate + "</td></tr>";
-
+                            approver += dt4.Rows[i][0].ToString() + "<br />";
 
                         }
-                        body += "</table>";
-                        body += "<br />This is an automatically generated email, please do not reply.";
 
-                        string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
-
-                        //for testing
-                        //send email to person who created the application to update status
-                        string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
-                          " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
-                        //string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
-                        //                                                  "from Access, UserAccess, ARole, EmpList " +
-                        //                                                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                        //                                                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                        //                                                  "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
-
-                        using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
+                        string sqlquery3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp', exitapproval.approve, exitapproval.approveddate " +
+                       "from EmpList, exitapproval where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID;";
+                        using (SqlCommand cmd3 = new SqlCommand(sqlquery3, con))
                         {
-                            using (SqlDataReader dr2 = cmd2.ExecuteReader())
+                            SqlDataAdapter da = new SqlDataAdapter(sqlquery3, con);
+                            DataSet ds = new DataSet();
+                            da.Fill(ds);
+                            DataTable dt = ds.Tables[0];
+
+                            //string exitNames = "";
+                            string body = "";
+                            body += "Hello, " + createdByName + ".";
+                            body += "<br /><br />Your application status for early exit permit on " + exittime + " has been updated.";
+                            body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                            body += "<tr style=\" height: 0.5em;\">";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Exit ID</th>";
+                            body += "<td style=\" border: 1px solid\">" + id + "</td>";
+                            body += "<tr style=\" height: 0.5em;\">";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Project</th>";
+                            body += "<td style=\" border: 1px solid\">" + project + "</td>";
+                            body += "<tr style=\" height: 0.5em;\">";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Reason</th>";
+                            body += "<td style=\" border: 1px solid\">" + reason + "</td>";
+                            body += "<tr style=\" height: 0.5em;\">";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Exit Time</th>";
+                            body += "<td style=\" border: 1px solid\">" + exittime + "</td>";
+                            body += "<tr style=\" height: 0.5em;\">";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Approver</th>";
+                            body += "<td style=\" border: 1px solid\">" + approver + "</td></tr></table>";
+
+                            body += "<br /><br /><table style=\"table-layout: fixed; text-align:left; border-collapse: collapse; border: 1px solid; width: 70%;\">";
+                            body += "<tr style=\" height: 0.5em;\">";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Employee Name(s)</th>";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Status</th>";
+                            body += "<th style=\" text-align:left; color: #004B7A; border: 1px solid\">Approval Date</th></tr>";
+                            for (int i = 0; i < dt.Rows.Count; i++)
                             {
-                                while (dr2.Read())
+                                string status = dt.Rows[i][1].ToString();
+                                if (status == "True")
                                 {
-                                    string email = dr2[2].ToString();
-                                    //string email = dr2[1].ToString();
-
-                                    MailMessage mm = new MailMessage();
-                                    mm.From = new MailAddress(MailFrom);
-                                    mm.Subject = "Early Exit Permit Application Status is Updated";
-                                    mm.Body = body;
-                                    mm.IsBodyHtml = true;
-                                    mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
-                                    mm.To.Add(new MailAddress(email));
-                                    SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp  
-                                    smtp.EnableSsl = false;
-                                    smtp.Send(mm);
+                                    status = "Approved (Valid Till: " + validTill + ")";
                                 }
+                                else
+                                {
+                                    status = "Rejected";
+                                }
+                                DateTime date1 = Convert.ToDateTime(dt.Rows[i][2]);
+                                string approveddate = date1.ToString("dd/MM/yyyy hh:mm tt");
+                                body += "<tr><td style=\" border: 1px solid\">" + dt.Rows[i][0].ToString() + "</td>";
+                                body += "<td style=\" border: 1px solid\">" + status + "</td>";
+                                body += "<td style=\" border: 1px solid\">" + approveddate + "</td></tr>";
 
 
                             }
+                            body += "</table>";
+                            body += "<br />This is an automatically generated email, please do not reply.";
+
+                            string PJM = ConfigurationManager.AppSettings["PJM"].ToString();
+
+                            //for testing
+                            //send email to person who created the application to update status
+                            string sqlquery2 = "select distinct EmpList.Employee_Name, exitapproval.createdby, EmpList.CEmail from EmpList, exitapproval" +
+                              " where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.createdby;";
+                            //string sqlquery2 = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                            //                                                  "from Access, UserAccess, ARole, EmpList " +
+                            //                                                  "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                            //                                                  "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                            //                                                  "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+
+                            using (SqlCommand cmd2 = new SqlCommand(sqlquery2, con))
+                            {
+                                using (SqlDataReader dr2 = cmd2.ExecuteReader())
+                                {
+                                    while (dr2.Read())
+                                    {
+                                        string email = dr2[2].ToString();
+                                        //string email = dr2[1].ToString();
+
+                                        MailMessage mm = new MailMessage();
+                                        mm.From = new MailAddress(MailFrom);
+                                        mm.Subject = "Early Exit Permit Application Status is Updated";
+                                        mm.Body = body;
+                                        mm.IsBodyHtml = true;
+                                        mm.From = new MailAddress(ConfigurationManager.AppSettings["MailFrom"].ToString());
+                                        mm.To.Add(new MailAddress(email));
+                                        SmtpClient smtp = new SmtpClient(smtpserver, smtpport); //Gmail smtp  
+                                        smtp.EnableSsl = false;
+                                        smtp.Send(mm);
+                                    }
+
+
+                                }
+                            }
                         }
+
                     }
+
 
 
                     con.Close();

@@ -54,15 +54,15 @@
                         </div>
                         <div id="approval">                                
                             <asp:Label class="label" ID="lblApproval" runat="server" Text="Approval Details"></asp:Label>
-                                <div id="statusWhenRow">
-                                       <div class="col">
+                                <div id="row">
+<%--                                       <div class="col">--%>
                                             <asp:Label class="label" ID="label" runat="server" Text="Status"></asp:Label>
                                             <asp:Label class="labelData" ID="lblStatus" runat="server" />
-                                        </div>
-                                        <div class="col">
-                                            <asp:Label class="label" runat="server" Text="When"></asp:Label>
+<%--                                        </div>--%>
+                                   <%--     <div class="col">
+                                            <asp:Label class="label" runat="server" Text="Approval Date"></asp:Label>
                                             <asp:Label class="labelData" ID="lblWhen" runat="server" />
-                                        </div> 
+                                        </div> --%>
                                     </div>
                                 <div class="row">
                                      <asp:Label class="label" ID="empName" runat="server" Text="Name(s) of DM worker/contractor"></asp:Label>
