@@ -595,7 +595,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             MailMessage mm = new MailMessage();
@@ -705,7 +705,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             MailMessage mm = new MailMessage();

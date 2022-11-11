@@ -736,6 +736,7 @@ namespace WorkerExitPass
                                                         valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                         //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                         ModalPopupExtender1.Show();
+                                                        return;
                                                     }
                                                 }
 
@@ -748,7 +749,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' AND EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -828,7 +829,7 @@ namespace WorkerExitPass
                                                     valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                     //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                     ModalPopupExtender1.Show();
-
+                                                    return;
                                                 }
 
 
@@ -840,7 +841,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "' AND EmpList.EmpID = 'T203'";
+                                                                          "and Access.id = '" + PJM + "'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -913,7 +914,7 @@ namespace WorkerExitPass
                                                     valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                     //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                     ModalPopupExtender1.Show();
-
+                                                    return;
                                                 }
 
                                             }
