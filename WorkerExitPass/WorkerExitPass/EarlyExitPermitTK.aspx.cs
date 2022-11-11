@@ -574,7 +574,10 @@ namespace WorkerExitPass
                                 string createdby = dr[1].ToString();
                                 //get exitid
                                 //string exitquery = "select distinct exitID from exitapproval where createdby = @empID and company = @company and exittime = @time";
-                                string exitquery = "select distinct exitID, projectdesc, reason, exittime from exitapproval where createdby = @empID and company = @company and exittime = @time;";
+                                //string exitquery = "select distinct exitID, projectdesc, reason, exittime from exitapproval where createdby = @empID and company = @company and exittime = @time;";
+                                string exitquery = "select exitapproval.exitID, exitapproval.projectdesc, exitapproval.exittime, exitapproval.EmpID, exitapproval.reason, clockingreason.description, clockingreason.emailtosend" +
+                               " from exitapproval JOIN clockingreason ON clockingreason.description = exitapproval.reason " +
+                               "where exitapproval.createdby = @empID and exitapproval.company = @company and exitapproval.exittime = @time and clockingreason.description = exitapproval.reason";
                                 using (SqlCommand exitcmd = new SqlCommand(exitquery, conn))
                                 {
                                     exitcmd.Parameters.AddWithValue("@empID", empID);
@@ -591,9 +594,15 @@ namespace WorkerExitPass
 
                                             string exitid = exitdr[0].ToString();
                                             string project = exitdr[1].ToString();
-                                            string reason = exitdr[2].ToString();
-                                            DateTime exittime = Convert.ToDateTime(exitdr[3].ToString());
+                                            DateTime exittime = Convert.ToDateTime(exitdr[2].ToString());
                                             string exittime1 = exittime.ToString("dd/MM/yyyy hh:mm tt");
+                                            string EmpID = exitdr[3].ToString();
+                                            string reason = exitdr[4].ToString();
+                                            string emailtosendstring = exitdr[6].ToString();
+                                            int emailtosend = int.Parse(emailtosendstring);
+
+                                            //DateTime exittime = Convert.ToDateTime(exitdr[3].ToString());
+                                            //string exittime1 = exittime.ToString("dd/MM/yyyy hh:mm tt");
                                             //string query3 = "select EmpList.Employee_Name, exitapproval.exittime, exitapproval.reason from EmpList, exitapproval where EmpList.EmpID =  exitapproval.toexit and exitapproval.exitID= '" + exitid + "';";
                                             string query3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) from EmpList, exitapproval where exitapproval.exitID = '"
                                                 + exitid + "' and EmpList.EmpID = exitapproval.EmpID;";
@@ -694,12 +703,25 @@ namespace WorkerExitPass
 
                                                             }
                                                         }
-                                                        if (ReasonDropdown.Text == "Medical Injury")
+                                                        if (emailtosend > 0)
                                                         {
+                                                            string sendemailquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                     "from Access, UserAccess, ARole, EmpList " +
+                                                                     "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                     "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                     "and Access.id = '" + emailtosend + "'";
+                                                            using (SqlCommand emailcmd = new SqlCommand(sendemailquery, conn))
+                                                            {
+                                                                using (SqlDataReader emaildr = emailcmd.ExecuteReader())
+                                                                {
+                                                                    while (emaildr.Read())
+                                                                    {
+                                                                        string emailto = emaildr[1].ToString();
+                                                                        mm.To.Add(new MailAddress(emailto));
+                                                                    }
+                                                                }
+                                                            }
                                                             mm.To.Add(new MailAddress(MailTo));
-                                                            //mm.To.Add(new MailAddress(MailToSafety));
-                                                            mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
-
                                                         }
                                                         else
                                                         {
@@ -726,7 +748,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' AND EmpList.EmpID = 'T203'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -774,12 +796,25 @@ namespace WorkerExitPass
                                                             smtp.UseDefaultCredentials = false;
                                                         }
                                                     }
-                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                    if (emailtosend > 0)
                                                     {
+                                                        string sendemailquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                 "from Access, UserAccess, ARole, EmpList " +
+                                                                 "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                 "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                 "and Access.id = '" + emailtosend + "'";
+                                                        using (SqlCommand emailcmd = new SqlCommand(sendemailquery, conn))
+                                                        {
+                                                            using (SqlDataReader emaildr = emailcmd.ExecuteReader())
+                                                            {
+                                                                while (emaildr.Read())
+                                                                {
+                                                                    string emailto = emaildr[1].ToString();
+                                                                    mm.To.Add(new MailAddress(emailto));
+                                                                }
+                                                            }
+                                                        }
                                                         mm.To.Add(new MailAddress(MailTo));
-                                                        //mm.To.Add(new MailAddress(MailToSafety));
-                                                        mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
-
                                                     }
                                                     else
                                                     {
@@ -805,7 +840,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' AND EmpList.EmpID = 'T203'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -846,12 +881,25 @@ namespace WorkerExitPass
                                                             smtp.UseDefaultCredentials = false;
                                                         }
                                                     }
-                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                    if (emailtosend > 0)
                                                     {
+                                                        string sendemailquery = "select distinct EmpList.EmpID,EmpList.CEmail " +
+                                                                 "from Access, UserAccess, ARole, EmpList " +
+                                                                 "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                                                 "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
+                                                                 "and Access.id = '" + emailtosend + "'";
+                                                        using (SqlCommand emailcmd = new SqlCommand(sendemailquery, conn))
+                                                        {
+                                                            using (SqlDataReader emaildr = emailcmd.ExecuteReader())
+                                                            {
+                                                                while (emaildr.Read())
+                                                                {
+                                                                    string emailto = emaildr[1].ToString();
+                                                                    mm.To.Add(new MailAddress(emailto));
+                                                                }
+                                                            }
+                                                        }
                                                         mm.To.Add(new MailAddress(MailTo));
-                                                        //mm.To.Add(new MailAddress(MailToSafety));
-                                                        mm.To.Add(new MailAddress("yutong.chow@dyna-mac.com"));
-
                                                     }
                                                     else
                                                     {
