@@ -291,6 +291,10 @@ namespace WorkerExitPass
                             lblCompany.Text = dt3.Rows[0]["company"].ToString();
                             lblReason.Text = dt3.Rows[0]["reason"].ToString();
 
+                            if (dt3.Rows[0]["reason"].ToString() == "Medical Injury")
+                            {
+                                lblApprover.Text = "N.A";
+                            }
                             if (dt3.Rows[0]["remarks"].ToString() == "")
                             {
                                 lblRemarks.Text = "N.A";
