@@ -53,7 +53,7 @@
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />
 <%--                    <asp:BoundField DataField="reason" HeaderText="Reason" />--%>
-                    <asp:BoundField DataField="approveddate" HeaderText="Approved Date" />
+                 <%--   <asp:BoundField DataField="approveddate" HeaderText="Approved Date" />--%>
                     <asp:BoundField DataField="projectdesc" HeaderText="Project" />
                     <asp:BoundField DataField="company" HeaderText="Company" />
                     <asp:BoundField DataField="approve" HeaderText="Status" />
@@ -83,7 +83,7 @@
                                             <asp:Label class="labelData" ID="lblStatus" runat="server" />
                                         </div>
                                         <div class="col">
-                                            <asp:Label class="label" runat="server" Text="When"></asp:Label>
+                                            <asp:Label class="label" runat="server" Text="Approval Date"></asp:Label>
                                             <asp:Label class="labelData" ID="lblWhen" runat="server" />
                                         </div> 
                                     </div>
@@ -108,7 +108,7 @@
 
                                 </div>
                                 <div class="col">
-                                        <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
+                                        <asp:Label class="label" ID="time" runat="server" Text="Exit Time"></asp:Label>
                                         <%--<asp:TextBox class="textbox" ID="tbTime" runat="server"></asp:TextBox>--%>
                                         <asp:Label class="labelData" ID="lblTime" runat="server"></asp:Label>
 

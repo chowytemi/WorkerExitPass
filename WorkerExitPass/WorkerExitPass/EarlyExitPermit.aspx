@@ -122,7 +122,7 @@
                 </div>  
                 <div class="contentRow">
                     <asp:Label ID="labelSuccess" runat="server" Text="Success!"></asp:Label>
-                    <asp:Label class="labelMsg" ID="valid" runat="server" Text="You will receive an email once it has been approved or rejected. </br> Once approved, please exit before "></asp:Label>
+                    <asp:Label class="labelMsg" ID="valid" runat="server"></asp:Label>
                     <asp:Button ID="viewStatusBtn" runat="server" Text="View Status" OnClick="viewStatus_Click" />
                 </div>
         </asp:Panel>   

@@ -88,17 +88,11 @@ namespace WorkerExitPass
         {
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO " +
-            //    "from exitapproval, EmpList " +
-            //    "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND (EmpList.RO IS NULL OR EmpList.RO = 'NONE') order by exitID desc;";
-
-            //string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' " +
-            //    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') " +
-            //    "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
 
             string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
             "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP " +
             "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
+
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -129,18 +123,10 @@ namespace WorkerExitPass
             using (SqlConnection conn = new SqlConnection(cs))
             {
 
-                //string statussql = "select distinct exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.approve, exitapproval.company, EmpList.RO, exitapproval.createdby " +
-                //   "from exitapproval,  EmpList " +
-                //   "where approve IS NULL AND reason NOT IN('Medical Injury') " +
-                //   "and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' order by exitID desc;";
-
-                //string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' " +
-                //    "from exitapproval, EmpList where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' " +
-                //    "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
-
                 string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
                     "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' and DATEADD(hour, 1, exittime) > CURRENT_TIMESTAMP " +
                     "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
+
                 using (SqlCommand cmd3 = new SqlCommand(statussql, conn))
                 {
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd3))
@@ -164,7 +150,8 @@ namespace WorkerExitPass
             Session["empID"] = empID;
             DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            string statussql = "select distinct exitapproval.exitID, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
+            //string statussql = "select distinct exitapproval.exitID, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -207,8 +194,6 @@ namespace WorkerExitPass
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                //DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
-                //e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy");
 
                 DateTime time1 = Convert.ToDateTime(e.Row.Cells[1].Text);
                 e.Row.Cells[1].Text = time1.ToString("dd/MM/yyyy hh:mm tt");
@@ -238,17 +223,14 @@ namespace WorkerExitPass
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                DateTime date1 = Convert.ToDateTime(e.Row.Cells[1].Text);
-                e.Row.Cells[1].Text = date1.ToString("dd/MM/yyyy hh:mm tt");
-
-                if ((e.Row.Cells[4].Text) == "True")
+                if ((e.Row.Cells[3].Text) == "True")
                 {
-                    e.Row.Cells[4].Text = "Approved";
+                    e.Row.Cells[3].Text = "Approved";
 
                 }
                 else
                 {
-                    e.Row.Cells[4].Text = "Rejected";
+                    e.Row.Cells[3].Text = "Rejected";
                 }
                 e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(GridView2, "Select$" + e.Row.RowIndex);
                 e.Row.ToolTip = "Click to select this row.";
@@ -281,7 +263,8 @@ namespace WorkerExitPass
             //try
             //{
             int exitID = Convert.ToInt32(GridView2.SelectedRow.Cells[0].Text);
-            string approve = GridView2.SelectedRow.Cells[4].Text;
+            string approve = GridView2.SelectedRow.Cells[3].Text;
+            lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
             lblStatus.Text = approve;
             if (approve == "Approved")
             {
@@ -296,118 +279,26 @@ namespace WorkerExitPass
                 approve = null;
             }
             bool isApprove = Convert.ToBoolean(approve);
-            //string sql = "select distinct exitapproval.approve, (select distinct EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', exitapproval.approveddate, exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
-            string sql = "select distinct (select distinct EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '"
-            + exitID + "') AS 'approver', exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, " +
-            "exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitapproval.exitID = '" + exitID + "';";
+
+            string sql = "select distinct(select distinct EmpList.Employee_Name from exitapproval, EmpList where exitapproval.approver = '" + empID + "' and exitapproval.approver = EmpList.EmpID and exitapproval.exitID = '" + exitID + "') AS 'approver', " +
+                "exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, exitapproval.remarks from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID " +
+                "and exitapproval.exitID = '" + exitID + "';";
             SqlDataAdapter da = new SqlDataAdapter(sql, conn);
             DataSet ds = new DataSet();
             da.Fill(ds);
             DataTable dt = ds.Tables[0];
 
-            if (!string.IsNullOrEmpty(dt.Rows[0]["approver"].ToString()))
-            {
-                lblApprover.Text = dt.Rows[0]["approver"].ToString();
-            }
-            else
-            {
-                if (dt.Rows[0]["reason"].ToString() == "Medical Injury")
-                {
-                    lblApprover.Text = "N.A";
-                    lblWhen.Text = "N.A";
-                }
-                else
-                {
-                    lblWhen.Text = "Pending";
-                    lblEmpName.Text = "Pending";
-                    string sqlquery = "select EmpID, Employee_Name, JobCode, Department, designation, RO from EmpList where EmpID = '" + empID + "' and isActive = 1;";
-                    using (SqlCommand cmd = new SqlCommand(sqlquery, conn))
-                    {
-                        using (SqlDataReader dr = cmd.ExecuteReader())
-                        {
-                            while (dr.Read())
-                            {
-                                string ROname = dr[5].ToString();
-                                if (dr[2].ToString() == "WK")
-                                {
-                                    string hodquery = "select Employee_Name from EmpList where EmpID='" + ROname + "' and isActive = 1";
+            DateTime date = Convert.ToDateTime(dt.Rows[0][1]);
+            DateTime time = Convert.ToDateTime(dt.Rows[0][2]);
 
-                                    using (SqlCommand cmd2 = new SqlCommand(hodquery, conn))
-                                    {
-                                        SqlDataAdapter da4 = new SqlDataAdapter(hodquery, conn);
-                                        DataSet ds4 = new DataSet();
-                                        da4.Fill(ds4);
-                                        DataTable dt4 = ds4.Tables[0];
-
-                                        string RONames = "";
-                                        for (int i = 0; i < dt4.Rows.Count; i++)
-                                        {
-                                            RONames += dt4.Rows[i][0].ToString() + "<br />";
-
-                                        }
-                                        lblApprover.Text = "Pending approval from: <br />" + RONames;
-                                    }
-                                }
-                                else if (dr[2].ToString() == "SUBCON")
-                                {
-
-                                    //for testing - supposed to be PJM
-                                    string pjmquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
-                                        "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + PJM + "'";
-                                    using (SqlCommand cmd3 = new SqlCommand(pjmquery, conn))
-                                    {
-                                        SqlDataAdapter da5 = new SqlDataAdapter(pjmquery, conn);
-                                        DataSet ds5 = new DataSet();
-                                        da5.Fill(ds5);
-                                        DataTable dt5 = ds5.Tables[0];
-
-                                        string PJMNames = "";
-                                        for (int i = 0; i < dt5.Rows.Count; i++)
-                                        {
-                                            PJMNames += dt5.Rows[i][0].ToString() + "<br />";
-
-                                        }
-                                        lblApprover.Text = "Pending approval from: <br />" + PJMNames;
-                                    }
-                                }
-                                //else //for testing
-                                //{
-                                //    string pjmquery = "select distinct EmpList.Employee_Name from Access, UserAccess,ARole,EmpList where UserAccess.RoleID = ARole.ID " +
-                                //        "and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + RO + "'";
-                                //    using (SqlCommand cmd2 = new SqlCommand(pjmquery, conn))
-                                //    {
-                                //        SqlDataAdapter da6 = new SqlDataAdapter(pjmquery, conn);
-                                //        DataSet ds6 = new DataSet();
-                                //        da6.Fill(ds6);
-                                //        DataTable dt6 = ds6.Tables[0];
-
-                                //        string pjmNames = "";
-                                //        for (int i = 0; i < dt6.Rows.Count; i++)
-                                //        {
-                                //            pjmNames += dt6.Rows[i][0].ToString() + "<br />";
-
-                                //        }
-                                //        lblApprover.Text = "Pending approval from: <br />" + pjmNames;
-                                //    }
-                                //}
-                            }
-                        }
-                    }
-                }
-
-
-            }
-
-            DateTime date = Convert.ToDateTime(dt.Rows[0]["createddate"]);
-            DateTime time = Convert.ToDateTime(dt.Rows[0]["exittime"]);
-
+            lblApprover.Text = dt.Rows[0][0].ToString();
             lblDate.Text = date.ToString("dd/MM/yyyy");
             lblTime.Text = time.ToString("hh:mm tt");
-            lblProject.Text = dt.Rows[0]["projectdesc"].ToString();
-            lblCompany.Text = dt.Rows[0]["company"].ToString();
-            lblReason.Text = dt.Rows[0]["reason"].ToString();
-
-            if (dt.Rows[0]["remarks"].ToString() == "")
+            lblProject.Text = dt.Rows[0][3].ToString();
+            lblCompany.Text = dt.Rows[0][4].ToString();
+            lblReason.Text = dt.Rows[0][5].ToString();
+            
+            if (dt.Rows[0][6].ToString() == "")
             {
                 lblRemarks.Text = "N.A";
                 remarks.Attributes.Add("class", "hide");
@@ -418,8 +309,7 @@ namespace WorkerExitPass
                 lblRemarks.Attributes.Add("class", "label");
                 remarks.Attributes.Add("class", "textbox");
                 lblRemarks.Text = dt.Rows[0]["remarks"].ToString();
-            }
-            lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
+            }     
 
             string sql3 = "select distinct exitapproval.approve, exitapproval.approveddate, CONCAT(RTRIM(EmpList.EmpID), ' - ', EmpList.Employee_Name) as 'emp' " +
             "from exitapproval, EmpList where EmpList.EmpID = exitapproval.EmpID and exitapproval.exitID = '" + exitID + "' and exitapproval.approve = '" + isApprove + "' order by emp";
@@ -428,32 +318,18 @@ namespace WorkerExitPass
             da3.Fill(ds3);
             DataTable dt3 = ds3.Tables[0];
 
-            using (DataTableReader reader = new DataTableReader(dt3))
+          
+            DateTime approvedate = Convert.ToDateTime(dt3.Rows[0]["approveddate"]);
+            lblWhen.Text = approvedate.ToString("dd/MM/yyyy hh:mm tt");
+
+            string empname = "";
+            for (int i = 0; i < dt3.Rows.Count; i++)
             {
-                if (reader.HasRows)
-                {
-                    DateTime approvedate = Convert.ToDateTime(dt3.Rows[0]["approveddate"]);
-                    lblWhen.Text = approvedate.ToString("dd/MM/yyyy hh:mm tt");
-                    if (dt3.Rows.Count == 1)
-                    {
-                        lblEmpName.Text = dt3.Rows[0]["emp"].ToString();
 
-                    }
-                    else
-                    {
-                        lblEmpName.Text += "<table>";
-
-                        for (int i = 0; i < dt3.Rows.Count; i++)
-                        {
-
-                            lblEmpName.Text += "<tr><td>" + dt3.Rows[i][2].ToString() + "</td>";
-                        }
-
-                        lblEmpName.Text += "</table>";
-
-                    }
-                }
+                empname += dt3.Rows[i][2].ToString() + "<BR />";
             }
+
+            lblEmpName.Text = empname;
 
             string sql2 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp' from EmpList, exitapproval " +
             "where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID order by emp;";
