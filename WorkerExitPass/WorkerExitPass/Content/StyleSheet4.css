@@ -25,7 +25,17 @@
     margin-bottom: 1%;
     width: 10%;
 }
-
+#noPending {
+    color: #424242;
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    font-size: 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
 .label {
     margin-bottom: 0.5em;
 }
@@ -143,10 +153,10 @@
     .button {
         width: 40%;
     }
-    /*.dropdown {
-        font-size: 0.625em;
-        width: 20%;
-    }*/
+    #noPending {
+        font-size: 1em;
+    }
+
 }
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {

@@ -84,9 +84,8 @@ namespace WorkerExitPass
 
         }
 
-        private DataTable GetPending()
-        {
-            DataTable dt = new DataTable();
+        private DataSet GetPending()
+        {           
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
 
             string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
@@ -100,25 +99,37 @@ namespace WorkerExitPass
                     cmd.Connection = conn;
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                     {
-                        sda.Fill(dt);
-                        GridView1.DataSource = dt;
-                        GridView1.DataBind();
+                        DataSet ds = new DataSet();
+                        sda.Fill(ds);
+                        DataTable dt = ds.Tables[0];
+                        if (dt.Rows.Count > 0)
+                        {
+                                                     
+                            GridView1.DataSource = dt;
+                            GridView1.DataBind();
+                            noPending.Visible = false;
+
+                        } else 
+                        {
+                            noPending.Text = "No Pending Early Exit Permit";
+                            noPending.Visible = true;
+                        }
+                        return ds;
                     }
+
                 }
             }
-            return dt;
+           
 
 
         }
 
-        private DataTable GetPendingRO()
+        private DataSet GetPendingRO()
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
-            DataTable dt = new DataTable();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-
 
             using (SqlConnection conn = new SqlConnection(cs))
             {
@@ -131,24 +142,38 @@ namespace WorkerExitPass
                 {
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd3))
                     {
-                        sda.Fill(dt);
-                        GridView1.DataSource = dt;
-                        GridView1.DataBind();
+                        DataSet ds = new DataSet();
+                        sda.Fill(ds);
+                        DataTable dt = ds.Tables[0];
+                        if (dt.Rows.Count > 0)
+                        {
+                           
+                            GridView1.DataSource = dt;
+                            GridView1.DataBind();
+                            noPending.Visible = false;
+
+                        }
+                        else
+                        {
+                            noPending.Text = "No Pending Early Exit Permit";
+                            noPending.Visible = true;
+
+                        }
+                        return ds;
 
                     }
 
                 }
             }
 
-            return dt;
 
         }
 
-        private DataTable GetApproved()
+        private DataSet GetApproved()
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            DataTable dt = new DataTable();
+
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             //string statussql = "select distinct exitapproval.exitID, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
             string statussql = "select distinct exitapproval.exitID, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
@@ -159,14 +184,26 @@ namespace WorkerExitPass
                     cmd.Connection = conn;
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                     {
-                        sda.Fill(dt);
-                        GridView2.DataSource = dt;
-                        GridView2.DataBind();
+                        DataSet ds = new DataSet();
+                        sda.Fill(ds);
+                        DataTable dt = ds.Tables[0];
+                        if (dt.Rows.Count > 0)
+                        {
+                            GridView2.DataSource = dt;
+                            GridView2.DataBind();
+                            noPending.Visible = false;
+                        }
+                        else
+                        {
+                            noPending.Text = "No Approved/Rejected Early Exit Permit";
+                            noPending.Visible = true;
+
+                        }
+                        return ds;
+                        
                     }
                 }
             }
-            return dt;
-
 
         }
 
@@ -182,6 +219,7 @@ namespace WorkerExitPass
             }
             else if (status == "Pending")
             {
+                CheckAccess();
                 GridView1.Visible = true;
                 GridView2.Visible = false;
             }
@@ -207,10 +245,11 @@ namespace WorkerExitPass
         protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             GridView1.PageIndex = e.NewPageIndex;
-            GetPending();
-            DataTable dt = this.GetPending();
-            GridView1.DataSource = dt;
-            GridView1.DataBind();
+            //GetPending();
+            //DataSet ds = this.GetPending();
+            //GridView1.DataSource = ds;
+            //GridView1.DataBind();
+            CheckAccess();
         }
 
         protected void Eservice_Click(object sender, EventArgs e)

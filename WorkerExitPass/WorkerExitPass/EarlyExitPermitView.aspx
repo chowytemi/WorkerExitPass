@@ -30,12 +30,8 @@
             </asp:DropDownList>
         </div>
         <div>
-<%--            <div class="row">            
-                        <asp:DropDownList ID="ddlStatus" class="dropdown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlStatus_SelectedIndexChanged">
-                            <asp:ListItem Text="Pending" Value=""></asp:ListItem>
-                            <asp:ListItem Text="Approved/Rejected"></asp:ListItem>     
-                        </asp:DropDownList>
-            </div>--%>
+           <asp:Label ID="noPending" runat="server" />
+
             <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" BackColor="#EBF6FE" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" DataKeyNames="exitID">
                 <Columns>
                     <asp:BoundField DataField="exitID" HeaderText="ID" />
