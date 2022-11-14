@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -25,7 +26,7 @@ namespace WorkerExitPass
 
                     string myempno = Request.QueryString["exprmitstatus"];
                     Session["empID"] = myempno;
-                    
+
 
                     if (Request.UrlReferrer == null)
                     {
@@ -36,15 +37,15 @@ namespace WorkerExitPass
                     {
                         FormStatus();
                     }
-                    
-                       
-                    
+
+
+
                 }
 
-               
+
             }
-            
-        
+
+
         }
 
         private void FormStatus()
@@ -110,14 +111,14 @@ namespace WorkerExitPass
 
                 //if ((e.Row.Cells[2].Text) == "&nbsp;")
                 //{
-                    
+
                 //    e.Row.Cells[2].Text = "NULL";
 
                 //}
                 //else
                 //{
-                    DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
-                    e.Row.Cells[2].Text = time1.ToString("dd/MM/yyyy hh:mm tt");
+                DateTime time1 = Convert.ToDateTime(e.Row.Cells[2].Text);
+                e.Row.Cells[2].Text = time1.ToString("dd/MM/yyyy hh:mm tt");
                 //}
                 //DateTime expirytime = Convert.ToDateTime(e.Row.Cells[4].Text);
                 //e.Row.Cells[4].Text = expirytime.ToString("dd/MM/yyyy hh:mm tt");
@@ -126,11 +127,15 @@ namespace WorkerExitPass
                 {
                     e.Row.Cells[3].Text = "Approved";
 
-                } else if ((e.Row.Cells[3].Text) == "&nbsp;") {
+                }
+                else if ((e.Row.Cells[3].Text) == "&nbsp;")
+                {
 
                     e.Row.Cells[3].Text = "Pending";
 
-                } else {
+                }
+                else
+                {
                     e.Row.Cells[3].Text = "Rejected";
                 }
 
@@ -159,24 +164,28 @@ namespace WorkerExitPass
 
             //try
             //{
-                int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
-                string approve = GridView1.SelectedRow.Cells[3].Text;
+            int exitID = Convert.ToInt32(GridView1.SelectedRow.Cells[0].Text);
+            string approve = GridView1.SelectedRow.Cells[3].Text;
 
-                DateTime exittime = Convert.ToDateTime(GridView1.SelectedRow.Cells[2].Text);
-                string expirytime = Convert.ToDateTime(exittime).AddHours(1).ToString("hh:mm tt");
-                lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
 
-                if (approve == "Approved")
-                {
-                    lblStatus.Text = approve + " (Valid Till: " + expirytime + ")";
-                    approve = "1";
-                    
+            //DateTime exittime = Convert.ToDateTime(GridView1.SelectedRow.Cells[2].Text);
+            DateTime exittime = DateTime.ParseExact(GridView1.SelectedRow.Cells[2].Text, "dd/MM/yyyy hh:mm tt", CultureInfo.CurrentCulture);
+            string expirytime = exittime.AddHours(1).ToString("hh:mm tt");
+            //string expirytime = Convert.ToDateTime(exittime).AddHours(1).ToString("hh:mm tt");
+            lblexitID.Text = "Early Exit Permit ID #" + exitID + " Details";
 
-                } else if (approve == "Rejected")
-                {
-                    lblStatus.Text = approve;
-                    approve = "0"; 
-                }
+            if (approve == "Approved")
+            {
+                lblStatus.Text = approve + " (Valid Till: " + expirytime + ")";
+                approve = "1";
+
+
+            }
+            else if (approve == "Rejected")
+            {
+                lblStatus.Text = approve;
+                approve = "0";
+            }
 
             string isApproveQuery = "";
             if (approve == "1" || approve == "0")
@@ -333,21 +342,21 @@ namespace WorkerExitPass
 
             string sql2 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) as 'emp' from EmpList, exitapproval " +
                 "where exitapproval.exitID = '" + exitID + "' and EmpList.EmpID = exitapproval.EmpID order by emp;";
-                SqlDataAdapter da2 = new SqlDataAdapter(sql2, conn);
-                DataSet ds2 = new DataSet();
-                da2.Fill(ds2);
-                DataTable dt2 = ds2.Tables[0];
+            SqlDataAdapter da2 = new SqlDataAdapter(sql2, conn);
+            DataSet ds2 = new DataSet();
+            da2.Fill(ds2);
+            DataTable dt2 = ds2.Tables[0];
 
-                string empName = "";
-                for (int i = 0; i < dt2.Rows.Count; i++)
-                {
-                    empName += dt2.Rows[i][0].ToString() + "<br />";
+            string empName = "";
+            for (int i = 0; i < dt2.Rows.Count; i++)
+            {
+                empName += dt2.Rows[i][0].ToString() + "<br />";
 
-                }
-                lblName.Text = empName;
+            }
+            lblName.Text = empName;
 
-                mpePopUp.Show();
-                conn.Close();
+            mpePopUp.Show();
+            conn.Close();
 
             //}
             //catch (Exception)

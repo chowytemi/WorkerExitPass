@@ -56,72 +56,75 @@ namespace WorkerExitPass
             SqlDataReader dr3 = cmd3.ExecuteReader();
 
 
-
-            while (dr3.Read())
+            if (dr3.HasRows)
             {
-                string ROid = dr3[2].ToString();
-                
-                //check if worker or subcon
-                if (dr3[1].ToString() == "WK")
+                while (dr3.Read())
                 {
-                    string sql = "select exitapproval.createdby, EmpList.RO from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitID = '" + exitID + "' and EmpList.RO = '" + empID + "';";
-                    SqlCommand cmd = new SqlCommand(sql, con);
-                    SqlDataReader dr = cmd.ExecuteReader();
+                    string ROid = dr3[2].ToString();
+                
+                    //check if worker or subcon
+                    if (dr3[1].ToString() == "WK")
+                    {
+                        string sql = "select exitapproval.createdby, EmpList.RO from exitapproval, EmpList where exitapproval.createdby = EmpList.EmpID and exitID = '" + exitID + "' and EmpList.RO = '" + empID + "';";
+                        SqlCommand cmd = new SqlCommand(sql, con);
+                        SqlDataReader dr = cmd.ExecuteReader();
                     
 
-                    if (dr.HasRows)
-                    {
-                        IsApprove();
-                        //CheckApprovalAccess();
-                        dr.Close();
+                        if (dr.HasRows)
+                        {
+                            IsApprove();
+                            //CheckApprovalAccess();
+                            dr.Close();
+                        }
+                        else
+                        {
+                            Response.Redirect("http://eservices.dyna-mac.com/error");
+                        }
                     }
-                    else
+                    else if (dr3[1].ToString() == "SUBCON")
                     {
-                        Response.Redirect("http://eservices.dyna-mac.com/error");
+                        string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
+                                            "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                            "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "';";
+                        SqlCommand cmd2 = new SqlCommand(sql2, con);
+                        SqlDataReader dr2 = cmd2.ExecuteReader();
+                        if (dr2.HasRows)
+                        {
+                            IsApprove();
+                            //CheckApprovalAccess();
+                            dr2.Close();
+                        }
+                        else
+                        {
+                            Response.Redirect("http://eservices.dyna-mac.com/error");
+                        }
                     }
-                }
-                else if (dr3[1].ToString() == "SUBCON")
-                {
-                    string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
-                                        "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                        "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "';";
-                    SqlCommand cmd2 = new SqlCommand(sql2, con);
-                    SqlDataReader dr2 = cmd2.ExecuteReader();
-                    if (dr2.HasRows)
+                    //testing
+                    else if (dr3[1].ToString() == "STAFF")
                     {
-                        IsApprove();
-                        //CheckApprovalAccess();
-                        dr2.Close();
+                        string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
+                                            "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
+                                            "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "';";
+                        SqlCommand cmd2 = new SqlCommand(sql2, con);
+                        SqlDataReader dr2 = cmd2.ExecuteReader();
+                        if (dr2.HasRows)
+                        {
+                            IsApprove();
+                            dr2.Close();
+                        }
+                        else
+                        {
+                            Response.Redirect("http://eservices.dyna-mac.com/error");
+                        }
                     }
-                    else
-                    {
-                        Response.Redirect("http://eservices.dyna-mac.com/error");
-                    }
-                }
-                //testing
-                else if (dr3[1].ToString() == "STAFF")
-                {
-                    string sql2 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name from Access, UserAccess, ARole, EmpList " +
-                                        "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
-                                        "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id ='" + PJM + "' and EmpList.EmpID = '" + empID + "';";
-                    SqlCommand cmd2 = new SqlCommand(sql2, con);
-                    SqlDataReader dr2 = cmd2.ExecuteReader();
-                    if (dr2.HasRows)
-                    {
-                        IsApprove();
-                        dr2.Close();
-                    }
-                    else
-                    {
-                        Response.Redirect("http://eservices.dyna-mac.com/error");
-                    }
-                }
-                else
-                {
-                    Response.Redirect("http://eservices.dyna-mac.com/error");
                 }
             }
-            
+            else
+            {
+                Response.Redirect("http://eservices.dyna-mac.com/error");
+            }
+
+
             con.Close();
         }
 
