@@ -48,27 +48,55 @@ namespace WorkerExitPass
 
         }
 
-        private void FormStatus()
+        private DataSet FormStatus()
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
             //Connect to database
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection conn = new SqlConnection(cs);
-            conn.Open();
+            //SqlConnection conn = new SqlConnection(cs);
+            //conn.Open();
             //string statussql = "select exitID, createddate, exittime, approve from exitapproval where createdby = '" + empID + "' order by exitID desc;";
             string statussql = "select distinct exitID, createddate, exittime, approve from exitapproval where EmpID = '" + empID + "' or createdby = '" + empID + "' order by exitID desc;";
 
-            SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
-            using (DataTable dt = new DataTable())
+            using (SqlConnection conn = new SqlConnection(cs))
             {
-                da.Fill(dt);
-                GridView1.DataSource = dt;
-                GridView1.DataBind();
+                using (SqlCommand cmd = new SqlCommand(statussql))
+                {
+                    cmd.Connection = conn;
+                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    {
+                        DataSet ds = new DataSet();
+                        sda.Fill(ds);
+                        DataTable dt = ds.Tables[0];
+                        if (dt.Rows.Count > 0)
+                        {
 
+                            GridView1.DataSource = dt;
+                            GridView1.DataBind();
+                            noPending.Visible = false;
+
+                        }
+                        else
+                        {
+                            noPending.Text = "You have not applied for early exit permit yet.";
+                            noPending.Visible = true;
+                        }
+                        return ds;
+                    }
+
+                }
             }
-            conn.Close();
+            //SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
+            //using (DataTable dt = new DataTable())
+            //{
+            //    da.Fill(dt);
+            //    GridView1.DataSource = dt;
+            //    GridView1.DataBind();
+
+            //}
+            //conn.Close();
         }
 
         protected void CheckAccess()

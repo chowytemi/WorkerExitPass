@@ -20,6 +20,17 @@
     position: absolute;
     bottom: 10%;*/
 }
+#noPending {
+    color: #424242;
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    font-size: 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
 .table {
     width: 90%;
     margin: auto;
@@ -211,6 +222,9 @@
     /*#Panel1 {
         width: 70%;
     }*/
+    #noPending {
+        font-size: 1em;
+    }
 }
 
 /* Extra small devices (phones, 600px and down) */

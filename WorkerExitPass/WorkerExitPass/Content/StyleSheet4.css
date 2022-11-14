@@ -25,17 +25,7 @@
     margin-bottom: 1%;
     width: 10%;
 }
-#noPending {
-    color: #424242;
-    font-family: 'Rubik', sans-serif;
-    text-align: center;
-    font-size: 2em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-}
+
 .label {
     margin-bottom: 0.5em;
 }
@@ -152,9 +142,6 @@
 
     .button {
         width: 40%;
-    }
-    #noPending {
-        font-size: 1em;
     }
 
 }
