@@ -89,7 +89,7 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
 
             string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
-            "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP " +
+            "where approve IS NULL AND reason NOT IN('Workplace Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP " +
             "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
 
             using (SqlConnection conn = new SqlConnection(cs))
@@ -135,7 +135,7 @@ namespace WorkerExitPass
             {
 
                 string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
-                    "where approve IS NULL AND reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' and DATEADD(hour, 1, exittime) > CURRENT_TIMESTAMP " +
+                    "where approve IS NULL AND reason NOT IN('Workplace Injury') and exitapproval.createdby = EmpList.EmpID AND EmpList.RO = '" + empID + "' and DATEADD(hour, 1, exittime) > CURRENT_TIMESTAMP " +
                     "group by exitapproval.exitID, exitapproval.createddate, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
 
                 using (SqlCommand cmd3 = new SqlCommand(statussql, conn))
@@ -176,7 +176,7 @@ namespace WorkerExitPass
 
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             //string statussql = "select distinct exitapproval.exitID, exitapproval.approveddate, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
-            string statussql = "select distinct exitapproval.exitID, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Medical Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
+            string statussql = "select distinct exitapproval.exitID, exitapproval.approve,  exitapproval.projectdesc, exitapproval.company, exitapproval.approver from exitapproval, EmpList where reason NOT IN('Workplace Injury') and exitapproval.createdby = EmpList.EmpID and exitapproval.approver = '" + empID + "' order by exitID desc";
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))

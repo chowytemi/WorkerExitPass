@@ -218,7 +218,7 @@ namespace WorkerExitPass
             string isApproveQuery = "";
             if (approve == "1" || approve == "0")
             {
-                isApproveQuery = "select distinct exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, " +
+                isApproveQuery = "select distinct exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.reason, " +
                     "exitapproval.remarks, exitapproval.approve,  CONCAT(RTRIM(EmpList.EmpID), ' - ', EmpList.Employee_Name) as 'emp' " +
                "from exitapproval, EmpList where EmpList.EmpID = exitapproval.EmpID and exitapproval.exitID = '" + exitID + "' and exitapproval.approve = '" + approve + "' order by emp";
 
@@ -244,7 +244,7 @@ namespace WorkerExitPass
             }
             else
             {
-                isApproveQuery = "select distinct exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.company, exitapproval.reason, " +
+                isApproveQuery = "select distinct exitapproval.createddate, exitapproval.exittime, exitapproval.projectdesc, exitapproval.reason, " +
                     "exitapproval.remarks, exitapproval.approve, CONCAT(RTRIM(EmpList.EmpID), ' - ', EmpList.Employee_Name) as 'emp' " +
                 "from exitapproval, EmpList where EmpList.EmpID = exitapproval.EmpID and exitapproval.exitID = '" + exitID + "' and exitapproval.approve IS NULL order by emp";
 
@@ -325,10 +325,10 @@ namespace WorkerExitPass
                             lblDate.Text = date.ToString("dd/MM/yyyy");
                             lblTime.Text = time.ToString("dd/MM/yyyy hh:mm tt");
                             lblProject.Text = dt3.Rows[0]["projectdesc"].ToString();
-                            lblCompany.Text = dt3.Rows[0]["company"].ToString();
+                            //lblCompany.Text = dt3.Rows[0]["company"].ToString();
                             lblReason.Text = dt3.Rows[0]["reason"].ToString();
 
-                            if (dt3.Rows[0]["reason"].ToString() == "Medical Injury")
+                            if (dt3.Rows[0]["reason"].ToString() == "Workplace Injury")
                             {
                                 lblApprover.Text = "N.A";
                             }
@@ -382,6 +382,20 @@ namespace WorkerExitPass
 
             }
             lblName.Text = empName;
+
+            string sql7 = "select distinct company from exitapproval where exitID = '" + exitID + "'";
+            SqlDataAdapter da7 = new SqlDataAdapter(sql7, conn);
+            DataSet ds7 = new DataSet();
+            da7.Fill(ds7);
+            DataTable dt7 = ds7.Tables[0];
+
+            string companyName = "";
+            for (int i = 0; i < dt7.Rows.Count; i++)
+            {
+                companyName += dt7.Rows[i][0].ToString() + "<br />";
+
+            }
+            lblCompany.Text = companyName;
 
             mpePopUp.Show();
             conn.Close();

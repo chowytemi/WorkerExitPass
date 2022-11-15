@@ -27,7 +27,13 @@ namespace WorkerExitPass
 
                 }
 
-                CheckAccess();
+                //CheckAccess();
+                RetrieveDataFromLogin();
+                BindDataSetDataProjects();
+                GetListOfEmployees();
+                BindDataSetDataReason();
+                mpePopUp.Show();
+                Panel1.Visible = true;
             }
 
         }
@@ -71,6 +77,9 @@ namespace WorkerExitPass
 
         protected void GetListOfEmployees()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
             string constr = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             string cmsstr = ConfigurationManager.ConnectionStrings["cms"].ConnectionString;
             string company = companytb.Text;
@@ -80,67 +89,93 @@ namespace WorkerExitPass
             appcon.Open();
 
             SqlConnection con = new SqlConnection(constr);
-
+            con.Open();
 
             if (company != "DMES")
             {
-                string sqlquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "' order by EmpID; ";
-                con.Open();
-                SqlCommand cmdlineno = new SqlCommand(sqlquery, con);
-                SqlDataReader dr = cmdlineno.ExecuteReader();
-                while (dr.Read())
+
+                string sqlcompany = "select Company from exitCompany where EmpID = '" + empID + "'";
+                SqlCommand cmd = new SqlCommand(sqlcompany, con);
+                SqlDataAdapter da = new SqlDataAdapter(sqlcompany, con);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                DataTable dt = ds.Tables[0];
+
+                string getIDquery = "";
+                if (dt.Rows.Count > 0)
                 {
-
-                    string employeesCompID = dr[0].ToString();
-                    string jobcode = dr[1].ToString();
-
-                    string query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "' order by EmpID; ";
-
-
-                    using (SqlCommand cmd2 = new SqlCommand(query, appcon))
+                    string companyName = "";
+                    for (int i = 0; i < dt.Rows.Count; i++)
                     {
-
-                        SqlDataReader timelogdr = cmd2.ExecuteReader();
-
-
-                        while (timelogdr.Read())
-                        {
-
-                            string workersIn = timelogdr[0].ToString();
-
-                            string query2 = "select distinct CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
-                       "AND company = '" + company + "' AND EmpID = '" + workersIn + "' order by empNameID;";
-
-                            using (SqlCommand namecmd = new SqlCommand(query2, con))
-                            {
-
-                                SqlDataReader namedr = namecmd.ExecuteReader();
-
-
-                                while (namedr.Read())
-                                {
-
-                                    string empNameID = namedr[0].ToString();
-
-                                    namesddl.Items.Add(empNameID);
-                                    //namesddl.DataBind();
-
-                                }
-                            }
-
-                        }
-
-
+                        companyName += "'" + dt.Rows[i][0].ToString() + "'" + ",";
                     }
+                    companyName = companyName.TrimEnd(',');
 
-
+                    getIDquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company IN(" + companyName + ");";
 
                 }
-                con.Close();
+                else if (dt.Rows.Count == 0)
+                {
+                    getIDquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "'; ";
+
+                }
+                using (SqlCommand cmd3 = new SqlCommand(getIDquery, con))
+                {
+
+                    SqlDataReader dr = cmd3.ExecuteReader();
+                    while (dr.Read())
+                    {
+
+                        string employeesCompID = dr[0].ToString();
+                        string jobcode = dr[1].ToString();
+
+                        string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "'; ";
+
+
+                        using (SqlCommand cmd2 = new SqlCommand(query, appcon))
+                        {
+
+                            SqlDataReader timelogdr = cmd2.ExecuteReader();
+
+
+                            while (timelogdr.Read())
+                            {
+
+                                string workersIn = timelogdr[0].ToString();
+
+                                string query2 = "select distinct CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
+                           " AND EmpID = '" + workersIn + "' order by empNameID;";
+
+                                using (SqlCommand namecmd = new SqlCommand(query2, con))
+                                {
+
+                                    SqlDataReader namedr = namecmd.ExecuteReader();
+
+
+                                    while (namedr.Read())
+                                    {
+
+                                        string empNameID = namedr[0].ToString();
+
+                                        namesddl.Items.Add(empNameID);
+                                        //namesddl.DataBind();
+
+                                    }
+                                }
+
+                            }
+
+
+                        }
+                    }
+
+                }
+
+
             }
             else
             {
-                con.Open();
+                //con.Open();
                 using (SqlCommand cmd = new SqlCommand("select CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "' order by EmpID;"))
                 {
                     cmd.CommandType = CommandType.Text;
@@ -153,10 +188,8 @@ namespace WorkerExitPass
 
             }
 
-
-
-
         }
+
         protected void BindDataSetDataReason()
         {
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -318,7 +351,7 @@ namespace WorkerExitPass
                 {
                     string projectcode = dr[0].ToString();
 
-                    if (ReasonDropdown.Text == "Medical Injury")
+                    if (ReasonDropdown.Text == "Workplace Injury")
                     {
                         //insert request
                         string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
@@ -429,17 +462,24 @@ namespace WorkerExitPass
                         {
                             //get EmpID
                             //string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
-                            string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','"
-                                + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
+                            //string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','"
+                            //    + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
+                            string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','" + namesddl.Items[i].Text + "')-" +
+                                "CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) as 'EmpId', Company from EmpList " +
+                                "where EmpID = SUBSTRING('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') + 1, CHARINDEX(')', " +
+                                "'" + namesddl.Items[i].Text + "') -CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1)";
                             SqlCommand empcmd = new SqlCommand(empquery, appcon);
                             using (SqlDataReader empdr = empcmd.ExecuteReader())
                             {
                                 while (empdr.Read())
                                 {
+                                    string company = empdr[1].ToString();
+                                    string employeeIDToExit = empdr[0].ToString();
+
                                     if (counter == 0)
                                     {
                                         string insertsinglequery = "";
-                                        if (ReasonDropdown.Text == "Medical Injury")
+                                        if (ReasonDropdown.Text == "Workplace Injury")
                                         {
                                             insertsinglequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
                                                 "values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
@@ -451,7 +491,7 @@ namespace WorkerExitPass
                                         }
 
 
-                                        string employeeIDToExit = empdr[0].ToString();
+
                                         using (SqlCommand insert = new SqlCommand(insertsinglequery, appcon))
                                         {
 
@@ -460,7 +500,8 @@ namespace WorkerExitPass
                                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
                                             insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
                                             insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
-                                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                            //insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                            insert.Parameters.AddWithValue("@company", company);
                                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
                                             insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
                                             insert.Parameters.AddWithValue("@exittime", dateInput);
@@ -475,7 +516,7 @@ namespace WorkerExitPass
                                     else if (counter > 0)
                                     {
                                         string insertmultiplequery = "";
-                                        if (ReasonDropdown.Text == "Medical Injury")
+                                        if (ReasonDropdown.Text == "Workplace Injury")
                                         {
                                             insertmultiplequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
                                                 "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
@@ -486,8 +527,6 @@ namespace WorkerExitPass
                                                 "values(CONVERT(int, (SELECT current_value FROM sys.sequences WHERE name = 'exitID_Sequence')), @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
                                         }
 
-
-                                        string employeeIDToExit = empdr[0].ToString();
                                         using (SqlCommand insert = new SqlCommand(insertmultiplequery, appcon))
                                         {
                                             insert.CommandType = CommandType.Text;
@@ -495,7 +534,8 @@ namespace WorkerExitPass
                                             insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
                                             insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
                                             insert.Parameters.AddWithValue("@EmpID", employeeIDToExit);
-                                            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                            //insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
+                                            insert.Parameters.AddWithValue("@company", company);
                                             insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
                                             insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
                                             insert.Parameters.AddWithValue("@exittime", dateInput);
@@ -679,10 +719,10 @@ namespace WorkerExitPass
 
                                                                 //MailMessage mm = new MailMessage();
                                                                 mm.From = new MailAddress(MailFrom);
-                                                                if (ReasonDropdown.Text == "Medical Injury")
+                                                                if (ReasonDropdown.Text == "Workplace Injury")
                                                                 {
 
-                                                                    mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                    mm.Subject = "Early Exit Permit Workplace Injury Notification";
 
                                                                 }
                                                                 else
@@ -770,10 +810,10 @@ namespace WorkerExitPass
                                                             string name = pjmdr[0].ToString();
 
                                                             mm.From = new MailAddress(MailFrom);
-                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            if (ReasonDropdown.Text == "Workplace Injury")
                                                             {
 
-                                                                mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                mm.Subject = "Early Exit Permit Workplace Injury Notification";
 
                                                             }
                                                             else
@@ -844,7 +884,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' and emplist.empid = 'T203'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
@@ -860,10 +900,10 @@ namespace WorkerExitPass
 
                                                             //MailMessage mm = new MailMessage();
                                                             mm.From = new MailAddress(MailFrom);
-                                                            if (ReasonDropdown.Text == "Medical Injury")
+                                                            if (ReasonDropdown.Text == "Workplace Injury")
                                                             {
 
-                                                                mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                mm.Subject = "Early Exit Permit Workplace Injury Notification";
 
                                                             }
                                                             else
@@ -1155,16 +1195,22 @@ namespace WorkerExitPass
 
                         if (counter > 0)
                         {
-                            if (ReasonDropdown.SelectedValue == "Select Reason")
+                            if (ReasonDropdown.SelectedValue == "0")
                             {
                                 Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                                "<script language='javascript'>alert('Please select a valid reason');</script>");
                                 return;
                             }
-                            else if (ReasonDropdown.SelectedValue == "Select Project")
+                            else if (projectddl.SelectedValue == "0")
                             {
                                 Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                                "<script language='javascript'>alert('Please select a valid project');</script>");
+                                return;
+                            }
+                            else if (reasonInput == "Others" && remarksInput == "")
+                            {
+                                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                               "<script language='javascript'>alert('Please fill in the Remarks field');</script>");
                                 return;
                             }
                             else
@@ -1231,16 +1277,22 @@ namespace WorkerExitPass
                     {
                         if (compare > 0)
                         {
-                            if (ReasonDropdown.SelectedValue == "Select Reason")
+                            if (ReasonDropdown.SelectedValue == "0")
                             {
                                 Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                                "<script language='javascript'>alert('Please select a valid reason');</script>");
                                 return;
                             }
-                            else if (ReasonDropdown.SelectedValue == "Select Project")
+                            else if (projectddl.SelectedValue == "0")
                             {
                                 Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                                "<script language='javascript'>alert('Please select a valid project');</script>");
+                                return;
+                            }
+                            else if (reasonInput == "Others")
+                            {
+                                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                               "<script language='javascript'>alert('Please fill in the Remarks field');</script>");
                                 return;
                             }
                             else

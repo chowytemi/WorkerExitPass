@@ -162,16 +162,22 @@ namespace WorkerExitPass
                 {
                     if (compare > 0)
                     {
-                        if (ReasonDropdown.SelectedValue == "Select Reason")
+                        if (ReasonDropdown.SelectedValue == "0")
                         {
                             Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                            "<script language='javascript'>alert('Please select a valid reason');</script>");
                             return;
                         }
-                        else if (ReasonDropdown.SelectedValue == "Select Project")
+                        else if (projectddl.SelectedValue == "0")
                         {
                             Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                            "<script language='javascript'>alert('Please select a valid project');</script>");
+                            return;
+                        }
+                        else if (reasonInput == "Others")
+                        {
+                            Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                           "<script language='javascript'>alert('Please fill in the Remarks field');</script>");
                             return;
                         }
                         else
@@ -349,7 +355,7 @@ namespace WorkerExitPass
             {
                 string projectcode = dr[0].ToString();
 
-                if (ReasonDropdown.Text == "Medical Injury")
+                if (ReasonDropdown.Text == "Workplace Injury")
                 {
                     //insert request
                     //string sqlinsertapprovequery = "insert into exitapproval(approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) values(1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
@@ -549,10 +555,10 @@ namespace WorkerExitPass
                                                                         body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee name</th>";
                                                                         body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
                                                                         string body1 = "";
-                                                                        if (ReasonDropdown.Text == "Medical Injury")
+                                                                        if (ReasonDropdown.Text == "Workplace Injury")
                                                                         {
 
-                                                                            mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                            mm.Subject = "Early Exit Permit Workplace Injury Notification";
 
                                                                         }
                                                                         else
@@ -653,10 +659,10 @@ namespace WorkerExitPass
                                                                     body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee Name</th>";
                                                                     body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
                                                                     string body1 = "";
-                                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                                    if (ReasonDropdown.Text == "Workplace Injury")
                                                                     {
 
-                                                                        mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                        mm.Subject = "Early Exit Permit Workplace Injury Notification";
 
                                                                     }
                                                                     else
@@ -728,7 +734,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' and EmpList.EmpID = 'T203'";
                                                         using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
                                                         {
                                                             MailMessage mm = new MailMessage();
@@ -760,10 +766,10 @@ namespace WorkerExitPass
                                                                     body += "<th style=\" color: #004B7A; text-align:left; border: 1px solid\">Employee Name</th>";
                                                                     body += "<td style=\" border: 1px solid\">" + exitName + "</td></tr></table>";
                                                                     string body1 = "";
-                                                                    if (ReasonDropdown.Text == "Medical Injury")
+                                                                    if (ReasonDropdown.Text == "Workplace Injury")
                                                                     {
 
-                                                                        mm.Subject = "Early Exit Permit Medical Injury Notification";
+                                                                        mm.Subject = "Early Exit Permit Workplace Injury Notification";
 
                                                                     }
                                                                     else
