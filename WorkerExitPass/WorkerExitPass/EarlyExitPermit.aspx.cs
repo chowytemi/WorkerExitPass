@@ -162,10 +162,16 @@ namespace WorkerExitPass
                 {
                     if (compare > 0)
                     {
-                        if (ReasonDropdown.SelectedValue == "Select")
+                        if (ReasonDropdown.SelectedValue == "Select Reason")
                         {
                             Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                            "<script language='javascript'>alert('Please select a valid reason');</script>");
+                            return;
+                        }
+                        else if (ReasonDropdown.SelectedValue == "Select Project")
+                        {
+                            Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                           "<script language='javascript'>alert('Please select a valid project');</script>");
                             return;
                         }
                         else
@@ -210,6 +216,7 @@ namespace WorkerExitPass
             projectddl.DataValueField = "description";
             projectddl.DataSource = ds;
             projectddl.DataBind();
+            projectddl.Items.Insert(0, new ListItem("Select Reason", "0"));
         }
 
         protected void BindDataSetDataReason()
@@ -225,6 +232,7 @@ namespace WorkerExitPass
             ReasonDropdown.DataValueField = "description";
             ReasonDropdown.DataSource = ds;
             ReasonDropdown.DataBind();
+            ReasonDropdown.Items.Insert(0, new ListItem("Select Reason", "0"));
         }
 
         //Get data from Login 

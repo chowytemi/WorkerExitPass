@@ -512,8 +512,8 @@ namespace WorkerExitPass
                     {
                         if (li.Selected == true)
                         {
-                            string getIDquery = "select EmpID from EmpList where Employee_Name = LEFT(@empName, CHARINDEX('(', @empName) - 1);";
-
+                            //string getIDquery = "select EmpID from EmpList where Employee_Name = LEFT(@empName, CHARINDEX('(', @empName) - 1);";
+                            string getIDquery = "Select SUBSTRING(@empName,CHARINDEX('(',@empName)+1 ,CHARINDEX(')',@empName)-CHARINDEX('(',@empName)-1)";
                             using (SqlCommand select = new SqlCommand(getIDquery, conn))
                             {
                                 select.CommandType = CommandType.Text;
@@ -595,7 +595,8 @@ namespace WorkerExitPass
                         if (li.Selected == true)
                         {
                             //insert to database, the value is in item.Value
-                            string getIDquery = "select EmpID from EmpList where Employee_Name = LEFT(@empName, CHARINDEX('(', @empName) - 1);";
+                            //string getIDquery = "select EmpID from EmpList where Employee_Name = LEFT(@empName, CHARINDEX('(', @empName) - 1);";
+                            string getIDquery = "Select SUBSTRING(@empName,CHARINDEX('(',@empName)+1 ,CHARINDEX(')',@empName)-CHARINDEX('(',@empName)-1)";
 
                             using (SqlCommand select = new SqlCommand(getIDquery, conn))
                             {
