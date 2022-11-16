@@ -1,22 +1,15 @@
 ﻿
-
-/*.container {
-    width: 50%;
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}*/
 h1 {
     text-align: center;
     font-size: 2.375em;
 }
 .container {
-    height: 50em;
     width: 50%;
     margin: auto;
+    box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
+    border-radius: 0 0.625em 0.625em 0;
 }
+
 
 h1, .label {
     color: #004B7A;
@@ -32,10 +25,14 @@ h1, .label {
     justify-content: center;
     align-items: center;
     width: 100%;
+    margin-top: 1em;
 }
 
 .col-12 {
-    width: 33%;
+    width: 50%;
+}
+col {
+    width: 70%;
 }
 .input, .dropdown {
     height: 2.5em !important;
@@ -60,4 +57,64 @@ h1, .label {
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
     width: 100%;
+    background-color: #004B7A;
+    margin-bottom: 1em;
+}
+.activeBtn {
+    display: inline-block;
+    width: 40%;
+    height: 3.125em;
+    border-radius: 0.625em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+    background-color: #004B7A;
+    color: white;
+    border: none;
+    margin: auto;
+    margin-top: 1.25em;
+}
+.rowBtn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+.inactiveBtn {
+    display: inline-block;
+    width: 40%;
+    height: 3.125em;
+    border-radius: 0.625em;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+    background-color: #E9F4FB;
+    color: #004B7A;
+    border: none;
+    margin: auto;
+    margin-top: 1.25em;
+}
+#caption {
+    height: 2.5em !important;
+}
+
+.dd_chk_drop {
+    top: 2.75em !important;
+    border-radius: 0.3125em !important;
+    border: 0.0625em solid #EFF0F6 !important;
+}
+
+@media only screen and (max-width: 600px) {
+    .container {
+        height: 100%;
+        width: 100%;
+    }
+    .col-12 {
+        width: 90%;
+    }
+    .inactiveBtn, .activeBtn {
+        width: 40%;
+    }
+    /*.button {
+        width: 50%;
+    }*/
 }

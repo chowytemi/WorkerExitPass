@@ -37,6 +37,19 @@ namespace WorkerExitPass
             }
 
         }
+        protected void createBtn_Click(object sender, EventArgs e)
+        {
+            updateBtn.CssClass = updateBtn.CssClass.Replace("activeBtn", "inactiveBtn");
+            createBtn.CssClass = createBtn.CssClass.Replace("inactiveBtn", "activeBtn");
+        }
+
+        protected void updateBtn_Click(object sender, EventArgs e)
+        {
+
+            createBtn.CssClass = createBtn.CssClass.Replace("activeBtn", "inactiveBtn");
+            updateBtn.CssClass = updateBtn.CssClass.Replace("inactiveBtn", "activeBtn");
+
+        }
         protected void companyddl_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -107,12 +120,12 @@ namespace WorkerExitPass
         }
         protected void CreateNew()
         {
-            string empID = Session["empID"].ToString();
-            Session["empID"] = empID;
+            //string empID = Session["empID"].ToString();
+            //Session["empID"] = empID;
 
-            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection appcon = new SqlConnection(connectionstring);
-            appcon.Open();
+            //string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            //SqlConnection appcon = new SqlConnection(connectionstring);
+            //appcon.Open();
 
             string employeeInput = lblEmpID.ToString();
 
