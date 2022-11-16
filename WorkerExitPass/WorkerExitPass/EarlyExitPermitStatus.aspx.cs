@@ -80,7 +80,7 @@ namespace WorkerExitPass
                         }
                         else
                         {
-                            noPending.Text = "You have not applied for early exit permit yet.";
+                            noPending.Text = "You have not applied for early exit permit yet. <br />Press 'Create New' to apply.";
                             noPending.Visible = true;
                         }
                         return ds;
