@@ -71,6 +71,10 @@
     color: #7C7C7C;
 }
 
+#nextBtn {
+    background-color: #00AC26;
+}
+
 #caption {
     /*
     overflow: visible !important;

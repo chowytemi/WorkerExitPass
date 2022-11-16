@@ -89,10 +89,9 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
 
             string statussql = "select distinct exitapproval.exitID, exitapproval.exittime, exitapproval.company, exitapproval.projectdesc, count(exitapproval.EmpID) as 'no of emp' from exitapproval, EmpList " +
-            "where approve IS NULL AND reason NOT IN('Workplace Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE')  " +
+            "where approve IS NULL AND reason NOT IN('Workplace Injury') and exitapproval.createdby = EmpList.EmpID AND(EmpList.RO IS NULL OR EmpList.RO = 'NONE') " +
             "group by exitapproval.exitID, exitapproval.exittime, exitapproval.reason, exitapproval.company, exitapproval.projectdesc order by exitID desc;";
-
-            // and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP
+            //and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP 
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 using (SqlCommand cmd = new SqlCommand(statussql))
@@ -105,7 +104,6 @@ namespace WorkerExitPass
                         DataTable dt = ds.Tables[0];
                         if (dt.Rows.Count > 0)
                         {
-                                                     
                             GridView1.DataSource = dt;
                             GridView1.DataBind();
                             noPending.Visible = false;

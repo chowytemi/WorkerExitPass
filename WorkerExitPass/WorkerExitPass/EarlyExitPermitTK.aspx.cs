@@ -30,7 +30,7 @@ namespace WorkerExitPass
                 //CheckAccess();
                 RetrieveDataFromLogin();
                 BindDataSetDataProjects();
-                GetListOfEmployees();
+                //GetListOfEmployees();
                 BindDataSetDataReason();
                 mpePopUp.Show();
                 Panel1.Visible = true;
@@ -45,14 +45,20 @@ namespace WorkerExitPass
             submitAsSolo.Visible = true;
             TeamBtn.CssClass = TeamBtn.CssClass.Replace("activeBtn", "submitAsButton");
             SoloBtn.CssClass = SoloBtn.CssClass.Replace("submitAsButton", "activeBtn");
+            Panel3.Visible = true;
+            nextBtn.Visible = false;
+            msg.Visible = false;
         }
 
         protected void TeamBtn_Click(object sender, EventArgs e)
         {
-            namesddl.Visible = true;
-            nametb.Visible = false;
-            submitAsTeam.Visible = true;
-            submitAsSolo.Visible = false;
+            Panel3.Visible = false;
+            nextBtn.Visible = true;
+            msg.Visible = true;
+            //namesddl.Visible = true;
+            //nametb.Visible = false;
+            //submitAsTeam.Visible = true;
+            //submitAsSolo.Visible = false;
             SoloBtn.CssClass = SoloBtn.CssClass.Replace("activeBtn", "submitAsButton");
             TeamBtn.CssClass = SoloBtn.CssClass.Replace("submitAsButton", "activeBtn");
 
@@ -84,6 +90,19 @@ namespace WorkerExitPass
             string cmsstr = ConfigurationManager.ConnectionStrings["cms"].ConnectionString;
             string company = companytb.Text;
 
+            var time = Request["timeInput"];
+            var date = Request["dateInput"] + " " + time;
+
+            DateTime dateinput = DateTime.Parse(date);
+            //var dateInput = dateparse.ToString();
+
+            var time10am = DateTime.Now.ToString("yyyy-MM-dd ") + "10:00:00.000";
+            DateTime dayshift = DateTime.Parse(time10am);
+            var time10pm = DateTime.Now.ToString("yyyy-MM-dd ") + "22:00:00.000";
+            DateTime date10pm = DateTime.Parse(time10pm);
+            var time7pm = DateTime.Now.ToString("yyyy-MM-dd ") + "19:00:00.000";
+            DateTime nightshift = DateTime.Parse(time7pm);
+
 
             SqlConnection appcon = new SqlConnection(cmsstr);
             appcon.Open();
@@ -94,7 +113,7 @@ namespace WorkerExitPass
             if (company != "DMES")
             {
 
-                string sqlcompany = "select Company from exitCompany where EmpID = '" + empID + "'";
+                string sqlcompany = "select Company from exitCompany where EmpID = '" + empID + "' AND IsActive = '1'";
                 SqlCommand cmd = new SqlCommand(sqlcompany, con);
                 SqlDataAdapter da = new SqlDataAdapter(sqlcompany, con);
                 DataSet ds = new DataSet();
@@ -102,7 +121,7 @@ namespace WorkerExitPass
                 DataTable dt = ds.Tables[0];
 
                 string getIDquery = "";
-                if (dt.Rows.Count > 0)
+                if (dt.Rows.Count > 1)
                 {
                     string companyName = "";
                     for (int i = 0; i < dt.Rows.Count; i++)
@@ -128,8 +147,22 @@ namespace WorkerExitPass
 
                         string employeesCompID = dr[0].ToString();
                         string jobcode = dr[1].ToString();
-
-                        string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "'; ";
+                        
+                       
+                        string query = "";
+                        if (dateinput < date10pm)
+                        {
+                            //check if clock in before 10AM
+                            query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                                "AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND EmpID = '" + employeesCompID + "';";
+                        }
+                        else
+                        {
+                            //clock in after 7PM
+                            query = " select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                                "AND cast(StartTime as time) > cast('" + nightshift + "' as time) AND EmpID = '" + employeesCompID + "';";
+                        }
+                            //string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "'; ";
 
 
                         using (SqlCommand cmd2 = new SqlCommand(query, appcon))
@@ -271,7 +304,7 @@ namespace WorkerExitPass
                 {
                     RetrieveDataFromLogin();
                     BindDataSetDataProjects();
-                    GetListOfEmployees();
+                    //GetListOfEmployees();
                     BindDataSetDataReason();
                     mpePopUp.Show();
                     Panel1.Visible = true;
@@ -1356,6 +1389,30 @@ namespace WorkerExitPass
             Panel1.Visible = false;
         }
 
+        protected void nextBtn_OnClick(object sender, EventArgs e)
+        {
+            var time = Request["timeInput"];
+            var date = Request["dateInput"] + " " + time;
+            DateTime dateinput = DateTime.Parse(date);
+            var currentdate = DateTime.Now;
+            int compare = DateTime.Compare(dateinput, currentdate);
 
+            if (compare <= 0)
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                "<script language='javascript'>alert('Please choose a time after the current time');</script>");
+                return;
+            } else
+            {
+                Panel3.Visible = true;
+                msg.Visible = false;
+                nextBtn.Visible = false;
+                namesddl.Visible = true;
+                nametb.Visible = false;
+                submitAsTeam.Visible = true;
+                submitAsSolo.Visible = false;
+                GetListOfEmployees();
+            }
+        }
     }
 }
