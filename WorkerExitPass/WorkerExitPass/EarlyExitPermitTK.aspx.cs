@@ -83,6 +83,7 @@ namespace WorkerExitPass
 
         protected void GetListOfEmployees()
         {
+            namesddl.Items.Clear();
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
