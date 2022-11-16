@@ -40,13 +40,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Label label1;
         
         /// <summary>
-        /// ddlCompany control.
+        /// companyddl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCompany;
+        protected global::Saplin.Controls.DropDownCheckBoxes companyddl;
         
         /// <summary>
         /// submitBtn control.

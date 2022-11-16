@@ -25,16 +25,32 @@ namespace WorkerExitPass
         {
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
-            SqlDataAdapter da = new SqlDataAdapter("select distinct company from EmpList", con);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            ds.Tables[0].Columns.Add("Company", typeof(string), "company");
+            con.Open();
+            using (SqlCommand cmd = new SqlCommand("select distinct company from EmpList"))
+            {
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = con;
+                companyddl.DataSource = cmd.ExecuteReader();
+                companyddl.DataTextField = "company";
+                companyddl.DataBind();
+                con.Close();
+            }
 
-            ddlCompany.DataTextField = "Company";
-            ddlCompany.DataValueField = "company";
-            ddlCompany.DataSource = ds;
-            ddlCompany.DataBind();
-            ddlCompany.Items.Insert(0, new ListItem("Select Company", "0"));
+        }
+        protected void companyddl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            int companyCount = 0;
+            for (int i = 0; i < companyddl.Items.Count; i++)
+            {
+                if (companyddl.Items[i].Selected)
+                {
+                    companyCount++;
+                    companyddl.SelectedItem.Selected = true;
+
+                }
+            }
+            companyddl.Texts.SelectBoxCaption = companyCount + " selected";
         }
 
 

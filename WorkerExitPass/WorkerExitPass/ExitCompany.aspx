@@ -16,15 +16,30 @@
         <div>
             <h1>Exit Company</h1>
 
-            <div>
-                 <asp:Label class="label" ID="label" runat="server" Text="Employee ID"></asp:Label>
-                 <input class="input" id="lblEmpID" type="text"/>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                     <asp:Label class="label" ID="label" runat="server" Text="Employee ID"></asp:Label>
+                     <input class="input" id="lblEmpID" type="text"/>
+                    </div>
+                </div>
+                <div class="row">
+                      <div class="col-12">
+                      <asp:Label class="label" ID="label1" runat="server" Text="Name of Company"></asp:Label>
+                      <asp:DropDownCheckBoxes ID="companyddl" runat="server" CssClass="dropdown" UseButtons="True" OnSelectedIndexChanged="companyddl_SelectedIndexChanged">
+       
+                                <Style SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style>
 
-                 <asp:Label class="label" ID="label1" runat="server" Text="Name of Company"></asp:Label>
-                 <asp:DropDownList class="dropdown" ID="ddlCompany" runat="server" AutoPostBack="true">
-                 </asp:DropDownList>
-
-                 <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" />
+                                <Style2 SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style2>
+                                    
+                     </asp:DropDownCheckBoxes>
+                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                    <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" />
+                    </div>
+                </div>
 
             </div>
         </div>

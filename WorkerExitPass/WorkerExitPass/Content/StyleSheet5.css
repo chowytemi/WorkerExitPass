@@ -1,0 +1,63 @@
+﻿
+
+/*.container {
+    width: 50%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}*/
+h1 {
+    text-align: center;
+    font-size: 2.375em;
+}
+.container {
+    height: 50em;
+    width: 50%;
+    margin: auto;
+}
+
+h1, .label {
+    color: #004B7A;
+    font-family: 'Rubik', sans-serif;
+}
+.label {
+    display: block;
+    font-size: 1.125em;
+    line-height: 1.875em;
+}
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.col-12 {
+    width: 33%;
+}
+.input, .dropdown {
+    height: 2.5em !important;
+    border-radius: 0.3125em !important;
+    border: 0.0625em solid #EFF0F6 !important;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em !important;
+    text-indent: 0.5em !important;
+    box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25) !important;
+    display: flex;
+    justify-content: center !important;
+    overflow: auto;
+    margin-bottom: 1.25em;
+    width: 100%;
+}
+.button {
+    border-radius: 0.9375em;
+    border-style: none;
+    color: white;
+    height: 3.5em;
+    width: 15%;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+    width: 100%;
+}
