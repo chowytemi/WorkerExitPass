@@ -56,53 +56,54 @@ namespace WorkerExitPass
 
         protected void ClickSubmit()
         {
-            string empID = Session["empID"].ToString();
-            Session["empID"] = empID;
-
-            var currentdate = DateTime.Now;
-
-            string employeeInput = .Text;
-            string companyInput = .Text;
-
-            if (employeeInput != "" || companyInput != "")
-            {
-                CheckDuplicate();
-            } else
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                                "<script language='javascript'>alert('Please fill in the fields required');</script>");
-                return;
-            }
-        }
-
-        protected void CheckDuplicate()
-        {
             //string empID = Session["empID"].ToString();
             //Session["empID"] = empID;
 
-            ////Connect to database
+            //var currentdate = DateTime.Now;
 
-            //string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //SqlConnection appcon = new SqlConnection(connectionstring);
-            //appcon.Open();
+            //string employeeInput = .Text;
+            //string companyInput = .Text;
 
-            ////check for duplicate
-            //string sqlquery1 = "select exitID from exitapproval where  CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and exittime = '" + dateInput + "';";
-
-            //SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
-            //SqlDataReader dr1 = cmd1.ExecuteReader();
-
-            //if (!dr1.HasRows)
+            //if (employeeInput != "" || companyInput != "")
             //{
-            //    CreateNew();
+            //    CheckDuplicate();
             //}
             //else
             //{
             //    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-            //                    "<script language='javascript'>alert('Duplicate Submission');</script>");
+            //                    "<script language='javascript'>alert('Please fill in the fields required');</script>");
             //    return;
             //}
-            //return;
+        }
+
+        protected void CheckDuplicate()
+        {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
+            //Connect to database
+
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
+
+            //check for duplicate
+            string sqlquery1 = "select exitID from exitapproval where  CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and exittime = '" + dateInput + "';";
+
+            SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
+            SqlDataReader dr1 = cmd1.ExecuteReader();
+
+            if (!dr1.HasRows)
+            {
+                CreateNew();
+            }
+            else
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Duplicate Submission');</script>");
+                return;
+            }
+            return;
         }
         protected void CreateNew()
         {
@@ -113,30 +114,66 @@ namespace WorkerExitPass
             SqlConnection appcon = new SqlConnection(connectionstring);
             appcon.Open();
 
-            string sqlinsertapprovequery = "insert into exitapproval(exitID, approveddate, approve, createdby, createddate, EmpID, company, reason, Remarks, exittime, projectdesc, projcode) " +
-                       "values((NEXT VALUE FOR exitID_Sequence), @approveddate, 1, @createdby, @createddate, @EmpID, @company, @reason, @Remarks, @exittime, @projectdesc, @projectcode);";
+            string employeeInput = lblEmpID.ToString();
 
-            using (SqlCommand insert = new SqlCommand(sqlinsertapprovequery, appcon))
+            for (int i = 0; i < ddlCompany.Items.Count; i++)
             {
+                if (ddlCompany.Items[i].Selected)
+                {
+                    string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+
+                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                    {
 
 
-                insert.CommandType = CommandType.Text;
-                insert.Parameters.AddWithValue("@createdby", empID);
-                insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                insert.Parameters.AddWithValue("@approveddate", DateTime.Now.ToString());
-                insert.Parameters.AddWithValue("@EmpID", empID);
-                insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companytb.Text));
-                insert.Parameters.AddWithValue("@reason", HttpUtility.HtmlDecode(ReasonDropdown.Text));
-                insert.Parameters.AddWithValue("@Remarks", HttpUtility.HtmlDecode(remarkstb.Text));
+                        insert.CommandType = CommandType.Text;
+                        insert.Parameters.AddWithValue("@createdby", empID);
+                        insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                        insert.Parameters.AddWithValue("@employee", employeeInput);
+                        insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(ddlCompany.ToString()));
 
-                insert.ExecuteNonQuery();
+                        insert.ExecuteNonQuery();
+                    }
+                }
             }
+            appcon.Close();
+
+
 
         }
 
         protected void UpdateCompany()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
 
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
+
+            string employeeInput = lblEmpID.ToString();
+
+            for (int i = 0; i < ddlCompany.Items.Count; i++)
+            {
+                if (ddlCompany.Items[i].Selected)
+                {
+                    string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, UpdateBy, UpdateDate) values(@employee, @company, '1', @updateby, @updatedate);";
+
+                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                    {
+
+
+                        insert.CommandType = CommandType.Text;
+                        insert.Parameters.AddWithValue("@updateby", empID);
+                        insert.Parameters.AddWithValue("@updatedate", DateTime.Now.ToString());
+                        insert.Parameters.AddWithValue("@employee", employeeInput);
+                        insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(ddlCompany.ToString()));
+
+                        insert.ExecuteNonQuery();
+                    }
+                }
+            }
+            appcon.Close();
         }
 
         protected void GetList()
