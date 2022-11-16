@@ -340,8 +340,8 @@ namespace WorkerExitPass
                             }
                             else
                             {
-                                lblRemarks.Attributes.Add("class", "label");
-                                remarks.Attributes.Add("class", "textbox");
+                                lblRemarks.Attributes.Add("class", "labelData");
+                                remarks.Attributes.Add("class", "label");
                                 lblRemarks.Text = dt3.Rows[0]["remarks"].ToString();
                             }
 

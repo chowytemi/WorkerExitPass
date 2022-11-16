@@ -191,21 +191,22 @@ namespace WorkerExitPass
 
             if (dr.HasRows)
             {
-                string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
+                string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL ";
+                //and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP
                 SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
                 SqlDataReader dr2 = cmdlineno.ExecuteReader();
-                if (dr2.HasRows)
-                {
+                //if (dr2.HasRows)
+                //{
                     GetApplicationById();
 
 
 
-                }
-                else
-                {
-                    labelExpiry.Text = "This early exit permit application has expired.";
-                    ModalPopupExtender1.Show();
-                }
+                //}
+                //else
+                //{
+                //    labelExpiry.Text = "This early exit permit application has expired.";
+                //    ModalPopupExtender1.Show();
+                //}
                 dr2.Close();
             }
             else
@@ -247,7 +248,7 @@ namespace WorkerExitPass
                 SqlConnection conn = new SqlConnection(cs);
                 conn.Open();
 
-                string statussql = "select distinct createddate, exittime, projectdesc, company, reason, remarks from exitapproval where exitID = '" + exitID + "';";
+                string statussql = "select distinct createddate, exittime, projectdesc, reason, remarks from exitapproval where exitID = '" + exitID + "';";
                 SqlDataAdapter da = new SqlDataAdapter(statussql, conn);
 
                 DataSet ds = new DataSet();
@@ -263,7 +264,7 @@ namespace WorkerExitPass
                 tbDate.Text = date.ToString("dd/MM/yyyy");
                 tbTime.Text = time.ToString("hh:mm tt");
                 tbProject.Text = dt.Rows[0]["projectdesc"].ToString();
-                tbCompany.Text = dt.Rows[0]["company"].ToString();
+                //tbCompany.Text = dt.Rows[0]["company"].ToString();
                 tbReason.Text = dt.Rows[0]["reason"].ToString();
 
                 if (dt.Rows[0]["remarks"].ToString() == "")
@@ -276,6 +277,25 @@ namespace WorkerExitPass
                 {
                     tbRemarks.Text = dt.Rows[0]["remarks"].ToString();
                 }
+
+                string companysql = "select distinct company from exitapproval where exitid = '" + exitID + "'";
+                SqlDataAdapter da3 = new SqlDataAdapter(companysql, conn);
+
+
+
+                DataSet ds3 = new DataSet();
+                da3.Fill(ds3);
+                DataTable dt3 = ds3.Tables[0];
+                string companyname = "";
+                for (int i = 0; i < dt3.Rows.Count; i++)
+                {
+
+
+
+                    companyname += dt3.Rows[i][0].ToString() + ",";
+                }
+                companyname = companyname.TrimEnd(',');
+                tbCompany.Text = companyname;
 
                 string sql2 = "select CONCAT(EmpList.Employee_Name, ' (', RTRIM(EmpList.EmpID), ')') AS 'empNameID' " +
                     "from EmpList, exitapproval where exitapproval.EmpID = EmpList.EmpID and exitapproval.exitID = '" + exitID + "' and approve IS NULL;";
