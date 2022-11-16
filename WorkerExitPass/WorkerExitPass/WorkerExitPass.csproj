@@ -110,6 +110,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\StyleSheet1.css" />
+    <Content Include="StyleSheet5.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
