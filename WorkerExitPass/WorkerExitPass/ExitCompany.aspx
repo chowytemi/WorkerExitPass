@@ -1,5 +1,5 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ExitCompany.aspx.cs" Inherits="WorkerExitPass.ExitCompany" %>
-
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ExitCompany.aspx.cs" Inherits="WorkerExitPass.ExitCompany" EnableEventValidation = "false"%>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet" />
     <link href="Content/StyleSheet5.css" rel="stylesheet" type="text/css" />
+    <link href="Content/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="Content/font-awesome.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -106,6 +108,19 @@
                         </div>--%>
                              
                     </asp:Panel>
+                    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+                    <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+                        <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="Label1" PopupControlID="Panel" CancelControlID="btnContinue" BackgroundCssClass="modalBackground">
+                        </ajaxToolkit:ModalPopupExtender>
+                        <asp:Panel ID="Panel" runat="server">  
+                            <div class="rowIcon">
+                                <asp:LinkButton ID="btnContinue" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>"/>
+                            </div>  
+                            <div class="contentRow">
+                                <asp:Label ID="labelSuccess" runat="server" Text="Success!"></asp:Label>
+                                <asp:Label class="lblData" ID="valid" runat="server"></asp:Label>
+                            </div>
+                      </asp:Panel>   
                 </div>
                 
 

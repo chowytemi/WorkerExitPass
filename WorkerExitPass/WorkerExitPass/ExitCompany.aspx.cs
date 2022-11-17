@@ -14,115 +14,7 @@ namespace WorkerExitPass
 {
     public partial class ExitCompany : System.Web.UI.Page
     {
-        //Panel pnlDropDownList;
-        //protected void Page_PreInit(object sender, EventArgs e)
-        //{
-        //    //Create a Dynamic Panel
-        //    pnlDropDownList = new Panel();
-        //    pnlDropDownList.ID = "pnlDropDownList";
-        //    //pnlDropDownList.BorderWidth = 1;
-        //    pnlDropDownList.Width = 300;
-        //    this.form1.Controls.Add(pnlDropDownList);
 
-        //    //Create a LinkDynamic Button to Add TextBoxes
-        //    LinkButton btnAddDdl = new LinkButton();
-        //    btnAddDdl.ID = "btnAddDdl";
-        //    btnAddDdl.Text = "Add";
-        //    btnAddDdl.Click += new System.EventHandler(btnAdd_Click);
-        //    this.form1.Controls.Add(btnAddDdl);
-
-        //    //Recreate Controls
-        //    RecreateControls("ddlDynamic", "DropDownList");
-
-        //}
-
-        //protected void btnAdd_Click(object sender, EventArgs e)
-
-        //{
-        //    int cnt = FindOccurence("ddlDynamic");
-        //    CreateDropDownList("ddlDynamic-" + Convert.ToString(cnt + 1));
-
-        //}
-
-        //private int FindOccurence(string substr)
-
-        //{
-        //    string reqstr = Request.Form.ToString();
-        //    return ((reqstr.Length - reqstr.Replace(substr, "").Length)/ substr.Length);
-
-        //}
-        //private void CreateDropDownList(string ID)
-        //{
-        //    DropDownList ddl = new DropDownList();
-        //    ddl.ID = ID;
-
-        //        string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-        //        SqlConnection con = new SqlConnection(cs);
-        //        SqlDataAdapter da = new SqlDataAdapter("select distinct company from EmpList", con);
-        //        DataSet ds = new DataSet();
-        //        da.Fill(ds);
-        //        ds.Tables[0].Columns.Add("Company", typeof(string), "company");
-
-        //    ddl.DataTextField = "Company";
-        //    ddl.DataValueField = "company";
-        //    ddl.DataSource = ds;
-        //    ddl.DataBind();
-        //    ddl.Items.Insert(0, new ListItem("Select Company", "0"));
-
-        //    //ddl.Items.Add(new ListItem("--Select--", ""));
-        //    //ddl.Items.Add(new ListItem("One", "1"));
-        //    //ddl.Items.Add(new ListItem("Two", "2"));       
-        //    //ddl.Items.Add(new ListItem("Three", "3"));
-        //    ddl.AutoPostBack = true;
-        //    ddl.SelectedIndexChanged += new EventHandler(OnSelectedIndexChanged);
-        //    pnlDropDownList.Controls.Add(ddl);
-
-        //    Literal lt = new Literal();
-        //    lt.Text = "<br />";
-        //    pnlDropDownList.Controls.Add(lt);
-
-        //}
-        //protected void OnSelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    DropDownList ddl = (DropDownList)sender;
-        //    string ID = ddl.ID;
-        //    ClientScript.RegisterClientScriptBlock(this.GetType(), "Alert",
-        //                 "<script type = 'text/javascript'>alert('" + ID +
-        //                  " fired SelectedIndexChanged event');</script>");
-        //    //Place the functionality here
-
-        //}
-
-        //private void RecreateControls(string ctrlPrefix, string ctrlType)
-        //{
-        //    string[] ctrls = Request.Form.ToString().Split('&');
-        //    int cnt = FindOccurence(ctrlPrefix);
-        //    if (cnt > 0)
-        //    {
-        //        for (int k = 1; k <= cnt; k++)
-        //        {
-        //            for (int i = 0; i < ctrls.Length; i++)
-        //            {
-        //                if (ctrls[i].Contains(ctrlPrefix + "-" + k.ToString())
-        //                    && !ctrls[i].Contains("EVENTTARGET"))                       
-        //                {
-        //                    string ctrlID = ctrls[i].Split('=')[0];
-        //                    if (ctrlType == "DropDownList")
-        //                    {
-        //                        CreateDropDownList(ctrlID);
-        //                    }
-
-        //                    break;
-
-        //                }
-
-        //            }
-
-        //        }
-
-        //    }
-
-        //}
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -251,7 +143,19 @@ namespace WorkerExitPass
         }
         protected void submitBtn_Click(object sender, EventArgs e)
         {
-            CreateNew();
+            string employeeInput = lblEmpID.Text;
+            string companyInput = companyddl.Text;
+
+            if (employeeInput == "" && companyInput == "")
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Please fill in the required fields');</script>");
+                return;
+            } else
+            {
+                CreateNew();
+            } 
+            
         }
 
         protected void CreateNew()
@@ -264,15 +168,21 @@ namespace WorkerExitPass
             appcon.Open();
 
             string employeeInput = lblEmpID.Text;
-
+            string selectedCompany = "";
             for (int i = 0; i < companyddl.Items.Count; i++)
             {
                 if (companyddl.Items[i].Selected)
                 {
-                    string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+                    //string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
 
-                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
-                    {
+            //for (int i = 0; i < companyddl.Items.Count; i++)
+            //{
+            //    if (companyddl.Items[i].Selected)
+            //    {
+            //        string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+
+            //        using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+            //        {
 
 
                         insert.CommandType = CommandType.Text;
@@ -281,11 +191,15 @@ namespace WorkerExitPass
                         insert.Parameters.AddWithValue("@employee", employeeInput);
                         insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
 
-                        insert.ExecuteNonQuery();
-                    }
+                    //    insert.ExecuteNonQuery();
+                    //}
+                    selectedCompany += companyddl.Items[i].Value + ",";
                 }
             }
             appcon.Close();
+            mpePopUp.Show();
+            string companyInput = selectedCompany.TrimEnd(',');
+            valid.Text = "You have successfully assign employee ID " + employeeInput + " to " + companyInput + ".";
 
 
 
@@ -460,11 +374,14 @@ namespace WorkerExitPass
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
 
-                //GridViewRow selected = (GridViewRow)((Control)(e.CommandSource)).Parent.Parent;
-                //int index = selected.RowIndex;
 
-                //int index = Convert.ToInt32(e.CommandArgument);
-                //GridViewRow row = GridView1.Rows[index];
+                //int countid;
+                //int.TryParse(e.CommandArgument.ToString(), out countid);
+
+                //string company = GridView1.DataKeys[countid].Values["Company"].ToString();
+                //string status = GridView1.DataKeys[countid].Values["IsActive"].ToString();
+
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
 
                 GridViewRow gvr = (GridViewRow)((Control)e.CommandSource).NamingContainer;
                 int rowIndex = gvr.RowIndex;
