@@ -32,7 +32,8 @@
                         <div class="row">
                             <div class="col-12">
                              <asp:Label class="label" runat="server" Text="Employee ID"></asp:Label>
-                             <input class="input" id="lblEmpID" type="text"/>
+                             <%--<input class="input" id="lblEmpID" type="text"/>--%>
+                                <asp:TextBox class="input" ID="lblEmpID" runat="server"></asp:TextBox>
                             </div>
                         </div>
                         <div class="row">
@@ -49,7 +50,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                            <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit"/>
+                            <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="submitBtn_Click"/>
                             </div>
                         </div>
                     </asp:Panel>
@@ -58,7 +59,7 @@
                             <div class="col-12">
                              <asp:Label class="label" runat="server" Text="Employee ID"></asp:Label>
                                 <div class="row1">
-                                 <input id="lblFindEmpID" type="text"/>
+                                 <asp:TextBox class="input" ID="lblFindEmpID" runat="server"></asp:TextBox>
                                  <asp:Button ID="SearchBtn" runat="server" Text="Search" OnClick="SearchBtn_Click"/>
                                 </div>
                             </div>

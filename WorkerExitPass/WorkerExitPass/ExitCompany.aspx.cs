@@ -42,7 +42,7 @@ namespace WorkerExitPass
             Panel1.Visible = true;
             Panel2.Visible = false;
 
-            CreateNew();
+            //CreateNew();
         }
 
         protected void updateDetailsBtn_Click(object sender, EventArgs e)
@@ -122,6 +122,11 @@ namespace WorkerExitPass
             //}
             //return;
         }
+        protected void submitBtn_Click(object sender, EventArgs e)
+        {
+            CreateNew();
+        }
+
         protected void CreateNew()
         {
             string empID = Session["empID"].ToString();
@@ -201,13 +206,13 @@ namespace WorkerExitPass
 
         protected void SearchBtn_Click(object sender, EventArgs e)
         {
-            //string empIDInput = lblFindEmpID.Text;
-            //if (empIDInput != "")
-            //{
+            string empIDInput = lblFindEmpID.Text;
+            if (empIDInput != "")
+            {
                 showCompany.Visible = true;
                 showCompanyddl.Visible = true;
                 UpdateBtn.Visible = true;
-            //}
+            }
 
         }
     }
