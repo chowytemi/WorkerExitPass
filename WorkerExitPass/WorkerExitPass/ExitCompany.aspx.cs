@@ -61,7 +61,6 @@ namespace WorkerExitPass
 
         protected void updateDetailsBtn_Click(object sender, EventArgs e)
         {
-
             createBtn.CssClass = createBtn.CssClass.Replace("activeBtn", "inactiveBtn");
             updateDetailsBtn.CssClass = updateDetailsBtn.CssClass.Replace("inactiveBtn", "activeBtn");
             Panel1.Visible = false;
@@ -143,8 +142,8 @@ namespace WorkerExitPass
         protected void submitBtn_Click(object sender, EventArgs e)
         {
 
-            ClickSubmit();
-            
+            //ClickSubmit();
+            CreateNew();
         }
 
         protected void CreateNew()

@@ -187,6 +187,7 @@ h1, .label {
     font-family: 'Open-Sans', sans-serif;
     font-weight: bold;
     font-size: 1em;
+    text-align: center;
 }
 .contentRow {
     width: 90%;
@@ -244,15 +245,21 @@ h1, .label {
         height: 100%;
         width: 100%;
     }
-    .col-12 {
+    .col-12, .col {
         width: 90%;
     }
     .inactiveBtn, .activeBtn {
         font-size: 1em;
         width: 40%;
     }
-    .button, #SearchBtn, label {
+    .button, #SearchBtn, label, .thead {
         font-size: 1em;
+    }
+    .table tbody {
+        font-size: 0.75em;
+    }
+    .btnStatus {
+        height: 3em;
     }
     h1 {
         font-size: 1.5em;
