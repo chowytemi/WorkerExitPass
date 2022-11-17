@@ -110,7 +110,7 @@
                     </asp:Panel>
                     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
                     <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
-                        <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="Label1" PopupControlID="Panel" CancelControlID="btnContinue" BackgroundCssClass="modalBackground">
+                        <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="Label1" PopupControlID="Panel" BackgroundCssClass="modalBackground">
                         </ajaxToolkit:ModalPopupExtender>
                         <asp:Panel ID="Panel" runat="server">  
                             <div class="rowIcon">
@@ -127,6 +127,6 @@
             </div>
         </div>
     </form>
-    <asp:Label ID="Label1" runat="server"></asp:Label>
+<%--    <asp:Label ID="Label1" runat="server"></asp:Label>--%>
 </body>
 </html>

@@ -57,7 +57,6 @@ namespace WorkerExitPass
             Panel1.Visible = true;
             Panel2.Visible = false;
 
-            //CreateNew();
         }
 
         protected void updateDetailsBtn_Click(object sender, EventArgs e)
@@ -173,20 +172,20 @@ namespace WorkerExitPass
             {
                 if (companyddl.Items[i].Selected)
                 {
-                    string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+                    //string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
 
-                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
-                    {
+                    //using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                    //{
 
 
-                        insert.CommandType = CommandType.Text;
-                        insert.Parameters.AddWithValue("@createdby", empID);
-                        insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                        insert.Parameters.AddWithValue("@employee", employeeInput);
-                        insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
+                    //    insert.CommandType = CommandType.Text;
+                    //    insert.Parameters.AddWithValue("@createdby", empID);
+                    //    insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                    //    insert.Parameters.AddWithValue("@employee", employeeInput);
+                    //    insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
 
-                        insert.ExecuteNonQuery();
-                    }
+                    //    insert.ExecuteNonQuery();
+                    //}
                     selectedCompany += companyddl.Items[i].Value + ",";
                 }
             }
@@ -320,46 +319,6 @@ namespace WorkerExitPass
             }
 
         }
-        //protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    string empID = Session["empID"].ToString();
-        //    Session["empID"] = empID;
-
-        //    string company = GridView1.SelectedRow.Cells[0].Text;
-        //    string status = GridView1.SelectedRow.Cells[1].Text;
-        //    if (status == "Active")
-        //    {
-        //        status = "1";
-        //    }
-        //    else if (status == "Inactive")
-        //    {
-        //        status = "0";
-        //    }
-
-        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-        //    SqlConnection con = new SqlConnection(cs);
-        //    con.Open();
-
-        //    string employeeInput = lblEmpID.Text;
-
-        //    string sqlupdatequery = "update exitCompany set IsActive = @isactive, UpdateBy = @updateby, UpdateDate = @updatedate where EmpID = @employee AND Company = @company";
-
-        //    using (SqlCommand update = new SqlCommand(sqlupdatequery, con))
-        //    {
-        //        update.CommandType = CommandType.Text;
-        //        update.Parameters.AddWithValue("@updateby", empID);
-        //        update.Parameters.AddWithValue("@updatedate", DateTime.Now.ToString());
-        //        update.Parameters.AddWithValue("@employee", employeeInput);
-        //        update.Parameters.AddWithValue("@isactive", status);
-        //        update.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companyddl.ToString()));
-
-        //        update.ExecuteNonQuery();
-
-        //    }
-
-        //    con.Close();
-
-        //}
 
         protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -368,27 +327,13 @@ namespace WorkerExitPass
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
 
-
-                //int countid;
-                //int.TryParse(e.CommandArgument.ToString(), out countid);
-
-                //string company = GridView1.DataKeys[countid].Values["Company"].ToString();
-                //string status = GridView1.DataKeys[countid].Values["IsActive"].ToString();
-
-
                 GridViewRow gvr = (GridViewRow)((Control)e.CommandSource).NamingContainer;
                 int rowIndex = gvr.RowIndex;
 
-                //int countid;
-                //int.TryParse(e.CommandArgument.ToString(), out countid);
-
-                //int rowIndex = Convert.ToInt32(e.CommandArgument);
                 string company = GridView1.DataKeys[rowIndex].Values["Company"].ToString();
                 string status = GridView1.DataKeys[rowIndex].Values["IsActive"].ToString();
                 int updatedstatus = 2;
 
-                //string company = row.Cells[0].Text;
-                //string status = row.Cells[1].Text;
                 if (status == "True")
                 {
                     updatedstatus = 0;
@@ -397,7 +342,6 @@ namespace WorkerExitPass
                 {
                     updatedstatus = 1;
                 }
-                Label1.Text = updatedstatus.ToString();
                 string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
                 SqlConnection con = new SqlConnection(cs);
                 con.Open();
@@ -421,6 +365,10 @@ namespace WorkerExitPass
                 }
 
                 con.Close();
+                mpePopUp.Show();
+                valid.Text = "You have successfully updated the status.";
+
+
             }
         }
 
