@@ -67,7 +67,8 @@
                         </div>
 
                             <div class="row">
-                                <div class="col-12">
+                                <asp:GridView class="table" ID="GridView1" runat="server"></asp:GridView>
+                               <%-- <div class="col-12">
                                     <asp:Label class="label" ID="showCompany" runat="server" Text="Name of Company" Visible="false"></asp:Label>
                                       <asp:DropDownCheckBoxes ID="showCompanyddl" runat="server" CssClass="dropdown" UseButtons="True" Visible="false">
        
@@ -76,7 +77,7 @@
                                                 <Style2 SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style2>
                                                 <Texts SelectBoxCaption="Select Company" />
                                      </asp:DropDownCheckBoxes>
-                                </div>
+                                </div>--%>
                             </div>
                         <div class="row">
                             <div class="col-12">

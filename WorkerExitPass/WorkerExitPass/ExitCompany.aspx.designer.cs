@@ -103,22 +103,13 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.Button SearchBtn;
         
         /// <summary>
-        /// showCompany control.
+        /// GridView1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label showCompany;
-        
-        /// <summary>
-        /// showCompanyddl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Saplin.Controls.DropDownCheckBoxes showCompanyddl;
+        protected global::System.Web.UI.WebControls.GridView GridView1;
         
         /// <summary>
         /// UpdateBtn control.

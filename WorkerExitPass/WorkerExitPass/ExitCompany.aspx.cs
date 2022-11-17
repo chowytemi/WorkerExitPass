@@ -134,12 +134,12 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            using (SqlCommand cmd = new SqlCommand("select distinct company from EmpList WHERE isActive = 1"))
+            using (SqlCommand cmd = new SqlCommand("select distinct Company from EmpList WHERE isActive = 1;"))
             {
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = con;
                 companyddl.DataSource = cmd.ExecuteReader();
-                companyddl.DataTextField = "company";
+                companyddl.DataTextField = "Company";
                 companyddl.DataBind();
                 con.Close();
             }
@@ -167,17 +167,20 @@ namespace WorkerExitPass
         protected void companyddl_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            int companyCount = 0;
+            //int companyCount = 0;
+            string company = "";
             for (int i = 0; i < companyddl.Items.Count; i++)
             {
                 if (companyddl.Items[i].Selected)
                 {
-                    companyCount++;
+                    //companyCount++;
+                    company = companyddl.Items[i].Value + ", ";
                     companyddl.SelectedItem.Selected = true;
 
                 }
             }
-            companyddl.Texts.SelectBoxCaption = companyCount + " selected";
+            //companyddl.Texts.SelectBoxCaption = companyCount + " selected";
+            companyddl.Texts.SelectBoxCaption = company;
         }
 
 
@@ -320,31 +323,44 @@ namespace WorkerExitPass
             con.Open();
 
             string employeeInput = lblFindEmpID.Text;
-            string sql = "select Company from exitCompany where EmpID = '" + employeeInput + "'";
+            string sql = "select EmpList.Employee_Name, exitCompany.Company, exitCompany.IsActive from EmpList, exitCompany where exitCompany.EmpID = '" + employeeInput + "' and exitCompany.EmpID = EmpList.EmpID";
             using (SqlCommand cmd = new SqlCommand(sql, con))
             {
-                SqlDataReader dr = cmd.ExecuteReader();
-                if (dr.HasRows)
+                using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                 {
-                    while (dr.Read())
+                    DataSet ds = new DataSet();
+                    sda.Fill(ds);
+                    DataTable dt = ds.Tables[0];
+                    if (dt.Rows.Count > 0)
                     {
-                        string company = dr[0].ToString();
-                        showCompanyddl.Texts.SelectBoxCaption = company;
-                        //BindDataSetDataCompany();
-                        showCompany.Visible = true;
-                        showCompanyddl.Visible = true;
-                        UpdateBtn.Visible = true;
+
+                        GridView1.DataSource = dt;
+                        GridView1.DataBind();
 
                     }
-                                    
-                } else
-                {
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                                "<script language='javascript'>alert('This Emp ID has not been added!');</script>");
-                    return;
-                }
-                
+                    //SqlDataReader dr = cmd.ExecuteReader();
+                    //if (dr.HasRows)
+                    //{
+                    //    while (dr.Read())
+                    //    {
+                    //        string company = dr[0].ToString();
+                    //        //showCompanyddl.Texts.SelectBoxCaption = company;
+                    //        //BindDataSetDataCompany();
+                    //        //showCompany.Visible = true;
+                    //        //showCompanyddl.Visible = true;
+                    //        UpdateBtn.Visible = true;
 
+                    //    }
+
+                     else
+                    {
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                    "<script language='javascript'>alert('This Emp ID has not been added!');</script>");
+                        return;
+                    }
+
+
+                }
             }
         }
 
