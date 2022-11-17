@@ -46,6 +46,7 @@
                                         <Style2 SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style2>
                                         <Texts SelectBoxCaption="Select Company" />
                              </asp:DropDownCheckBoxes>
+<%--                              <asp:Panel ID="pnlDropDownList" runat="server"></asp:Panel>--%>
                              </div>
                         </div>
                         <div class="row">
