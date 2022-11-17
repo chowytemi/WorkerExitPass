@@ -60,7 +60,7 @@
                             <div class="col">
                              <asp:Label class="label" runat="server" Text="Employee ID"></asp:Label>
                                 <div class="row1">
-                                 <asp:TextBox class="input" ID="lblFindEmpID" runat="server"></asp:TextBox>
+                                 <asp:TextBox class="input" ID="lblFindEmpID" runat="server" OnTextChanged="lblFindEmpID_TextChanged"></asp:TextBox>
                                  <asp:Button ID="SearchBtn" runat="server" Text="Search" OnClick="SearchBtn_Click"/>
                                 </div>
                             </div>
@@ -76,12 +76,13 @@
                                 <div class="col">
                                 <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnRowCommand="GridView1_RowCommand" DataKeyNames="Company,IsActive">
                                     <Columns>
+
                                         <asp:BoundField DataField="Company" HeaderText="Company" />
                                         <asp:BoundField DataField="IsActive" HeaderText="Status" />
                                         <asp:TemplateField>
                                             <HeaderTemplate>Update Status</HeaderTemplate>
                                             <ItemTemplate>
-                                                <asp:Button CssClass="btnStatus" ID="btnStatus" CommandName="Update" runat="server" />
+                                                <asp:Button CssClass="btnStatus" ID="btnStatus" CommandName="UpdateItem" runat="server" />
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                     </Columns>
@@ -111,5 +112,6 @@
             </div>
         </div>
     </form>
+    <asp:Label ID="Label1" runat="server"></asp:Label>
 </body>
 </html>

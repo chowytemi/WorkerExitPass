@@ -256,36 +256,36 @@ namespace WorkerExitPass
 
         protected void CreateNew()
         {
-            //string empID = Session["empID"].ToString();
-            //Session["empID"] = empID;
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
 
-            //string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //SqlConnection appcon = new SqlConnection(connectionstring);
-            //appcon.Open();
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
 
-            //string employeeInput = lblEmpID.ToString();
+            string employeeInput = lblEmpID.Text;
 
-            //for (int i = 0; i < companyddl.Items.Count; i++)
-            //{
-            //    if (companyddl.Items[i].Selected)
-            //    {
-            //        string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+            for (int i = 0; i < companyddl.Items.Count; i++)
+            {
+                if (companyddl.Items[i].Selected)
+                {
+                    string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
 
-            //        using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
-            //        {
+                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                    {
 
 
-            //            insert.CommandType = CommandType.Text;
-            //            insert.Parameters.AddWithValue("@createdby", empID);
-            //            insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-            //            insert.Parameters.AddWithValue("@employee", employeeInput);
-            //            insert.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companyddl.ToString()));
+                        insert.CommandType = CommandType.Text;
+                        insert.Parameters.AddWithValue("@createdby", empID);
+                        insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                        insert.Parameters.AddWithValue("@employee", employeeInput);
+                        insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
 
-            //            insert.ExecuteNonQuery();
-            //        }
-            //    }
-            //}
-            //appcon.Close();
+                        insert.ExecuteNonQuery();
+                    }
+                }
+            }
+            appcon.Close();
 
 
 
@@ -325,11 +325,7 @@ namespace WorkerExitPass
             //}
             //appcon.Close();
         }
-
-        protected void GetList()
-        {
-
-        }
+        
         protected void GetCompanyByEmpID()
         {
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
@@ -459,7 +455,7 @@ namespace WorkerExitPass
 
         protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "Update")
+            if (e.CommandName == "UpdateItem")
             {
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
@@ -470,31 +466,36 @@ namespace WorkerExitPass
                 //int index = Convert.ToInt32(e.CommandArgument);
                 //GridViewRow row = GridView1.Rows[index];
 
-                int countid;
-                int.TryParse(e.CommandArgument.ToString(), out countid);
+                GridViewRow gvr = (GridViewRow)((Control)e.CommandSource).NamingContainer;
+                int rowIndex = gvr.RowIndex;
+
+                //int countid;
+                //int.TryParse(e.CommandArgument.ToString(), out countid);
 
                 //int rowIndex = Convert.ToInt32(e.CommandArgument);
-                string company = GridView1.DataKeys[countid].Values["Company"].ToString();
-                string status = GridView1.DataKeys[countid].Values["IsActive"].ToString();
+                string company = GridView1.DataKeys[rowIndex].Values["Company"].ToString();
+                string status = GridView1.DataKeys[rowIndex].Values["IsActive"].ToString();
+                int updatedstatus = 2;
 
                 //string company = row.Cells[0].Text;
                 //string status = row.Cells[1].Text;
-                //if (status == "Active")
-                //{
-                //    status = "1";
-                //}
-                //else if (status == "Inactive")
-                //{
-                //    status = "0";
-                //}
-
+                if (status == "True")
+                {
+                    updatedstatus = 0;
+                }
+                else if (status == "False")
+                {
+                    updatedstatus = 1;
+                }
+                Label1.Text = updatedstatus.ToString();
                 string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
                 SqlConnection con = new SqlConnection(cs);
                 con.Open();
 
-                string employeeInput = lblEmpID.Text;
+                string employeeInput = lblFindEmpID.Text;
 
-                string sqlupdatequery = "update exitCompany set IsActive = @isactive, UpdateBy = @updateby, UpdateDate = @updatedate where EmpID = @employee AND Company = @company";
+                //string sqlupdatequery = "update exitCompany set IsActive = @updatedstatus, UpdateBy = @updateby, UpdateDate = @updatedate where EmpID = @employee AND Company = @company";
+                string sqlupdatequery = "update exitCompany set IsActive = '" + updatedstatus + "', UpdateBy = '" + empID + "', UpdateDate = '" + DateTime.Now + "' where EmpID = '" + employeeInput + "' AND Company = '" + company +"';";
 
                 using (SqlCommand update = new SqlCommand(sqlupdatequery, con))
                 {
@@ -502,7 +503,7 @@ namespace WorkerExitPass
                     update.Parameters.AddWithValue("@updateby", empID);
                     update.Parameters.AddWithValue("@updatedate", DateTime.Now.ToString());
                     update.Parameters.AddWithValue("@employee", employeeInput);
-                    update.Parameters.AddWithValue("@isactive", status);
+                    update.Parameters.AddWithValue("@updatedstatus", updatedstatus);
                     update.Parameters.AddWithValue("@company", company);
 
                     update.ExecuteNonQuery();
@@ -513,5 +514,9 @@ namespace WorkerExitPass
             }
         }
 
+        protected void lblFindEmpID_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
