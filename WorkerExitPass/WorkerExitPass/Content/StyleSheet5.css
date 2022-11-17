@@ -53,12 +53,12 @@ col {
     border-style: none;
     color: white;
     height: 3.5em;
-    width: 15%;
+    /*width: 15%;*/
     font-family: 'Rubik', sans-serif;
     font-size: 1.25em;
     width: 100%;
     background-color: #004B7A;
-    margin-bottom: 1em;
+    margin-bottom: 1.25em;
 }
 .activeBtn {
     display: inline-block;
@@ -103,6 +103,37 @@ col {
     border: 0.0625em solid #EFF0F6 !important;
 }
 
+#lblFindEmpID {
+    height: 2.5em;
+    border-radius: 0.3125em;
+    border: 0.0625em solid #EFF0F6;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    text-indent: 0.5em;
+    box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25);
+    display: flex;
+    overflow: auto;
+    margin-bottom: 1.25em;
+    width: 50%;
+}
+
+.row1 {
+    display: flex;
+    width: 100%;
+    margin-top: 1em;
+    justify-content: space-between;
+}
+#SearchBtn {
+    height: 2.5em;
+    border-radius: 0.3125em;
+    border-style: none;
+    color: white;
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+    width: 30%;
+    background-color: #004B7A;
+    margin-bottom: 1.25em;
+}
 @media only screen and (max-width: 600px) {
     .container {
         height: 100%;

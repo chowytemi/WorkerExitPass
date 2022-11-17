@@ -4,8 +4,6 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -39,17 +37,21 @@ namespace WorkerExitPass
         }
         protected void createBtn_Click(object sender, EventArgs e)
         {
-            updateBtn.CssClass = updateBtn.CssClass.Replace("activeBtn", "inactiveBtn");
+            updateDetailsBtn.CssClass = updateDetailsBtn.CssClass.Replace("activeBtn", "inactiveBtn");
             createBtn.CssClass = createBtn.CssClass.Replace("inactiveBtn", "activeBtn");
+            Panel1.Visible = true;
+            Panel2.Visible = false;
 
             CreateNew();
         }
 
-        protected void updateBtn_Click(object sender, EventArgs e)
+        protected void updateDetailsBtn_Click(object sender, EventArgs e)
         {
 
             createBtn.CssClass = createBtn.CssClass.Replace("activeBtn", "inactiveBtn");
-            updateBtn.CssClass = updateBtn.CssClass.Replace("inactiveBtn", "activeBtn");
+            updateDetailsBtn.CssClass = updateDetailsBtn.CssClass.Replace("inactiveBtn", "activeBtn");
+            Panel1.Visible = false;
+            Panel2.Visible = true;
 
         }
         protected void companyddl_SelectedIndexChanged(object sender, EventArgs e)
@@ -194,6 +196,18 @@ namespace WorkerExitPass
 
         protected void GetList()
         {
+
+        }
+
+        protected void SearchBtn_Click(object sender, EventArgs e)
+        {
+            //string empIDInput = lblFindEmpID.Text;
+            //if (empIDInput != "")
+            //{
+                showCompany.Visible = true;
+                showCompanyddl.Visible = true;
+                UpdateBtn.Visible = true;
+            //}
 
         }
     }
