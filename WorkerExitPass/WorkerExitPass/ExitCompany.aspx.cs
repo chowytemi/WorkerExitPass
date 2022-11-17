@@ -125,12 +125,25 @@ namespace WorkerExitPass
         //}
         protected void Page_Load(object sender, EventArgs e)
         {
-          
-            BindDataSetDataCompany();
+
+            if (!IsPostBack)
+            {
+                if ((Request.QueryString["exitcompany"] != null))
+                {
+
+                    string empID = Request.QueryString["exitcompany"];
+                    Session["empID"] = empID;
+
+                }
+                BindDataSetDataCompany();
+            }
+
         }
 
         protected void BindDataSetDataCompany()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
@@ -167,20 +180,21 @@ namespace WorkerExitPass
         protected void companyddl_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            //int companyCount = 0;
-            string company = "";
+            int companyCount = 0;
+            //string company = "";
             for (int i = 0; i < companyddl.Items.Count; i++)
             {
                 if (companyddl.Items[i].Selected)
                 {
-                    //companyCount++;
-                    company = companyddl.Items[i].Value + ", ";
+                    companyCount++;
                     companyddl.SelectedItem.Selected = true;
+                    //company += companyddl.Items[i].Value + ", ";
+                    //companyddl.SelectedItem.Selected = true;
 
                 }
             }
-            //companyddl.Texts.SelectBoxCaption = companyCount + " selected";
-            companyddl.Texts.SelectBoxCaption = company;
+            companyddl.Texts.SelectBoxCaption = companyCount + " selected";
+            //companyddl.Texts.SelectBoxCaption = company;
         }
 
 
@@ -323,45 +337,47 @@ namespace WorkerExitPass
             con.Open();
 
             string employeeInput = lblFindEmpID.Text;
-            string sql = "select EmpList.Employee_Name, exitCompany.Company, exitCompany.IsActive from EmpList, exitCompany where exitCompany.EmpID = '" + employeeInput + "' and exitCompany.EmpID = EmpList.EmpID";
-            using (SqlCommand cmd = new SqlCommand(sql, con))
+
+            string empNameSql = "select distinct EmpList.Employee_Name from EmpList, exitCompany where Emplist.EmpID = exitCompany.EmpID and exitCompany.EmpID = '" + employeeInput + "'";
+            using (SqlCommand cmd = new SqlCommand(empNameSql, con))
             {
-                using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                while (dr.Read())
                 {
-                    DataSet ds = new DataSet();
-                    sda.Fill(ds);
-                    DataTable dt = ds.Tables[0];
-                    if (dt.Rows.Count > 0)
+                    string empName = dr[0].ToString();
+                    lblEmpName.Visible = true;
+                    lblDataEmpName.Visible = true;
+                    lblDataEmpName.Text = empName;
+                }
+                string sql = "select Company, IsActive from exitCompany where EmpID = '" + employeeInput + "'";
+                using (SqlCommand cmd2 = new SqlCommand(sql, con))
+                {
+                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd2))
                     {
+                        DataSet ds = new DataSet();
+                        sda.Fill(ds);
+                        DataTable dt = ds.Tables[0];
+                        if (dt.Rows.Count > 0)
+                        {
 
-                        GridView1.DataSource = dt;
-                        GridView1.DataBind();
+                            GridView1.DataSource = dt;
+                            GridView1.DataBind();
+
+                        }
+
+                        else
+                        {
+                            Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                        "<script language='javascript'>alert('This Emp ID has not been added!');</script>");
+                            return;
+                        }
+
 
                     }
-                    //SqlDataReader dr = cmd.ExecuteReader();
-                    //if (dr.HasRows)
-                    //{
-                    //    while (dr.Read())
-                    //    {
-                    //        string company = dr[0].ToString();
-                    //        //showCompanyddl.Texts.SelectBoxCaption = company;
-                    //        //BindDataSetDataCompany();
-                    //        //showCompany.Visible = true;
-                    //        //showCompanyddl.Visible = true;
-                    //        UpdateBtn.Visible = true;
-
-                    //    }
-
-                     else
-                    {
-                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                                    "<script language='javascript'>alert('This Emp ID has not been added!');</script>");
-                        return;
-                    }
-
-
                 }
             }
+
         }
 
         protected void SearchBtn_Click(object sender, EventArgs e)
@@ -379,5 +395,123 @@ namespace WorkerExitPass
             }
 
         }
+        protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            Button btnStatus = e.Row.FindControl("btnStatus") as Button;
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                if ((e.Row.Cells[1].Text) == "True")
+                {
+                    e.Row.Cells[1].Text = "Active";
+                    btnStatus.Text = "Deactivate";
+
+                }
+                else if ((e.Row.Cells[1].Text) == "False")
+                {
+
+                    e.Row.Cells[1].Text = "Inactive";
+                    btnStatus.Text = "Activate";
+
+                }
+            }
+
+        }
+        //protected void GridView1_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    string empID = Session["empID"].ToString();
+        //    Session["empID"] = empID;
+
+        //    string company = GridView1.SelectedRow.Cells[0].Text;
+        //    string status = GridView1.SelectedRow.Cells[1].Text;
+        //    if (status == "Active")
+        //    {
+        //        status = "1";
+        //    }
+        //    else if (status == "Inactive")
+        //    {
+        //        status = "0";
+        //    }
+
+        //    string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+        //    SqlConnection con = new SqlConnection(cs);
+        //    con.Open();
+
+        //    string employeeInput = lblEmpID.Text;
+
+        //    string sqlupdatequery = "update exitCompany set IsActive = @isactive, UpdateBy = @updateby, UpdateDate = @updatedate where EmpID = @employee AND Company = @company";
+
+        //    using (SqlCommand update = new SqlCommand(sqlupdatequery, con))
+        //    {
+        //        update.CommandType = CommandType.Text;
+        //        update.Parameters.AddWithValue("@updateby", empID);
+        //        update.Parameters.AddWithValue("@updatedate", DateTime.Now.ToString());
+        //        update.Parameters.AddWithValue("@employee", employeeInput);
+        //        update.Parameters.AddWithValue("@isactive", status);
+        //        update.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companyddl.ToString()));
+
+        //        update.ExecuteNonQuery();
+
+        //    }
+
+        //    con.Close();
+
+        //}
+
+        protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Update")
+            {
+                string empID = Session["empID"].ToString();
+                Session["empID"] = empID;
+
+                //GridViewRow selected = (GridViewRow)((Control)(e.CommandSource)).Parent.Parent;
+                //int index = selected.RowIndex;
+
+                //int index = Convert.ToInt32(e.CommandArgument);
+                //GridViewRow row = GridView1.Rows[index];
+
+                int countid;
+                int.TryParse(e.CommandArgument.ToString(), out countid);
+
+                //int rowIndex = Convert.ToInt32(e.CommandArgument);
+                string company = GridView1.DataKeys[countid].Values["Company"].ToString();
+                string status = GridView1.DataKeys[countid].Values["IsActive"].ToString();
+
+                //string company = row.Cells[0].Text;
+                //string status = row.Cells[1].Text;
+                //if (status == "Active")
+                //{
+                //    status = "1";
+                //}
+                //else if (status == "Inactive")
+                //{
+                //    status = "0";
+                //}
+
+                string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+                SqlConnection con = new SqlConnection(cs);
+                con.Open();
+
+                string employeeInput = lblEmpID.Text;
+
+                string sqlupdatequery = "update exitCompany set IsActive = @isactive, UpdateBy = @updateby, UpdateDate = @updatedate where EmpID = @employee AND Company = @company";
+
+                using (SqlCommand update = new SqlCommand(sqlupdatequery, con))
+                {
+                    update.CommandType = CommandType.Text;
+                    update.Parameters.AddWithValue("@updateby", empID);
+                    update.Parameters.AddWithValue("@updatedate", DateTime.Now.ToString());
+                    update.Parameters.AddWithValue("@employee", employeeInput);
+                    update.Parameters.AddWithValue("@isactive", status);
+                    update.Parameters.AddWithValue("@company", company);
+
+                    update.ExecuteNonQuery();
+
+                }
+
+                con.Close();
+            }
+        }
+
     }
 }

@@ -57,7 +57,7 @@
                     </asp:Panel>
                     <asp:Panel ID="Panel2" runat="server" Visible="false">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col">
                              <asp:Label class="label" runat="server" Text="Employee ID"></asp:Label>
                                 <div class="row1">
                                  <asp:TextBox class="input" ID="lblFindEmpID" runat="server"></asp:TextBox>
@@ -67,7 +67,26 @@
                         </div>
 
                             <div class="row">
-                                <asp:GridView class="table" ID="GridView1" runat="server"></asp:GridView>
+                                <div class="col">
+                                <asp:Label class="label" ID="lblEmpName" runat="server" Text="Employee Name" Visible="false"></asp:Label>
+                                    <asp:Label class="lblData" ID="lblDataEmpName" runat="server"></asp:Label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                <asp:GridView ID="GridView1" GridLines="None" CssClass="table" HeaderStyle-CssClass="thead" RowStyle-CssClass="tr" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridView1_RowDataBound" OnRowCommand="GridView1_RowCommand" DataKeyNames="Company,IsActive">
+                                    <Columns>
+                                        <asp:BoundField DataField="Company" HeaderText="Company" />
+                                        <asp:BoundField DataField="IsActive" HeaderText="Status" />
+                                        <asp:TemplateField>
+                                            <HeaderTemplate>Update Status</HeaderTemplate>
+                                            <ItemTemplate>
+                                                <asp:Button CssClass="btnStatus" ID="btnStatus" CommandName="Update" runat="server" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+                                </div>
                                <%-- <div class="col-12">
                                     <asp:Label class="label" ID="showCompany" runat="server" Text="Name of Company" Visible="false"></asp:Label>
                                       <asp:DropDownCheckBoxes ID="showCompanyddl" runat="server" CssClass="dropdown" UseButtons="True" Visible="false">
@@ -79,11 +98,11 @@
                                      </asp:DropDownCheckBoxes>
                                 </div>--%>
                             </div>
-                        <div class="row">
+<%--                        <div class="row">
                             <div class="col-12">
                             <asp:Button class="button" ID="UpdateBtn" runat="server" Text="Update" Visible="false"/>
                             </div>
-                        </div>
+                        </div>--%>
                              
                     </asp:Panel>
                 </div>
