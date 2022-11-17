@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col-12">
                          <asp:Label class="label" ID="label" runat="server" Text="Employee ID"></asp:Label>
-                         <input class="input" id="lblEmpID" type="text"/>
+                         <input class="input" id="lblEmpID" type="text" runat="server"/>
                         </div>
                     </div>
                     <div class="row">

@@ -26,7 +26,7 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            using (SqlCommand cmd = new SqlCommand("select distinct company from EmpList"))
+            using (SqlCommand cmd = new SqlCommand("select distinct company from EmpList WHERE isActive = 1"))
             {
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = con;
@@ -41,6 +41,8 @@ namespace WorkerExitPass
         {
             updateBtn.CssClass = updateBtn.CssClass.Replace("activeBtn", "inactiveBtn");
             createBtn.CssClass = createBtn.CssClass.Replace("inactiveBtn", "activeBtn");
+
+            CreateNew();
         }
 
         protected void updateBtn_Click(object sender, EventArgs e)
@@ -120,12 +122,12 @@ namespace WorkerExitPass
         }
         protected void CreateNew()
         {
-            //string empID = Session["empID"].ToString();
-            //Session["empID"] = empID;
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
 
-            //string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //SqlConnection appcon = new SqlConnection(connectionstring);
-            //appcon.Open();
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
 
             string employeeInput = lblEmpID.ToString();
 
