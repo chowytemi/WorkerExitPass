@@ -91,24 +91,24 @@ namespace WorkerExitPass
 
         protected void ClickSubmit()
         {
-            //string empID = Session["empID"].ToString();
-            //Session["empID"] = empID;
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
 
-            //var currentdate = DateTime.Now;
+            var currentdate = DateTime.Now;
 
-            //string employeeInput = .Text;
-            //string companyInput = .Text;
+            string employeeInput = lblEmpID.Text;
+            string companyInput = companyddl.Text;
 
-            //if (employeeInput != "" || companyInput != "")
-            //{
-            //    CheckDuplicate();
-            //}
-            //else
-            //{
-            //    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-            //                    "<script language='javascript'>alert('Please fill in the fields required');</script>");
-            //    return;
-            //}
+            if (employeeInput != "" || companyInput != "")
+            {
+                CheckDuplicate();
+            }
+            else
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Please fill in the fields required');</script>");
+                return;
+            }
         }
 
         protected void CheckDuplicate()
@@ -142,18 +142,8 @@ namespace WorkerExitPass
         }
         protected void submitBtn_Click(object sender, EventArgs e)
         {
-            string employeeInput = lblEmpID.Text;
-            string companyInput = companyddl.Text;
 
-            if (employeeInput == "" && companyInput == "")
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                                "<script language='javascript'>alert('Please fill in the required fields');</script>");
-                return;
-            } else
-            {
-                CreateNew();
-            } 
+            ClickSubmit();
             
         }
 
@@ -233,7 +223,7 @@ namespace WorkerExitPass
             //appcon.Close();
         }
         
-        protected void GetCompanyByEmpID()
+        protected void GetEmpNameByEmpID()
         {
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
@@ -253,42 +243,48 @@ namespace WorkerExitPass
                     lblDataEmpName.Visible = true;
                     lblDataEmpName.Text = empName;
                 }
-                string sql = "select Company, IsActive from exitCompany where EmpID = '" + employeeInput + "'";
-                using (SqlCommand cmd2 = new SqlCommand(sql, con))
-                {
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd2))
-                    {
-                        DataSet ds = new DataSet();
-                        sda.Fill(ds);
-                        DataTable dt = ds.Tables[0];
-                        if (dt.Rows.Count > 0)
-                        {
-
-                            GridView1.DataSource = dt;
-                            GridView1.DataBind();
-
-                        }
-
-                        else
-                        {
-                            Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                                        "<script language='javascript'>alert('This Emp ID has not been added!');</script>");
-                            return;
-                        }
+                GetCompany();
 
 
-                    }
-                }
             }
 
         }
+        private DataSet GetCompany()
+        {
+            string employeeInput = lblFindEmpID.Text;
+
+            string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection con = new SqlConnection(cs);
+            con.Open();
+            string sql = "select Company, IsActive from exitCompany where EmpID = '" + employeeInput + "'";
+            using (SqlCommand cmd2 = new SqlCommand(sql, con))
+            {
+                using (SqlDataAdapter sda = new SqlDataAdapter(cmd2))
+                {
+                    DataSet ds = new DataSet();
+                    sda.Fill(ds);
+                    DataTable dt = ds.Tables[0];
+                    if (dt.Rows.Count > 0)
+                    {
+
+                        GridView1.DataSource = dt;
+                        GridView1.DataBind();
+
+                    }
+
+                    return ds;
+
+                }
+            }
+        }
+
 
         protected void SearchBtn_Click(object sender, EventArgs e)
         {
             string empIDInput = lblFindEmpID.Text;
             if (empIDInput != "")
             {
-                GetCompanyByEmpID();
+                GetEmpNameByEmpID();
             }
             else
             {
@@ -349,7 +345,7 @@ namespace WorkerExitPass
                 string employeeInput = lblFindEmpID.Text;
 
                 //string sqlupdatequery = "update exitCompany set IsActive = @updatedstatus, UpdateBy = @updateby, UpdateDate = @updatedate where EmpID = @employee AND Company = @company";
-                string sqlupdatequery = "update exitCompany set IsActive = '" + updatedstatus + "', UpdateBy = '" + empID + "', UpdateDate = '" + DateTime.Now + "' where EmpID = '" + employeeInput + "' AND Company = '" + company +"';";
+                string sqlupdatequery = "update exitCompany set IsActive = '" + updatedstatus + "', UpdateBy = '" + empID + "', UpdateDate = '" + DateTime.Now + "' where EmpID = '" + employeeInput + "' AND Company = '" + company + "';";
 
                 using (SqlCommand update = new SqlCommand(sqlupdatequery, con))
                 {
@@ -365,6 +361,7 @@ namespace WorkerExitPass
                 }
 
                 con.Close();
+                GetCompany();
                 mpePopUp.Show();
                 valid.Text = "You have successfully updated the status.";
 
