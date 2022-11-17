@@ -87,6 +87,32 @@ namespace WorkerExitPass
             //companyddl.Texts.SelectBoxCaption = company;
         }
 
+        protected void submitBtn_Click(object sender, EventArgs e)
+        {
+
+            //ClickSubmit();
+            //CreateNew();
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
+            var currentdate = DateTime.Now;
+
+            string employeeInput = lblEmpID.Text;
+            string companyInput = companyddl.Text;
+
+            if (employeeInput != "" || companyInput != "")
+            {
+                CheckDuplicate();
+                //CreateNew();
+            }
+            else
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                "<script language='javascript'>alert('Please fill in the fields required');</script>");
+                return;
+            }
+        }
+
         protected void CheckDuplicate()
         {
             string empID = Session["empID"].ToString();
@@ -106,7 +132,7 @@ namespace WorkerExitPass
                 {
 
                     //check for duplicate
-                    string sqlquery1 = "select EmpID, Company from exitCompany where EmpID = '" + employeeInput + "' AND Company = '" + companyddl.Items[i].Selected + "' AND IsActive = 1;";
+                    string sqlquery1 = "select EmpID, Company from exitCompany where EmpID = '" + employeeInput + "' AND Company = '" + companyddl.Items[i].Text + "' AND IsActive = 1;";
 
                     SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
                     SqlDataReader dr1 = cmd1.ExecuteReader();
@@ -114,6 +140,7 @@ namespace WorkerExitPass
                     if (!dr1.HasRows)
                     {
                         CreateNew();
+                        return;
                     }
                     else
                     {
@@ -127,39 +154,17 @@ namespace WorkerExitPass
 
             return;
         }
-        protected void submitBtn_Click(object sender, EventArgs e)
-        {
-
-            //ClickSubmit();
-            //CreateNew();
-            string empID = Session["empID"].ToString();
-            Session["empID"] = empID;
-
-            var currentdate = DateTime.Now;
-
-            string employeeInput = lblEmpID.Text;
-            string companyInput = companyddl.Text;
-
-            if (employeeInput != "" || companyInput != "")
-            {
-                CheckDuplicate();
-            }
-            else
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                                "<script language='javascript'>alert('Please fill in the fields required');</script>");
-                return;
-            }
-        }
+        
 
         protected void CreateNew()
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-
+            
             string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection appcon = new SqlConnection(connectionstring);
             appcon.Open();
+            
 
             string employeeInput = lblEmpID.Text;
             string selectedCompany = "";
@@ -168,17 +173,16 @@ namespace WorkerExitPass
                 if (companyddl.Items[i].Selected)
                 {
                     string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+                    
 
                     using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                     {
-
-
                         insert.CommandType = CommandType.Text;
                         insert.Parameters.AddWithValue("@createdby", empID);
                         insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
                         insert.Parameters.AddWithValue("@employee", employeeInput);
                         insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
-
+                        
                         insert.ExecuteNonQuery();
                     }
                     selectedCompany += companyddl.Items[i].Value + ",";
@@ -188,11 +192,9 @@ namespace WorkerExitPass
             mpePopUp.Show();
             string companyInput = selectedCompany.TrimEnd(',');
             valid.Text = "You have successfully assign employee ID " + employeeInput + " to " + companyInput + ".";
-
-
-
+            
         }
-        
+
         protected void GetEmpNameByEmpID()
         {
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
