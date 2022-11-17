@@ -87,9 +87,51 @@ namespace WorkerExitPass
             //companyddl.Texts.SelectBoxCaption = company;
         }
 
-
-        protected void ClickSubmit()
+        protected void CheckDuplicate()
         {
+            string empID = Session["empID"].ToString();
+            Session["empID"] = empID;
+
+            string employeeInput = lblEmpID.Text;
+
+            //Connect to database
+
+            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            SqlConnection appcon = new SqlConnection(connectionstring);
+            appcon.Open();
+
+            for (int i = 0; i < companyddl.Items.Count; i++)
+            {
+                if (companyddl.Items[i].Selected)
+                {
+
+                    //check for duplicate
+                    string sqlquery1 = "select EmpID, Company from exitCompany where EmpID = '" + employeeInput + "' AND Company = '" + companyddl.Items[i].Selected + "' AND IsActive = 1;";
+
+                    SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
+                    SqlDataReader dr1 = cmd1.ExecuteReader();
+
+                    if (!dr1.HasRows)
+                    {
+                        CreateNew();
+                    }
+                    else
+                    {
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                                        "<script language='javascript'>alert('Duplicate Submission');</script>");
+                        return;
+                    }
+                }
+            }
+
+
+            return;
+        }
+        protected void submitBtn_Click(object sender, EventArgs e)
+        {
+
+            //ClickSubmit();
+            //CreateNew();
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
@@ -110,42 +152,6 @@ namespace WorkerExitPass
             }
         }
 
-        protected void CheckDuplicate()
-        {
-            //string empID = Session["empID"].ToString();
-            //Session["empID"] = empID;
-
-            ////Connect to database
-
-            //string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //SqlConnection appcon = new SqlConnection(connectionstring);
-            //appcon.Open();
-
-            ////check for duplicate
-            //string sqlquery1 = "select exitID from exitapproval where  CAST(createddate AS Date ) = CAST(GETDATE() AS Date ) and empID = '" + empID + "' and exittime = '" + dateInput + "';";
-
-            //SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
-            //SqlDataReader dr1 = cmd1.ExecuteReader();
-
-            //if (!dr1.HasRows)
-            //{
-            //    CreateNew();
-            //}
-            //else
-            //{
-            //    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-            //                    "<script language='javascript'>alert('Duplicate Submission');</script>");
-            //    return;
-            //}
-            //return;
-        }
-        protected void submitBtn_Click(object sender, EventArgs e)
-        {
-
-            //ClickSubmit();
-            CreateNew();
-        }
-
         protected void CreateNew()
         {
             string empID = Session["empID"].ToString();
@@ -161,20 +167,20 @@ namespace WorkerExitPass
             {
                 if (companyddl.Items[i].Selected)
                 {
-                    //string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+                    string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
 
-                    //using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
-                    //{
+                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                    {
 
 
-                    //    insert.CommandType = CommandType.Text;
-                    //    insert.Parameters.AddWithValue("@createdby", empID);
-                    //    insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
-                    //    insert.Parameters.AddWithValue("@employee", employeeInput);
-                    //    insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
+                        insert.CommandType = CommandType.Text;
+                        insert.Parameters.AddWithValue("@createdby", empID);
+                        insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
+                        insert.Parameters.AddWithValue("@employee", employeeInput);
+                        insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
 
-                    //    insert.ExecuteNonQuery();
-                    //}
+                        insert.ExecuteNonQuery();
+                    }
                     selectedCompany += companyddl.Items[i].Value + ",";
                 }
             }
@@ -185,41 +191,6 @@ namespace WorkerExitPass
 
 
 
-        }
-
-        protected void UpdateCompany()
-        {
-            //string empID = Session["empID"].ToString();
-            //Session["empID"] = empID;
-
-            //string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            //SqlConnection appcon = new SqlConnection(connectionstring);
-            //appcon.Open();
-
-            //string employeeInput = lblEmpID.ToString();
-
-            //for (int i = 0; i < companyddl.Items.Count; i++)
-            //{
-            //    if (companyddl.Items[i].Selected)
-            //    {
-            //        string sqlupdatequery = "update exitCompany set Company = @company, IsActive = @isactive, UpdateBy = @updateby, UpdateDate = @updatedate where ID = ''";
-
-            //        using (SqlCommand update = new SqlCommand(sqlupdatequery, appcon))
-            //        {
-
-
-            //            update.CommandType = CommandType.Text;
-            //            update.Parameters.AddWithValue("@updateby", empID);
-            //            update.Parameters.AddWithValue("@updatedate", DateTime.Now.ToString());
-            //            update.Parameters.AddWithValue("@employee", employeeInput);
-            //            update.Parameters.AddWithValue("@isactive", isactive);
-            //            update.Parameters.AddWithValue("@company", HttpUtility.HtmlDecode(companyddl.ToString()));
-
-            //            update.ExecuteNonQuery();
-            //        }
-            //    }
-            //}
-            //appcon.Close();
         }
         
         protected void GetEmpNameByEmpID()
