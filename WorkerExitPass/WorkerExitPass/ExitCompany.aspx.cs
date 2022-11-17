@@ -173,16 +173,10 @@ namespace WorkerExitPass
             {
                 if (companyddl.Items[i].Selected)
                 {
-                    //string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
+                    string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
 
-            //for (int i = 0; i < companyddl.Items.Count; i++)
-            //{
-            //    if (companyddl.Items[i].Selected)
-            //    {
-            //        string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
-
-            //        using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
-            //        {
+                    using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
+                    {
 
 
                         insert.CommandType = CommandType.Text;
@@ -191,8 +185,8 @@ namespace WorkerExitPass
                         insert.Parameters.AddWithValue("@employee", employeeInput);
                         insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
 
-                    //    insert.ExecuteNonQuery();
-                    //}
+                        insert.ExecuteNonQuery();
+                    }
                     selectedCompany += companyddl.Items[i].Value + ",";
                 }
             }
@@ -381,7 +375,6 @@ namespace WorkerExitPass
                 //string company = GridView1.DataKeys[countid].Values["Company"].ToString();
                 //string status = GridView1.DataKeys[countid].Values["IsActive"].ToString();
 
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
 
                 GridViewRow gvr = (GridViewRow)((Control)e.CommandSource).NamingContainer;
                 int rowIndex = gvr.RowIndex;
