@@ -32,6 +32,57 @@ namespace WorkerExitPass
 
         }
 
+        protected void CheckAccess()
+        {
+            //string empID = Session["empID"].ToString();
+            //Session["empID"] = empID;
+            //string Safety = ConfigurationManager.AppSettings["Safety"].ToString();
+            //string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
+            //SqlConnection con = new SqlConnection(cs);
+            //con.Open();
+
+
+            //string sqlcheck = "select AC.menu  from UserAccess as UA, Access as AC, EmpList as emp where UA.accessid = AC.ID " +
+            //    "and emp.ID = UA.EmpID and UA.IsActive = 1 " +
+            //    "and emp.EmpID = '" + empID + "'  and emp.isactive = 1   and AC.Application = 'Service Request' and ac.menu = 'btnexit'";
+
+            //SqlCommand cmdline = new SqlCommand(sqlcheck, con);
+            //SqlDataReader drcheck = cmdline.ExecuteReader();
+            //if (drcheck.HasRows)
+            //{
+            //    string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name " +
+            //        "from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid " +
+            //        "and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + Safety + "' and EmpList.EmpID = '" + empID + "' ; ";
+            //    SqlCommand cmd = new SqlCommand(sql, con);
+            //    SqlDataReader dr = cmd.ExecuteReader();
+            //    if (dr.HasRows)
+            //    {
+            //        BindDataSetDataCompany();
+            //    }
+            //    else
+            //    {
+
+            //        Response.Redirect("http://eservices.dyna-mac.com/error");
+
+
+            //    }
+
+            //    dr.Close();
+            //}
+            //else
+            //{
+
+            //    Response.Redirect("http://eservices.dyna-mac.com/error");
+
+
+            //}
+
+            //drcheck.Close();
+            //con.Close();
+
+
+        }
+
         protected void BindDataSetDataCompany()
         {
             string empID = Session["empID"].ToString();
@@ -89,9 +140,7 @@ namespace WorkerExitPass
 
         protected void submitBtn_Click(object sender, EventArgs e)
         {
-
-            //ClickSubmit();
-            //CreateNew();
+            
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
