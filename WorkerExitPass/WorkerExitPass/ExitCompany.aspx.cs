@@ -204,8 +204,6 @@ namespace WorkerExitPass
 
             string employeeInput = lblFindEmpID.Text;
 
-            string empExist = "select distinct EmpID from EmpList where IsActive = 1 and JobCode IN('WK', 'SUBCON') and EmpID = '" + employeeInput + "'";
-
             string empNameSql = "select distinct EmpList.Employee_Name from EmpList, exitCompany where Emplist.EmpID = exitCompany.EmpID and exitCompany.EmpID = '" + employeeInput + "'";
             using (SqlCommand cmd = new SqlCommand(empNameSql, con))
             {
