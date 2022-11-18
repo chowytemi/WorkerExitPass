@@ -106,31 +106,21 @@ namespace WorkerExitPass
                 companyIn = companyIn.TrimEnd(',');
                 getCompanyquery = "select distinct Company FROM EmpList WHERE isActive = 1 AND EmpList.Company NOT IN(" + companyIn + ");";
 
-                using (SqlCommand cmd2 = new SqlCommand(getCompanyquery, con))
-                {
-                    cmd2.CommandType = CommandType.Text;
-                    cmd2.Connection = con;
-                    companyddl.DataSource = cmd2.ExecuteReader();
-                    companyddl.DataTextField = "Company";
-                    companyddl.DataBind();
-
-                }
             }
             else
             {
                 getCompanyquery = "select distinct Company FROM EmpList WHERE isActive = 1;";
 
-                using (SqlCommand cmd2 = new SqlCommand(getCompanyquery, con))
-                {
-                    cmd2.CommandType = CommandType.Text;
-                    cmd2.Connection = con;
-                    companyddl.DataSource = cmd2.ExecuteReader();
-                    companyddl.DataTextField = "Company";
-                    companyddl.DataBind();
-
-                }
             }
+            using (SqlCommand cmd2 = new SqlCommand(getCompanyquery, con))
+            {
+                cmd2.CommandType = CommandType.Text;
+                cmd2.Connection = con;
+                companyddl.DataSource = cmd2.ExecuteReader();
+                companyddl.DataTextField = "Company";
+                companyddl.DataBind();
 
+            }
 
 
             con.Close();

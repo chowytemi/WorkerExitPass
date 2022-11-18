@@ -31,6 +31,9 @@ h1, .label {
 
 .col-12 {
     width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .col {
     width: 70%;
@@ -46,7 +49,7 @@ h1, .label {
     display: flex;
     justify-content: center !important;
     overflow: auto;
-    margin-bottom: 1.25em;
+    /*margin-bottom: 1.25em;*/
     width: 100%;
 }
 
@@ -62,7 +65,12 @@ h1, .label {
     background-color: #004B7A;
     margin-bottom: 1.25em;
 }
-
+#submitBtn {
+    width: 50%;
+    /*display: flex;
+    justify-content: center;
+    align-items: center;*/
+}
 .activeBtn {
     display: inline-block;
     width: 40%;
@@ -252,7 +260,7 @@ h1, .label {
         font-size: 1em;
         width: 40%;
     }
-    .button, #SearchBtn, label, .thead, #NextBtn {
+    .button, #SearchBtn, .label, .thead, #NextBtn {
         font-size: 1em;
     }
     .table tbody {
