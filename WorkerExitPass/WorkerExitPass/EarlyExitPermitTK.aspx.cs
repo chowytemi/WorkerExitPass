@@ -1413,6 +1413,8 @@ namespace WorkerExitPass
                 submitAsTeam.Visible = true;
                 submitAsSolo.Visible = false;
                 GetListOfEmployees();
+                dateInput.Disabled = true;
+                timeInput.Disabled = true;
             }
         }
     }

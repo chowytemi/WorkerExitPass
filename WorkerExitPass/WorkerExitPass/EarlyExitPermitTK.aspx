@@ -51,7 +51,9 @@
 <%--                    <asp:LinkButton ID="btnHelp" runat="server" Text="<i class='fa fa-question-circle fa-2x' aria-hidden='true'></i>" OnClick="btnHelp_Click"/>--%>
                 </div>  
                 <div class ="row">
+                    <div class="col-12">
                         <asp:Label class="label" ID="msg" runat="server" Text="Please select date and time you want to exit at." Visible="false"></asp:Label>
+                    </div>
                 </div>
                 <div class="dateTimeRow">
 
@@ -66,8 +68,10 @@
                     </div>
 
                 </div>
+                <div class="row">
                 <asp:Button class="button" ID="nextBtn" runat="server" Text="Next" Visible="false" OnClick="nextBtn_OnClick"/>
-                 <asp:Panel ID="Panel3" runat="server">
+                </div>
+                <asp:Panel ID="Panel3" runat="server">
                 <div class="row">
                     <div class="col-12">
                             <asp:Label class="label" ID="project" runat="server" Text="Project"></asp:Label>

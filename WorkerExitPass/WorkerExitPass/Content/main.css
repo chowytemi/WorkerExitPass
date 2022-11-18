@@ -63,7 +63,7 @@ h1, .label {
     border: 0.0625em solid #EFF0F6 !important;
     font-family: 'Open Sans', sans-serif;
     font-size: 1em !important;
-    text-indent: 0.5em !important;
+    text-indent: 0.2em !important;
     box-shadow: 0 0.125em 0.25em rgba(0, 75, 122, 0.25) !important;
     display: flex;
     justify-content: center !important;
@@ -217,8 +217,8 @@ li {
     }
 
     .dateTimeRow {
-        margin-left: 10%;
-        margin-right: 10%;
+        margin-left: 5%;
+        margin-right: 5%;
     }
     .button, #viewStatusBtn {
         height: 3.55em;
