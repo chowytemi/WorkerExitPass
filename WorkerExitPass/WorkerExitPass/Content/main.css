@@ -46,7 +46,7 @@ h1, .label {
 
 .col-12 {
     /*width: 100%;*/
-    width: 33%;
+    width: 34%;
 }
 
 #dateInput, #timeInput {
@@ -213,7 +213,7 @@ li {
     }
 
     .col-12 {
-        width: 80%;
+        width: 90%;
     }
 
     .dateTimeRow {
