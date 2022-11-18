@@ -117,7 +117,7 @@
                                 <asp:LinkButton ID="btnContinue" runat="server" Text="<i class='fa fa-times fa-2x' aria-hidden='true'></i>"/>
                             </div>  
                             <div class="contentRow">
-                                <asp:Label ID="labelSuccess" runat="server" Text="Success!"></asp:Label>
+                                <asp:Label ID="labelSuccess" runat="server"></asp:Label>
                                 <asp:Label class="lblData" ID="valid" runat="server"></asp:Label>
                             </div>
                       </asp:Panel>   

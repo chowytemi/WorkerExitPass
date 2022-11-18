@@ -191,6 +191,7 @@ namespace WorkerExitPass
             appcon.Close();
             mpePopUp.Show();
             string companyInput = selectedCompany.TrimEnd(',');
+            labelSuccess.Text = "Success!";
             valid.Text = "You have successfully assign employee ID " + employeeInput + " to " + companyInput + ".";
             
         }
@@ -203,11 +204,14 @@ namespace WorkerExitPass
 
             string employeeInput = lblFindEmpID.Text;
 
+            string empExist = "select distinct EmpID from EmpList where IsActive = 1 and JobCode IN('WK', 'SUBCON') and EmpID = '" + employeeInput + "'";
+
             string empNameSql = "select distinct EmpList.Employee_Name from EmpList, exitCompany where Emplist.EmpID = exitCompany.EmpID and exitCompany.EmpID = '" + employeeInput + "'";
             using (SqlCommand cmd = new SqlCommand(empNameSql, con))
             {
                 SqlDataReader dr = cmd.ExecuteReader();
 
+                
                 while (dr.Read())
                 {
                     string empName = dr[0].ToString();
@@ -215,7 +219,8 @@ namespace WorkerExitPass
                     lblDataEmpName.Visible = true;
                     lblDataEmpName.Text = empName;
                 }
-                GetCompany();
+
+                //GetCompany();
 
 
             }
@@ -238,11 +243,17 @@ namespace WorkerExitPass
                     DataTable dt = ds.Tables[0];
                     if (dt.Rows.Count > 0)
                     {
-
                         GridView1.DataSource = dt;
                         GridView1.DataBind();
+                        GetEmpNameByEmpID();
 
-                    }
+                    } else if (dt.Rows.Count == 0)
+                    {
+                        mpePopUp.Show();
+                        labelSuccess.Text = "Error!";
+                        valid.Text = "This employee has not been assigned any company!";
+
+                    }       
 
                     return ds;
 
@@ -256,7 +267,8 @@ namespace WorkerExitPass
             string empIDInput = lblFindEmpID.Text;
             if (empIDInput != "")
             {
-                GetEmpNameByEmpID();
+                //GetEmpNameByEmpID();
+                GetCompany();
             }
             else
             {
@@ -335,6 +347,7 @@ namespace WorkerExitPass
                 con.Close();
                 GetCompany();
                 mpePopUp.Show();
+                labelSuccess.Text = "Success!";
                 valid.Text = "You have successfully updated the status.";
 
 
@@ -343,7 +356,7 @@ namespace WorkerExitPass
 
         protected void lblFindEmpID_TextChanged(object sender, EventArgs e)
         {
-
+            GetCompany();
         }
     }
 }
