@@ -252,7 +252,7 @@ h1, .label {
         font-size: 1em;
         width: 40%;
     }
-    .button, #SearchBtn, label, .thead {
+    .button, #SearchBtn, label, .thead, #NextBtn {
         font-size: 1em;
     }
     .table tbody {
