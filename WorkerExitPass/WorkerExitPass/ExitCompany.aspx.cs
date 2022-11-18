@@ -90,16 +90,42 @@ namespace WorkerExitPass
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
-            using (SqlCommand cmd = new SqlCommand("select distinct Company from EmpList WHERE isActive = 1;"))
+
+            string employeeID = "7015";
+
+            string getCompanyInquery = "select Company from exitCompany where EmpID = '" + employeeID + "';";
+            SqlCommand cmd = new SqlCommand(getCompanyInquery, con);
+            SqlDataAdapter da = new SqlDataAdapter(getCompanyInquery, con);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            DataTable dt = ds.Tables[0];
+
+            string getCompanyquery = "";
+            string companyIn = "";
+
+            if (dt.Rows.Count > 1)
             {
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection = con;
-                companyddl.DataSource = cmd.ExecuteReader();
-                companyddl.DataTextField = "Company";
-                companyddl.DataBind();
-                con.Close();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    companyIn += "'" + dt.Rows[i][0].ToString() + "'" + ",";
+                }
+                companyIn = companyIn.TrimEnd(',');
+                
             }
 
+            getCompanyquery = "select distinct Company FROM EmpList WHERE isActive = 1 AND EmpList.Company NOT IN(" + companyIn + ");";
+
+            using (SqlCommand cmd2 = new SqlCommand(getCompanyquery, con))
+            {
+                cmd2.CommandType = CommandType.Text;
+                cmd2.Connection = con;
+                companyddl.DataSource = cmd2.ExecuteReader();
+                companyddl.DataTextField = "Company";
+                companyddl.DataBind();
+
+            }
+            
+            con.Close();
         }
         protected void createBtn_Click(object sender, EventArgs e)
         {
@@ -140,7 +166,7 @@ namespace WorkerExitPass
 
         protected void submitBtn_Click(object sender, EventArgs e)
         {
-            
+
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
@@ -203,17 +229,17 @@ namespace WorkerExitPass
 
             return;
         }
-        
+
 
         protected void CreateNew()
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            
+
             string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection appcon = new SqlConnection(connectionstring);
             appcon.Open();
-            
+
 
             string employeeInput = lblEmpID.Text;
             string selectedCompany = "";
@@ -222,7 +248,7 @@ namespace WorkerExitPass
                 if (companyddl.Items[i].Selected)
                 {
                     string sqlinsertquery = "INSERT INTO exitCompany(EmpID, Company, IsActive, CreatedBy, CreatedDate) values(@employee, @company, '1', @createdby, @createddate);";
-                    
+
 
                     using (SqlCommand insert = new SqlCommand(sqlinsertquery, appcon))
                     {
@@ -231,7 +257,7 @@ namespace WorkerExitPass
                         insert.Parameters.AddWithValue("@createddate", DateTime.Now.ToString());
                         insert.Parameters.AddWithValue("@employee", employeeInput);
                         insert.Parameters.AddWithValue("@company", companyddl.Items[i].Text);
-                        
+
                         insert.ExecuteNonQuery();
                     }
                     selectedCompany += companyddl.Items[i].Value + ",";
@@ -242,7 +268,7 @@ namespace WorkerExitPass
             string companyInput = selectedCompany.TrimEnd(',');
             labelSuccess.Text = "Success!";
             valid.Text = "You have successfully assign employee ID " + employeeInput + " to " + companyInput + ".";
-            
+
         }
 
         protected void GetEmpNameByEmpID()
@@ -258,7 +284,7 @@ namespace WorkerExitPass
             {
                 SqlDataReader dr = cmd.ExecuteReader();
 
-                
+
                 while (dr.Read())
                 {
                     string empName = dr[0].ToString();
@@ -294,13 +320,14 @@ namespace WorkerExitPass
                         GridView1.DataBind();
                         GetEmpNameByEmpID();
 
-                    } else if (dt.Rows.Count == 0)
+                    }
+                    else if (dt.Rows.Count == 0)
                     {
                         mpePopUp.Show();
                         labelSuccess.Text = "Error!";
                         valid.Text = "This employee has not been assigned any company!";
 
-                    }       
+                    }
 
                     return ds;
 
