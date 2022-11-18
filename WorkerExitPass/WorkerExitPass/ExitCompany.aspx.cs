@@ -88,7 +88,7 @@ namespace WorkerExitPass
             SqlConnection con = new SqlConnection(cs);
             con.Open();
 
-            string employeeID = "7015";
+            string employeeID = lblEmpID.Text;
 
             string getCompanyInquery = "select Company from exitCompany where EmpID = '" + employeeID + "';";
             SqlCommand cmd = new SqlCommand(getCompanyInquery, con);
@@ -186,7 +186,7 @@ namespace WorkerExitPass
                 if (counter > 0)
                 {
 
-                    CheckDuplicate();                    
+                    CreateNew();          
 
                 }
                 else if (counter == 0)
@@ -224,7 +224,6 @@ namespace WorkerExitPass
 
             if (dr.HasRows)
             {
-                //CheckDuplicate();
                 //CreateNew();
                 GetCompany();
                 //return;
@@ -234,55 +233,12 @@ namespace WorkerExitPass
                 mpePopUp.Show();
                 labelSuccess.Text = "Error!";
                 valid.Text = employeeInput + " does not exist!";
+                lblEmpName.Visible = false;
+                lblDataEmpName.Visible = false;
+                GridView1.Visible = false;
             }
         }
-
-        protected void CheckDuplicate()
-        {
-            string empID = Session["empID"].ToString();
-            Session["empID"] = empID;
-
-            string employeeInput = lblEmpID.Text;
-
-            //Connect to database
-
-            string connectionstring = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
-            SqlConnection appcon = new SqlConnection(connectionstring);
-            appcon.Open();
-
-            for (int i = 0; i < companyddl.Items.Count; i++)
-            {
-                if (companyddl.Items[i].Selected)
-                {
-
-                    //check for duplicate
-                    string sqlquery1 = "select EmpID, Company from exitCompany where EmpID = '" + employeeInput + "' AND Company = '" + companyddl.Items[i].Text + "' AND IsActive = 1;";
-
-                    SqlCommand cmd1 = new SqlCommand(sqlquery1, appcon);
-                    SqlDataReader dr1 = cmd1.ExecuteReader();
-
-                    if (!dr1.HasRows)
-                    {
-                        CreateNew();
-                        //return;                       
-                    }
-                    else
-                    {
-                        //Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                        //                "<script language='javascript'>alert('Duplicate Submission');</script>");
-                        //return;
-
-                        mpePopUp.Show();
-                        labelSuccess.Text = "Error!";
-                        valid.Text = employeeInput + " has been assigned to " + companyddl.Items[i].Text;
-                    }
-                }
-            }
-
-
-            return;
-        }
-
+     
 
         protected void CreateNew()
         {
@@ -366,6 +322,7 @@ namespace WorkerExitPass
                     DataTable dt = ds.Tables[0];
                     if (dt.Rows.Count > 0)
                     {
+                        GridView1.Visible = true;
                         GridView1.DataSource = dt;
                         GridView1.DataBind();
                         GetEmpNameByEmpID();
@@ -376,6 +333,9 @@ namespace WorkerExitPass
                         mpePopUp.Show();
                         labelSuccess.Text = "Error!";
                         valid.Text = "This employee has not been assigned any company!";
+                        lblEmpName.Visible = false;
+                        lblDataEmpName.Visible = false;
+                        GridView1.Visible = false;
 
                     }
 
@@ -400,9 +360,13 @@ namespace WorkerExitPass
                 //Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
                 //                "<script language='javascript'>alert('Please fill in the fields required');</script>");
                 //return;
+                lblEmpName.Visible = false;
+                lblDataEmpName.Visible = false;
+                GridView1.Visible = false;
                 mpePopUp.Show();
                 labelSuccess.Text = "Error!";
                 valid.Text = "Please input employee ID";
+                
             }
 
         }
@@ -512,6 +476,10 @@ namespace WorkerExitPass
                     mpePopUp.Show();
                     labelSuccess.Text = "Error!";
                     valid.Text = empIDInput + " does not exist!";
+                    lblCompanyName.Visible = false;
+                    companyddl.Visible = false;
+                    submitBtn.Visible = false;
+
                 }               
             }
             else
@@ -519,6 +487,9 @@ namespace WorkerExitPass
                 mpePopUp.Show();
                 labelSuccess.Text = "Error!";
                 valid.Text = "Please input employee ID";
+                lblCompanyName.Visible = false;
+                companyddl.Visible = false;
+                submitBtn.Visible = false;
             }
 
         }
