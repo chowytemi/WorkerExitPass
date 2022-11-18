@@ -58,6 +58,24 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.WebControls.TextBox lblEmpID;
         
         /// <summary>
+        /// NextBtn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button NextBtn;
+        
+        /// <summary>
+        /// lblCompanyName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCompanyName;
+        
+        /// <summary>
         /// companyddl control.
         /// </summary>
         /// <remarks>

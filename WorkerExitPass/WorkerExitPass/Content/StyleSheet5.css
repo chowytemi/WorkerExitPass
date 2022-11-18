@@ -106,7 +106,7 @@ h1, .label {
     border: 0.0625em solid #EFF0F6 !important;
 }
 
-#lblFindEmpID {
+#lblFindEmpID, #lblEmpID {
     height: 2.5em;
     border-radius: 0.3125em;
     border: 0.0625em solid #EFF0F6;
@@ -135,7 +135,7 @@ h1, .label {
     width: 70%;
     background-color: #004B7A;
 }
-#SearchBtn {
+#SearchBtn, #NextBtn {
     height: 2.5em;
     border-radius: 0.3125em;
     border-style: none;
@@ -263,5 +263,8 @@ h1, .label {
     }
     h1 {
         font-size: 1.5em;
+    }
+    #Panel {
+        width: 70%;
     }
 }

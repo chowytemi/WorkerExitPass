@@ -31,17 +31,25 @@
                         
                      </div>
                     <asp:Panel ID="Panel1" runat="server" Visible="true">
-                        <div class="row">
+                       <%-- <div class="row">
                             <div class="col-12">
                              <asp:Label class="label" runat="server" Text="Employee ID"></asp:Label>
-                             <%--<input class="input" id="lblEmpID" type="text"/>--%>
-                                <asp:TextBox class="input" ID="lblEmpID" runat="server"></asp:TextBox>
+                           
+                                <asp:TextBox class="input" ID="lblEmpID" runat="server"></asp:TextBox>                           
+                        </div>--%>
+                        <div class="row">
+                            <div class="col">
+                             <asp:Label class="label" runat="server" Text="Employee ID"></asp:Label>
+                                <div class="row1">
+                                 <asp:TextBox class="input" ID="lblEmpID" runat="server"></asp:TextBox>
+                                 <asp:Button ID="NextBtn" runat="server" Text="Next" OnClick="NextBtn_Click"/>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
-                              <div class="col-12">
-                              <asp:Label class="label" runat="server" Text="Name of Company"></asp:Label>
-                              <asp:DropDownCheckBoxes ID="companyddl" runat="server" CssClass="dropdown" UseButtons="True" OnSelectedIndexChanged="companyddl_SelectedIndexChanged">
+                              <div class="col">
+                              <asp:Label class="label" ID="lblCompanyName" runat="server" Text="Name of Company" Visible="false"></asp:Label>
+                              <asp:DropDownCheckBoxes ID="companyddl" runat="server" CssClass="dropdown" Visible="false" UseButtons="True" OnSelectedIndexChanged="companyddl_SelectedIndexChanged">
        
                                         <Style SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style>
 
@@ -53,7 +61,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                            <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" OnClick="submitBtn_Click"/>
+                            <asp:Button class="button" ID="submitBtn" runat="server" Text="Submit" Visible="false" OnClick="submitBtn_Click"/>
                             </div>
                         </div>
                     </asp:Panel>
@@ -110,7 +118,7 @@
                     </asp:Panel>
                     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
                     <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
-                        <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="Label1" PopupControlID="Panel" BackgroundCssClass="modalBackground">
+                        <ajaxToolkit:ModalPopupExtender ID="mpePopUp" runat="server" TargetControlID="Label1" PopupControlID="Panel" CancelControlID="btnContinue" BackgroundCssClass="modalBackground">
                         </ajaxToolkit:ModalPopupExtender>
                         <asp:Panel ID="Panel" runat="server">  
                             <div class="rowIcon">
