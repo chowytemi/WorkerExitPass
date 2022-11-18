@@ -48,6 +48,8 @@ namespace WorkerExitPass
             Panel3.Visible = true;
             nextBtn.Visible = false;
             msg.Visible = false;
+            dateInput.Disabled = false;
+            timeInput.Disabled = false;
         }
 
         protected void TeamBtn_Click(object sender, EventArgs e)
