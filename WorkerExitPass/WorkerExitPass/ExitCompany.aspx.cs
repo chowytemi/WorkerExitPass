@@ -104,21 +104,35 @@ namespace WorkerExitPass
                     companyIn += "'" + dt.Rows[i][0].ToString() + "'" + ",";
                 }
                 companyIn = companyIn.TrimEnd(',');
-                
+                getCompanyquery = "select distinct Company FROM EmpList WHERE isActive = 1 AND EmpList.Company NOT IN(" + companyIn + ");";
+
+                using (SqlCommand cmd2 = new SqlCommand(getCompanyquery, con))
+                {
+                    cmd2.CommandType = CommandType.Text;
+                    cmd2.Connection = con;
+                    companyddl.DataSource = cmd2.ExecuteReader();
+                    companyddl.DataTextField = "Company";
+                    companyddl.DataBind();
+
+                }
             }
-
-            getCompanyquery = "select distinct Company FROM EmpList WHERE isActive = 1 AND EmpList.Company NOT IN(" + companyIn + ");";
-
-            using (SqlCommand cmd2 = new SqlCommand(getCompanyquery, con))
+            else
             {
-                cmd2.CommandType = CommandType.Text;
-                cmd2.Connection = con;
-                companyddl.DataSource = cmd2.ExecuteReader();
-                companyddl.DataTextField = "Company";
-                companyddl.DataBind();
+                getCompanyquery = "select distinct Company FROM EmpList WHERE isActive = 1;";
 
+                using (SqlCommand cmd2 = new SqlCommand(getCompanyquery, con))
+                {
+                    cmd2.CommandType = CommandType.Text;
+                    cmd2.Connection = con;
+                    companyddl.DataSource = cmd2.ExecuteReader();
+                    companyddl.DataTextField = "Company";
+                    companyddl.DataBind();
+
+                }
             }
-            
+
+
+
             con.Close();
         }
         protected void createBtn_Click(object sender, EventArgs e)
@@ -169,8 +183,8 @@ namespace WorkerExitPass
             string employeeInput = lblEmpID.Text;
             int counter = 0;
             if (employeeInput != "")
-            {   
-                
+            {
+
                 for (int i = 0; i < companyddl.Items.Count; i++)
                 {
                     if (companyddl.Items[i].Selected)
@@ -183,7 +197,7 @@ namespace WorkerExitPass
                 if (counter > 0)
                 {
 
-                    CreateNew();          
+                    CreateNew();
 
                 }
                 else if (counter == 0)
@@ -235,7 +249,7 @@ namespace WorkerExitPass
                 GridView1.Visible = false;
             }
         }
-     
+
 
         protected void CreateNew()
         {
@@ -363,7 +377,7 @@ namespace WorkerExitPass
                 mpePopUp.Show();
                 labelSuccess.Text = "Error!";
                 valid.Text = "Please input employee ID";
-                
+
             }
 
         }
@@ -477,7 +491,7 @@ namespace WorkerExitPass
                     companyddl.Visible = false;
                     submitBtn.Visible = false;
 
-                }               
+                }
             }
             else
             {
