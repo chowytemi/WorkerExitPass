@@ -89,7 +89,7 @@
                             <Style SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style>
 
                             <Style2 SelectBoxWidth="" DropDownBoxBoxWidth="" DropDownBoxBoxHeight="" SelectBoxCssClass="dropdown"></Style2>
-                             
+                            <Texts SelectBoxCaption="Select Employees" />
                             <Texts SelectAllNode="Select all"></Texts>
        
                         </asp:DropDownCheckBoxes>
