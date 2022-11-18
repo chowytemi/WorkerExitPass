@@ -30,6 +30,16 @@
     font-size: 1.3em;
     margin-top: 0.5em;
     /*margin-bottom: 0.5em;*/
+    font-weight: bold;
+}
+.dateTimeLabel {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1em;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.25em;
 }
 .submitAsButton {
     display: block;

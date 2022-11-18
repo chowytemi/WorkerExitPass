@@ -48,8 +48,10 @@ namespace WorkerExitPass
             Panel3.Visible = true;
             nextBtn.Visible = false;
             msg.Visible = false;
-            dateInput.Disabled = false;
-            timeInput.Disabled = false;
+            dateSubmit.Visible = false;
+            timeSubmit.Visible = false;
+            dateInput.Visible = true;
+            timeInput.Visible = true;
         }
 
         protected void TeamBtn_Click(object sender, EventArgs e)
@@ -57,10 +59,10 @@ namespace WorkerExitPass
             Panel3.Visible = false;
             nextBtn.Visible = true;
             msg.Visible = true;
-            //namesddl.Visible = true;
-            //nametb.Visible = false;
-            //submitAsTeam.Visible = true;
-            //submitAsSolo.Visible = false;
+            dateSubmit.Visible = false;
+            timeSubmit.Visible = false;
+            dateInput.Visible = true;
+            timeInput.Visible = true;
             SoloBtn.CssClass = SoloBtn.CssClass.Replace("activeBtn", "submitAsButton");
             TeamBtn.CssClass = SoloBtn.CssClass.Replace("submitAsButton", "activeBtn");
 
@@ -441,7 +443,7 @@ namespace WorkerExitPass
                 }
                 conn.Close();
                 appcon.Close();
-                sendEmailForApproval();
+                sendEmailForApproval(dateparse);
                 //DateTime timeinput = Convert.ToDateTime(time);
                 //DateTime permitexpiry = timeinput.AddHours(1);
                 //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
@@ -462,10 +464,11 @@ namespace WorkerExitPass
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
 
-            var time = Request["timeInput"];
-            var date = Request["dateInput"] + " " + time;
-            DateTime dateparse = DateTime.Parse(date);
-            var dateInput = dateparse.ToString();
+            //var time = Request["timeInput"];
+            //var date = Request["dateInput"] + " " + time;
+            //DateTime dateparse = DateTime.Parse(date);
+            //var dateInput = dateparse.ToString();
+            DateTime dateInput = DateTime.Parse(timeSubmit.Text);
 
             string description = projectddl.Text;
             string projectInput = projectddl.Text;
@@ -594,7 +597,7 @@ namespace WorkerExitPass
 
             conn.Close();
             appcon.Close();
-            sendEmailForApproval();
+            sendEmailForApproval(dateInput);
             //ScriptManager.RegisterClientScriptBlock
             //      (this, this.GetType(), "alertMessage", "alert" +
             //      "('Submitted')", true);
@@ -614,7 +617,7 @@ namespace WorkerExitPass
 
         }
 
-        protected void sendEmailForApproval()
+        protected void sendEmailForApproval(DateTime dateInput)
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
@@ -629,10 +632,6 @@ namespace WorkerExitPass
             string smtport = ConfigurationManager.AppSettings["smtport"].ToString();
             int smtpport = Convert.ToInt32(smtport);
             string link = ConfigurationManager.AppSettings["link"].ToString();
-            var time = Request["timeInput"];
-            var date = Request["dateInput"] + " " + time;
-            DateTime dateparse = DateTime.Parse(date);
-            var dateInput = dateparse.ToString();
 
             try
             {
@@ -662,6 +661,7 @@ namespace WorkerExitPass
                                     exitcmd.Parameters.AddWithValue("@empID", empID);
                                     exitcmd.Parameters.AddWithValue("@company", companytb.Text);
                                     exitcmd.Parameters.AddWithValue("@time", dateInput);
+
                                     using (SqlDataReader exitdr = exitcmd.ExecuteReader())
                                     {
 
@@ -679,10 +679,7 @@ namespace WorkerExitPass
                                             string reason = exitdr[4].ToString();
                                             string emailtosendstring = exitdr[6].ToString();
                                             int emailtosend = int.Parse(emailtosendstring);
-
-                                            //DateTime exittime = Convert.ToDateTime(exitdr[3].ToString());
-                                            //string exittime1 = exittime.ToString("dd/MM/yyyy hh:mm tt");
-                                            //string query3 = "select EmpList.Employee_Name, exitapproval.exittime, exitapproval.reason from EmpList, exitapproval where EmpList.EmpID =  exitapproval.toexit and exitapproval.exitID= '" + exitid + "';";
+                                           
                                             string query3 = "select CONCAT(RTRIM(EmpList.EmpID), ' - ' , EmpList.Employee_Name) from EmpList, exitapproval where exitapproval.exitID = '"
                                                 + exitid + "' and EmpList.EmpID = exitapproval.EmpID;";
 
@@ -809,8 +806,8 @@ namespace WorkerExitPass
 
                                                         smtp.Send(mm);
 
-                                                        DateTime timeinput = Convert.ToDateTime(dateparse);
-                                                        DateTime permitexpiry = timeinput.AddHours(1);
+                                                        //DateTime timeinput = Convert.ToDateTime(dateparse);
+                                                        DateTime permitexpiry = dateInput.AddHours(1);
                                                         labelSuccess.Text = "Success!";
                                                         valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                         //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
@@ -902,8 +899,8 @@ namespace WorkerExitPass
                                                     }
 
                                                     smtp.Send(mm);
-                                                    DateTime timeinput = Convert.ToDateTime(dateparse);
-                                                    DateTime permitexpiry = timeinput.AddHours(1);
+                                                    //DateTime timeinput = Convert.ToDateTime(dateparse);
+                                                    DateTime permitexpiry = dateInput.AddHours(1);
                                                     labelSuccess.Text = "Success!";
                                                     valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                     //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
@@ -987,8 +984,8 @@ namespace WorkerExitPass
                                                     }
 
                                                     smtp.Send(mm);
-                                                    DateTime timeinput = Convert.ToDateTime(dateparse);
-                                                    DateTime permitexpiry = timeinput.AddHours(1);
+                                                    //DateTime timeinput = Convert.ToDateTime(dateparse);
+                                                    DateTime permitexpiry = dateInput.AddHours(1);
                                                     labelSuccess.Text = "Success!";
                                                     valid.Text = "Once approved, please exit before " + permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
                                                     //valid.Text += permitexpiry.ToString("dd/MM/yyyy hh:mm tt") + ".";
@@ -1087,11 +1084,11 @@ namespace WorkerExitPass
 
         protected void CheckSubmissionTeam()
         {
-            var time = Request["timeInput"];
+            //var time = Request["timeInput"];
             //var dateInput = DateTime.Now.ToString("yyyy-MM-dd ") + time;
-            var date = Request["dateInput"] + " " + time;
-            DateTime dateInput = DateTime.Parse(date);
-
+            //var date = Request["dateInput"] + " " + time;
+            //DateTime dateInput = DateTime.Parse(date);
+            DateTime dateinput = DateTime.Parse(timeSubmit.Text);
             string companyInput = companytb.Text;
 
 
@@ -1183,15 +1180,19 @@ namespace WorkerExitPass
                 }
             }
         }
+
         protected void SubmitAsTeam_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
+            submitAsTeamClicked = true;
             int counter = 0;
             //try
             //{
-            var time = Request["timeInput"];
-            var date = Request["dateInput"] + " " + time;
+            DateTime dateinput = DateTime.Parse(timeSubmit.Text);
+            //var date = dateSubmit.Text + " " + time;
+            //var time = Request["timeInput"];
+            //var date = Request["dateInput"] + " " + time;
 
             var time5pm = DateTime.Now.ToString("yyyy-MM-dd ") + "17:00:00.000";
             DateTime date5pm = DateTime.Parse(time5pm);
@@ -1200,8 +1201,7 @@ namespace WorkerExitPass
 
             //var testtime = DateTime.Now.ToString("yyyy-MM-dd ") + "19:30:00.000";
             //DateTime currentdate = DateTime.Parse(testtime);
-
-            DateTime dateinput = DateTime.Parse(date);
+            //DateTime dateinput = DateTime.Parse(date);
             var currentdate = DateTime.Now;
 
             string projectInput = projectddl.Text;
@@ -1287,6 +1287,7 @@ namespace WorkerExitPass
             {
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
+                submitAsSoloClicked = true;
 
                 var time = Request["timeInput"];
                 var date = Request["dateInput"] + " " + time;
@@ -1366,19 +1367,6 @@ namespace WorkerExitPass
             Response.Redirect(myApp);
         }
 
-        //protected void btnHelp_Click(object sender, EventArgs e)
-        //{
-        //    //mpePopUp.Show();
-        //}
-        //protected void btnContinue_Click(object sender, EventArgs e)
-        //{
-        //    //ModalPopupExtender1.Hide();
-        //    //Panel2.Visible = false;
-        //    //string empID = Session["empID"].ToString();
-        //    //Session["empID"] = empID;
-        //    //Response.Redirect("EarlyExitPermitTK.aspx?exprmit=" + empID);
-        //    //Response.Redirect(Request.RawUrl);
-        //}
         protected void viewStatus_Click(object sender, EventArgs e)
         {
             string empID = Session["empID"].ToString();
@@ -1397,6 +1385,7 @@ namespace WorkerExitPass
             var time = Request["timeInput"];
             var date = Request["dateInput"] + " " + time;
             DateTime dateinput = DateTime.Parse(date);
+            DateTime timeinput = DateTime.Parse(time);
             var currentdate = DateTime.Now;
             int compare = DateTime.Compare(dateinput, currentdate);
 
@@ -1414,9 +1403,13 @@ namespace WorkerExitPass
                 nametb.Visible = false;
                 submitAsTeam.Visible = true;
                 submitAsSolo.Visible = false;
+                dateInput.Visible = false;
+                timeInput.Visible = false;
+                dateSubmit.Visible = true;
+                timeSubmit.Visible = true;
+                dateSubmit.Text = dateinput.ToString("dd/MM/yyyy");
+                timeSubmit.Text = timeinput.ToString("hh:mm tt");
                 GetListOfEmployees();
-                dateInput.Disabled = true;
-                timeInput.Disabled = true;
             }
         }
     }

@@ -85,6 +85,15 @@ namespace WorkerExitPass {
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl dateInput;
         
         /// <summary>
+        /// dateSubmit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label dateSubmit;
+        
+        /// <summary>
         /// time control.
         /// </summary>
         /// <remarks>
@@ -101,6 +110,15 @@ namespace WorkerExitPass {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl timeInput;
+        
+        /// <summary>
+        /// timeSubmit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label timeSubmit;
         
         /// <summary>
         /// nextBtn control.

@@ -60,11 +60,13 @@
                     <div class="dateCol">
                         <asp:Label class="label" ID="date" runat="server" Text="Date"></asp:Label>
                         <input class="input" id="dateInput" type="date" runat="server" />
+                        <asp:Label class="dateTimeLabel" ID="dateSubmit" runat="server" Visible="false"></asp:Label>
                     </div>
      
                     <div class="timeCol">
                         <asp:Label class="label" ID="time" runat="server" Text="Time"></asp:Label>
                         <input class="input" id="timeInput" type="time" runat="server"/>
+                        <asp:Label class="dateTimeLabel" ID="timeSubmit" runat="server" Visible="false"></asp:Label>
                     </div>
 
                 </div>
