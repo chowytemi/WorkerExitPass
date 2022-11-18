@@ -1185,7 +1185,6 @@ namespace WorkerExitPass
         {
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
-            submitAsTeamClicked = true;
             int counter = 0;
             //try
             //{
@@ -1287,7 +1286,6 @@ namespace WorkerExitPass
             {
                 string empID = Session["empID"].ToString();
                 Session["empID"] = empID;
-                submitAsSoloClicked = true;
 
                 var time = Request["timeInput"];
                 var date = Request["dateInput"] + " " + time;
