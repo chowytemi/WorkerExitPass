@@ -127,6 +127,7 @@
         justify-content: space-around;
         align-items: center;
         width: 100%;
+        margin-bottom: 1em;
     }
     .form {
         height: 85%;
@@ -166,17 +167,16 @@
 
 
 }
-
-/* Medium devices (landscape tablets, 768px and down) */
-/*@media only screen and (max-width: 768px) {
-    .submitAsButton, .activeBtn {
-        width: 30%;
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .container {
+        height: 100%;
     }
-}*/
 
-/* Medium devices (landscape tablets, 320px and down) */
-/*@media only screen and (max-width: 320px) {
-    .submitAsButton, .activeBtn {
-        width: 40%;
+    .rowButtons {
+        margin-bottom: 1em;
     }
-}*/
+    #nextBtn {
+        margin-bottom: 1em;
+    }
+}

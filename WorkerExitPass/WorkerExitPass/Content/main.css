@@ -89,7 +89,7 @@ h1, .label {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    margin-top: 2em;
+    /*margin-top: 2em;*/
     width: 100%;
 }
 

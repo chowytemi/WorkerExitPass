@@ -1382,33 +1382,43 @@ namespace WorkerExitPass
         {
             var time = Request["timeInput"];
             var date = Request["dateInput"] + " " + time;
-            DateTime dateinput = DateTime.Parse(date);
-            DateTime timeinput = DateTime.Parse(time);
-            var currentdate = DateTime.Now;
-            int compare = DateTime.Compare(dateinput, currentdate);
-
-            if (compare <= 0)
+            if (time != "")
+            {
+                DateTime dateinput = DateTime.Parse(date);
+                DateTime timeinput = DateTime.Parse(time);
+                var currentdate = DateTime.Now;
+                int compare = DateTime.Compare(dateinput, currentdate);
+            
+                if (compare <= 0)
+                {
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                    "<script language='javascript'>alert('Please choose a time after the current time');</script>");
+                    return;
+                } else
+                {
+                    Panel3.Visible = true;
+                    msg.Visible = false;
+                    nextBtn.Visible = false;
+                    namesddl.Visible = true;
+                    nametb.Visible = false;
+                    submitAsTeam.Visible = true;
+                    submitAsSolo.Visible = false;
+                    dateInput.Visible = false;
+                    timeInput.Visible = false;
+                    dateSubmit.Visible = true;
+                    timeSubmit.Visible = true;
+                    dateSubmit.Text = dateinput.ToString("dd/MM/yyyy");
+                    timeSubmit.Text = timeinput.ToString("hh:mm tt");
+                    GetListOfEmployees();
+                }
+            }
+            else
             {
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                "<script language='javascript'>alert('Please choose a time after the current time');</script>");
+                   "<script language='javascript'>alert('Please choose a time after the current time');</script>");
                 return;
-            } else
-            {
-                Panel3.Visible = true;
-                msg.Visible = false;
-                nextBtn.Visible = false;
-                namesddl.Visible = true;
-                nametb.Visible = false;
-                submitAsTeam.Visible = true;
-                submitAsSolo.Visible = false;
-                dateInput.Visible = false;
-                timeInput.Visible = false;
-                dateSubmit.Visible = true;
-                timeSubmit.Visible = true;
-                dateSubmit.Text = dateinput.ToString("dd/MM/yyyy");
-                timeSubmit.Text = timeinput.ToString("hh:mm tt");
-                GetListOfEmployees();
             }
+            
         }
     }
 }
