@@ -239,10 +239,10 @@
         font-size: 1.1em;
     }*/
 
-    #lblApproval, #lblDetails {
+    /*#lblApproval, #lblDetails {
         margin-top: 1em;
         font-size: 1em;
-    }
+    }*/
 
     /*.label, .labelData, .textbox {
         font-size: 0.8em;
@@ -250,5 +250,24 @@
     #ExitPermitBtn, #EserviceBtn {
         /*width: 10%;*/
         font-size: 0.8em;
+    }
+
+    .content {
+        width: 85%;
+    }
+
+    #lblexitID, .label {
+        font-size: 1em;
+    }
+
+    .table {
+        width: 100%;
+    }
+
+    #ExitPermitBtn, #EserviceBtn {
+        margin-left: 0;
+    }
+    #ddlStatus {
+        margin-right: 0;
     }
 }

@@ -267,6 +267,7 @@ h1, .label {
     }
     .btnStatus {
         height: 3em;
+        width: 80%;
     }
     h1 {
         font-size: 1.5em;

@@ -44,5 +44,8 @@ h1 {
     .label, .labelData, .textbox {
         font-size: 0.8em;
     }
-
+    #lblApproval, #lblDetails {
+        margin-top: 1em;
+        font-size: 1em;
+    }
 }

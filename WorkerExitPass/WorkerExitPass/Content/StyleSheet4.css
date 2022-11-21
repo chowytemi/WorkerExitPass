@@ -165,4 +165,7 @@
     #labelExpiry {
         font-size: 1em;
     }
+    .btnRow {
+        margin-bottom: 2em;
+    }
 }
