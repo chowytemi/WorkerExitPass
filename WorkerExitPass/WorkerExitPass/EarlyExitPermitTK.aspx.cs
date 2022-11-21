@@ -125,7 +125,9 @@ namespace WorkerExitPass
                 da.Fill(ds);
                 DataTable dt = ds.Tables[0];
 
-                string getIDquery = "";
+                string query = "";
+
+                //string getIDquery = "";
                 if (dt.Rows.Count > 1)
                 {
                     string companyName = "";
@@ -135,79 +137,118 @@ namespace WorkerExitPass
                     }
                     companyName = companyName.TrimEnd(',');
 
-                    getIDquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company IN(" + companyName + ");";
+                    //    getIDquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company IN(" + companyName + ");";
+
+                    if (dateinput < date10pm && dateinput > nightshift) //7-10pm : show everyone
+                    {
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company from TimeLog, Emp_Master_Data " +
+                            "where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1;";
+
+                    }
+                    else if (dateinput > date10pm)
+                    {
+                        //get those clock in after 7PM
+                        //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                        //    "AND cast(StartTime as time) > cast('" + nightshift + "' as time) AND EmpID = '" + employeesCompID + "';";
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
+                            "from TimeLog, Emp_Master_Data where EndTime IS NOT NULL AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1;";
+
+                    }
+                    else if (dateinput < nightshift)
+                    {
+                        //get those clock in before 10AM
+                        //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                        //   "AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND EmpID = '" + employeesCompID + "';";
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
+                            "from TimeLog, Emp_Master_Data where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                            " AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1;";
+                    }
 
                 }
                 else if (dt.Rows.Count == 0)
                 {
-                    getIDquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "'; ";
+                    //    getIDquery = "select distinct EmpID, JobCode from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 AND company = '" + company + "'; ";
 
-                }
-                using (SqlCommand cmd3 = new SqlCommand(getIDquery, con))
-                {
-
-                    SqlDataReader dr = cmd3.ExecuteReader();
-                    while (dr.Read())
+                    
+                    if (dateinput < date10pm && dateinput > nightshift) //7-10pm : show everyone
                     {
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company from TimeLog, Emp_Master_Data " +
+                            "where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1;";
 
-                        string employeesCompID = dr[0].ToString();
-                        string jobcode = dr[1].ToString();
+                    }
+                    else if (dateinput > date10pm)
+                    {
+                        //get those clock in after 7PM
+                        //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                        //    "AND cast(StartTime as time) > cast('" + nightshift + "' as time) AND EmpID = '" + employeesCompID + "';";
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
+                            "from TimeLog, Emp_Master_Data where EndTime IS NOT NULL AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1;";
 
-
-                        string query = "";
-                        if (dateinput < date10pm)
-                        {
-                            //check if clock in before 10AM
-                            query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
-                                "AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND EmpID = '" + employeesCompID + "';";
-                        }
-                        else
-                        {
-                            //clock in after 7PM
-                            query = " select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
-                                "AND cast(StartTime as time) > cast('" + nightshift + "' as time) AND EmpID = '" + employeesCompID + "';";
-                        }
-                        //string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "'; ";
-
-
-                        using (SqlCommand cmd2 = new SqlCommand(query, appcon))
-                        {
-
-                            SqlDataReader timelogdr = cmd2.ExecuteReader();
-
-
-                            while (timelogdr.Read())
-                            {
-
-                                string workersIn = timelogdr[0].ToString();
-
-                                string query2 = "select distinct CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
-                           " AND EmpID = '" + workersIn + "' order by empNameID;";
-
-                                using (SqlCommand namecmd = new SqlCommand(query2, con))
-                                {
-
-                                    SqlDataReader namedr = namecmd.ExecuteReader();
-
-
-                                    while (namedr.Read())
-                                    {
-
-                                        string empNameID = namedr[0].ToString();
-
-                                        namesddl.Items.Add(empNameID);
-                                        //namesddl.DataBind();
-
-                                    }
-                                }
-
-                            }
-
-
-                        }
+                    }
+                    else if (dateinput < nightshift)
+                    {
+                        //get those clock in before 10AM
+                        //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                        //   "AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND EmpID = '" + employeesCompID + "';";
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
+                            "from TimeLog, Emp_Master_Data where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                            " AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1;";
                     }
 
                 }
+                //using (SqlCommand cmd3 = new SqlCommand(getIDquery, con))
+                //{
+
+                //    SqlDataReader dr = cmd3.ExecuteReader();
+                //    while (dr.Read())
+                //{
+
+                //string employeesCompID = dr[0].ToString();
+                //string jobcode = dr[1].ToString();
+
+
+                
+                //string query = "select EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND EmpID = '" + employeesCompID + "'; ";
+
+
+                using (SqlCommand cmd2 = new SqlCommand(query, appcon))
+                {
+
+                    SqlDataReader timelogdr = cmd2.ExecuteReader();
+
+
+                    while (timelogdr.Read())
+                    {
+
+                        string workersIn = timelogdr[0].ToString();
+
+                        string query2 = "select distinct CONCAT(Employee_Name, ' (', RTRIM(EmpID), ')') AS 'empNameID' from EmpList where JobCode IN('SUBCON', 'WK') AND IsActive = 1 " +
+                   " AND EmpID = '" + workersIn + "' order by empNameID;";
+
+                        using (SqlCommand namecmd = new SqlCommand(query2, con))
+                        {
+
+                            SqlDataReader namedr = namecmd.ExecuteReader();
+
+
+                            while (namedr.Read())
+                            {
+
+                                string empNameID = namedr[0].ToString();
+
+                                namesddl.Items.Add(empNameID);
+                                //namesddl.DataBind();
+
+                            }
+                        }
+
+                    }
+
+
+                }
+                //}
+
+                // }
 
 
             }
@@ -1382,60 +1423,33 @@ namespace WorkerExitPass
         {
             var time = Request["timeInput"];
             var date = Request["dateInput"] + " " + time;
-            if (time != "")
+            DateTime dateinput = DateTime.Parse(date);
+            DateTime timeinput = DateTime.Parse(time);
+            var currentdate = DateTime.Now;
+            int compare = DateTime.Compare(dateinput, currentdate);
+
+            if (compare <= 0)
             {
-                DateTime dateinput = DateTime.Parse(date);
-                DateTime timeinput = DateTime.Parse(time);
-                var currentdate = DateTime.Now;
-                //var test = DateTime.Now.ToString("yyyy-MM-dd ") + "14:00:00.000";
-                //DateTime currentdate = DateTime.Parse(test);
-
-                int compare = DateTime.Compare(dateinput, currentdate);
-
-                var time5pm = DateTime.Now.ToString("yyyy-MM-dd ") + "17:00:00.000";
-                DateTime date5pm = DateTime.Parse(time5pm);
-                var time6pm = DateTime.Now.ToString("yyyy-MM-dd ") + "18:00:00.000";
-                DateTime date6pm = DateTime.Parse(time6pm);
-
-                if (currentdate < date5pm || currentdate > date6pm)
-                {
-                    if (compare <= 0)
-                    {
-                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                        "<script language='javascript'>alert('Please choose a time after the current time');</script>");
-                        return;
-                    } else 
-                    {
-                        Panel3.Visible = true;
-                        msg.Visible = false;
-                        nextBtn.Visible = false;
-                        namesddl.Visible = true;
-                        nametb.Visible = false;
-                        submitAsTeam.Visible = true;
-                        submitAsSolo.Visible = false;
-                        dateInput.Visible = false;
-                        timeInput.Visible = false;
-                        dateSubmit.Visible = true;
-                        timeSubmit.Visible = true;
-                        dateSubmit.Text = dateinput.ToString("dd/MM/yyyy");
-                        timeSubmit.Text = timeinput.ToString("hh:mm tt");
-                        GetListOfEmployees();
-                    }
-                    
-                }
-                else
-                {
-                    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                            "<script language='javascript'>alert('Unable to submit permits from 5PM to 6PM. Please try again after 6PM');</script>");
-                    return;
-                }
-
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                "<script language='javascript'>alert('Please choose a time after the current time');</script>");
+                return;
             }
             else
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                   "<script language='javascript'>alert('Please choose a time after the current time');</script>");
-                return;
+                Panel3.Visible = true;
+                msg.Visible = false;
+                nextBtn.Visible = false;
+                namesddl.Visible = true;
+                nametb.Visible = false;
+                submitAsTeam.Visible = true;
+                submitAsSolo.Visible = false;
+                dateInput.Visible = false;
+                timeInput.Visible = false;
+                dateSubmit.Visible = true;
+                timeSubmit.Visible = true;
+                dateSubmit.Text = dateinput.ToString("dd/MM/yyyy");
+                timeSubmit.Text = timeinput.ToString("hh:mm tt");
+                GetListOfEmployees();
             }
         }
     }
