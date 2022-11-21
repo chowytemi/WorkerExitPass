@@ -27,13 +27,13 @@ namespace WorkerExitPass
 
                 }
 
-                CheckAccess();
-                //RetrieveDataFromLogin();
-                //BindDataSetDataProjects();
-                ////GetListOfEmployees();
-                //BindDataSetDataReason();
-                //mpePopUp.Show();
-                //Panel1.Visible = true;
+                //CheckAccess();
+                RetrieveDataFromLogin();
+                BindDataSetDataProjects();
+                //GetListOfEmployees();
+                BindDataSetDataReason();
+                mpePopUp.Show();
+                Panel1.Visible = true;
             }
 
         }
@@ -141,8 +141,8 @@ namespace WorkerExitPass
 
                     if (dateinput < date10pm && dateinput > nightshift) //7-10pm : show everyone
                     {
-                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company from TimeLog, Emp_Master_Data " +
-                            "where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1;";
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.UserName, Emp_Master_Data.Company from TimeLog, Emp_Master_Data " +
+                            "where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1 order by Emp_Master_Data.UserName;";
 
                     }
                     else if (dateinput > date10pm)
@@ -150,8 +150,12 @@ namespace WorkerExitPass
                         //get those clock in after 7PM
                         //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
                         //    "AND cast(StartTime as time) > cast('" + nightshift + "' as time) AND EmpID = '" + employeesCompID + "';";
-                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
-                            "from TimeLog, Emp_Master_Data where EndTime IS NOT NULL AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1;";
+                        //query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
+                        //    "from TimeLog, Emp_Master_Data where EndTime IS NOT NULL AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1;";
+                        query = "select distinct Emp_Master_Data.EmployeeID, Emp_Master_Data.UserName from Emp_Master_Data, TimeLog where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.isActive = 1 " +
+                            " AND Emp_Master_Data.Company IN(" + companyName + ")" +
+                            " and Emp_Master_Data.EmployeeID NOT IN " +
+                            " (select distinct EmpID from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND cast(StartTime as time) < cast('2022-11-21 10:00:00.000' as time)) order by Emp_Master_Data.UserName";
 
                     }
                     else if (dateinput < nightshift)
@@ -159,9 +163,9 @@ namespace WorkerExitPass
                         //get those clock in before 10AM
                         //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
                         //   "AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND EmpID = '" + employeesCompID + "';";
-                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
-                            "from TimeLog, Emp_Master_Data where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
-                            " AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company IN(" + companyName + ") and Emp_Master_Data.isActive = 1;";
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.UserName, Emp_Master_Data.Company " +
+                            " from TimeLog, Emp_Master_Data where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
+                            " AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company IN (" + companyName + ") and Emp_Master_Data.isActive = 1 order by Emp_Master_Data.UserName;";
                     }
 
                 }
@@ -172,8 +176,8 @@ namespace WorkerExitPass
                     
                     if (dateinput < date10pm && dateinput > nightshift) //7-10pm : show everyone
                     {
-                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company from TimeLog, Emp_Master_Data " +
-                            "where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1;";
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.UserName, Emp_Master_Data.Company from TimeLog, Emp_Master_Data " +
+                            "where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1 order by Emp_Master_Data.UserName;";
 
                     }
                     else if (dateinput > date10pm)
@@ -181,8 +185,12 @@ namespace WorkerExitPass
                         //get those clock in after 7PM
                         //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
                         //    "AND cast(StartTime as time) > cast('" + nightshift + "' as time) AND EmpID = '" + employeesCompID + "';";
-                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
-                            "from TimeLog, Emp_Master_Data where EndTime IS NOT NULL AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1;";
+                        //query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
+                        //    "from TimeLog, Emp_Master_Data where EndTime IS NOT NULL AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1;";
+                        query = "select distinct Emp_Master_Data.EmployeeID, Emp_Master_Data.UserName, from Emp_Master_Data, TimeLog where Emp_Master_Data.EmployeeID = TimeLog.EmpID and Emp_Master_Data.isActive = 1 " +
+                            " AND Emp_Master_Data.Company = '" + company + "'" +
+                            " and Emp_Master_Data.EmployeeID NOT IN " +
+                            "(select distinct EmpID from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) AND cast(StartTime as time) < cast('2022-11-21 10:00:00.000' as time)) order by Emp_Master_Data.UserName";
 
                     }
                     else if (dateinput < nightshift)
@@ -190,9 +198,10 @@ namespace WorkerExitPass
                         //get those clock in before 10AM
                         //query = "select distinct EmpID, StartTime ,EndTime from TimeLog where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
                         //   "AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND EmpID = '" + employeesCompID + "';";
-                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.Company " +
+                        query = "select distinct TimeLog.EmpID, Emp_Master_Data.UserName, Emp_Master_Data.Company " +
                             "from TimeLog, Emp_Master_Data where EndTime IS NULL AND CAST(StartTime AS Date) = CAST(GETDATE() AS Date) " +
-                            " AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1;";
+                            " AND cast(StartTime as time) < cast('" + dayshift + "' as time) AND Emp_Master_Data.EmployeeID = TimeLog.EmpID AND Emp_Master_Data.Company = '" + company + "' and Emp_Master_Data.isActive = 1 order by Emp_Master_Data.UserName" +
+                            "order by ;";
                     }
 
                 }
@@ -866,7 +875,7 @@ namespace WorkerExitPass
                                                                           "from Access, UserAccess, ARole, EmpList " +
                                                                           "where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID " +
                                                                           "and EmpList.ID = UserAccess.empid and UserAccess.IsActive = 1 and emplist.IsActive = 1 " +
-                                                                          "and Access.id = '" + PJM + "'";
+                                                                          "and Access.id = '" + PJM + "' and emplist.empid = 'T203'";
 
 
                                                 using (SqlCommand pjmcmd = new SqlCommand(pjmquery, conn))
