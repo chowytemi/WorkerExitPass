@@ -278,7 +278,7 @@ namespace WorkerExitPass
             string companyInput = selectedCompany.TrimEnd(',');
             labelSuccess.Text = "Success!";
             valid.Text = "You have successfully assign employee ID " + employeeInput + " to " + companyInput + ".";
-
+            BindDataSetDataCompany();
         }
 
         protected void GetEmpNameByEmpID()
@@ -494,6 +494,10 @@ namespace WorkerExitPass
             }
 
         }
+        //protected void btnContinue_Click(object sender, EventArgs e)
+        //{
+        //    mpePopUp.Hide();
+        //}
 
     }
 }

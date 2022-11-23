@@ -27,13 +27,13 @@ namespace WorkerExitPass
 
                 }
 
-                //CheckAccess();
-                RetrieveDataFromLogin();
-                BindDataSetDataProjects();
-                //GetListOfEmployees();
-                BindDataSetDataReason();
-                mpePopUp.Show();
-                Panel1.Visible = true;
+                CheckAccess();
+                //RetrieveDataFromLogin();
+                //BindDataSetDataProjects();
+                ////GetListOfEmployees();
+                //BindDataSetDataReason();
+                //mpePopUp.Show();
+                //Panel1.Visible = true;
             }
 
         }
