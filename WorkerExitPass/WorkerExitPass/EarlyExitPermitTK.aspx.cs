@@ -1425,33 +1425,61 @@ namespace WorkerExitPass
         {
             var time = Request["timeInput"];
             var date = Request["dateInput"] + " " + time;
-            DateTime dateinput = DateTime.Parse(date);
-            DateTime timeinput = DateTime.Parse(time);
-            var currentdate = DateTime.Now;
-            int compare = DateTime.Compare(dateinput, currentdate);
-
-            if (compare <= 0)
+            if (time != "")
             {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
-                "<script language='javascript'>alert('Please choose a time after the current time');</script>");
-                return;
+                DateTime dateinput = DateTime.Parse(date);
+                DateTime timeinput = DateTime.Parse(time);
+                var currentdate = DateTime.Now;
+                //var test = DateTime.Now.ToString("yyyy-MM-dd ") + "14:00:00.000";
+                //DateTime currentdate = DateTime.Parse(test);
+
+                int compare = DateTime.Compare(dateinput, currentdate);
+
+                var time5pm = DateTime.Now.ToString("yyyy-MM-dd ") + "17:00:00.000";
+                DateTime date5pm = DateTime.Parse(time5pm);
+                var time6pm = DateTime.Now.ToString("yyyy-MM-dd ") + "18:00:00.000";
+                DateTime date6pm = DateTime.Parse(time6pm);
+
+                if (currentdate < date5pm || currentdate > date6pm)
+                {
+                    if (compare <= 0)
+                    {
+                        Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                        "<script language='javascript'>alert('Please choose a time after the current time');</script>");
+                        return;
+                    }
+                    else
+                    {
+                        Panel3.Visible = true;
+                        msg.Visible = false;
+                        nextBtn.Visible = false;
+                        namesddl.Visible = true;
+                        nametb.Visible = false;
+                        submitAsTeam.Visible = true;
+                        submitAsSolo.Visible = false;
+                        dateInput.Visible = false;
+                        timeInput.Visible = false;
+                        dateSubmit.Visible = true;
+                        timeSubmit.Visible = true;
+                        dateSubmit.Text = dateinput.ToString("dd/MM/yyyy");
+                        timeSubmit.Text = timeinput.ToString("hh:mm tt");
+                        GetListOfEmployees();
+                    }
+
+                }
+                else
+                {
+                    Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                            "<script language='javascript'>alert('Unable to submit permits from 5PM to 6PM. Please try again after 6PM');</script>");
+                    return;
+                }
+
             }
             else
             {
-                Panel3.Visible = true;
-                msg.Visible = false;
-                nextBtn.Visible = false;
-                namesddl.Visible = true;
-                nametb.Visible = false;
-                submitAsTeam.Visible = true;
-                submitAsSolo.Visible = false;
-                dateInput.Visible = false;
-                timeInput.Visible = false;
-                dateSubmit.Visible = true;
-                timeSubmit.Visible = true;
-                dateSubmit.Text = dateinput.ToString("dd/MM/yyyy");
-                timeSubmit.Text = timeinput.ToString("hh:mm tt");
-                GetListOfEmployees();
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "showSaveMessage",
+                   "<script language='javascript'>alert('Please choose a time after the current time');</script>");
+                return;
             }
         }
     }
