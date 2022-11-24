@@ -543,11 +543,12 @@ namespace WorkerExitPass
                         if (namesddl.Items[i].Selected)
                         {
                             //get EmpID
-                            //string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
-                            //string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','"
-                            //    + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
-                            string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','" + namesddl.Items[i].Text + "')-" +
-                                "CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) as 'EmpId', Company from EmpList " +
+                                                       
+                            //string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','" + namesddl.Items[i].Text + "')-" +
+                            //    "CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) as 'EmpId', Company from EmpList " +
+                            //    "where EmpID = SUBSTRING('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') + 1, CHARINDEX(')', " +
+                            //    "'" + namesddl.Items[i].Text + "') -CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1)";
+                            string empquery = "Select EmpID, Company from EmpList " +
                                 "where EmpID = SUBSTRING('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') + 1, CHARINDEX(')', " +
                                 "'" + namesddl.Items[i].Text + "') -CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1)";
                             SqlCommand empcmd = new SqlCommand(empquery, appcon);
