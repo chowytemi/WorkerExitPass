@@ -1151,7 +1151,9 @@ namespace WorkerExitPass
                 if (namesddl.Items[i].Selected)
                 {
                     //get EmpID
-                    string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
+                    string empquery = "Select SUBSTRING('" + namesddl.Items[i].Text + "',CHARINDEX('(','" + namesddl.Items[i].Text + "')+1 ,CHARINDEX(')','" + namesddl.Items[i].Text + "')-CHARINDEX('(','" + namesddl.Items[i].Text + "')-1)";
+
+                    //string empquery = "select EmpID from EmpList where Employee_Name = LEFT('" + namesddl.Items[i].Text + "', CHARINDEX('(', '" + namesddl.Items[i].Text + "') - 1) and IsActive = 1 and Company = '" + companyInput + "';";
                     SqlCommand empcmd = new SqlCommand(empquery, appcon);
                     using (SqlDataReader empdr = empcmd.ExecuteReader())
                     {
@@ -1192,7 +1194,6 @@ namespace WorkerExitPass
                                 //         "('There is already an approved permit before submitted time')", true);
                                 //    return;
                                 //}
-
 
                                 TeamSubmit();
                             }

@@ -194,19 +194,19 @@ namespace WorkerExitPass
                 string sqlquery = "select approve from exitapproval where exitID = '" + exitID + "' and approve IS NULL and DATEADD(hour,1,exittime) > CURRENT_TIMESTAMP";
                 SqlCommand cmdlineno = new SqlCommand(sqlquery, conn);
                 SqlDataReader dr2 = cmdlineno.ExecuteReader();
-                //if (dr2.HasRows)
-                //{
+                if (dr2.HasRows)
+                {
                     GetApplicationById();
 
 
 
-                //}
-                //else
-                //{
-                //    labelExpiry.Text = "This early exit permit application has expired.";
-                //    ModalPopupExtender1.Show();
-                //}
-                //dr2.Close();
+                }
+                else
+                {
+                    labelExpiry.Text = "This early exit permit application has expired.";
+                    ModalPopupExtender1.Show();
+                }
+                dr2.Close();
             }
             else
             {

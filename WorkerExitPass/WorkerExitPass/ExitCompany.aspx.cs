@@ -140,7 +140,6 @@ namespace WorkerExitPass
             updateDetailsBtn.CssClass = updateDetailsBtn.CssClass.Replace("inactiveBtn", "activeBtn");
             Panel1.Visible = false;
             Panel2.Visible = true;
-
         }
         protected void companyddl_SelectedIndexChanged(object sender, EventArgs e)
         {
