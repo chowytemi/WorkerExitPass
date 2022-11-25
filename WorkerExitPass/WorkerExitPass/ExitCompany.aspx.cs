@@ -38,7 +38,7 @@ namespace WorkerExitPass
             string empID = Session["empID"].ToString();
             Session["empID"] = empID;
             //string Safety = ConfigurationManager.AppSettings["Safety"].ToString();
-            string Safety = ConfigurationManager.AppSettings["TK"].ToString();
+            string Assign = ConfigurationManager.AppSettings["Assign"].ToString();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
@@ -54,7 +54,7 @@ namespace WorkerExitPass
             {
                 string sql = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name " +
                     "from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid " +
-                    "and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + Safety + "' and EmpList.EmpID = '" + empID + "' ; ";
+                    "and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + Assign + "' and EmpList.EmpID = '" + empID + "' ; ";
                 SqlCommand cmd = new SqlCommand(sql, con);
                 SqlDataReader dr = cmd.ExecuteReader();
                 if (!dr.HasRows)

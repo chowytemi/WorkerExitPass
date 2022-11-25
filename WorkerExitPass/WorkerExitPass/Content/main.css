@@ -108,10 +108,12 @@ h1, .label {
 }
 
 #submitBtn, #submitAsTeam, #submitAsSolo {
+    /*background-color: #008A1E;*/
     background-color: #00AC26;
 }
 
 #cancelBtn {
+    /*background-color: #E72323;*/
     background-color: #E83333;
 }
 
