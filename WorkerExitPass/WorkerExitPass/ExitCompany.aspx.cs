@@ -213,19 +213,45 @@ namespace WorkerExitPass
         protected void CheckEmp()
         {
             string employeeInput = lblFindEmpID.Text;
-
+            string TK = ConfigurationManager.AppSettings["TK"].ToString();
             string cs = ConfigurationManager.ConnectionStrings["appusers"].ConnectionString;
             SqlConnection con = new SqlConnection(cs);
             con.Open();
+
+
 
             string sql = "select EmpID from EmpList where EmpID = '" + employeeInput + "'";
             SqlCommand cmd = new SqlCommand(sql, con);
             SqlDataReader dr = cmd.ExecuteReader();
 
+
+
             if (dr.HasRows)
             {
-                //CreateNew();
-                GetCompany();
+                string sql1 = "select distinct EmpList.EmpID,EmpList.designation,EmpList.Employee_Name " +
+                   "from Access, UserAccess, ARole, EmpList where UserAccess.RoleID = ARole.ID and ARole.ID = UserAccess.RoleID and UserAccess.AccessID = Access.ID and EmpList.ID = UserAccess.empid " +
+                   "and UserAccess.IsActive = 1 and emplist.IsActive = 1 and Access.id = '" + TK + "' and EmpList.EmpID = '" + employeeInput + "' ; ";
+                SqlCommand cmd1 = new SqlCommand(sql1, con);
+                SqlDataReader dr1 = cmd1.ExecuteReader();
+                if (dr1.HasRows)
+                {
+                    GetCompany();
+
+
+
+                }
+                else
+                {
+                    mpePopUp.Show();
+                    labelSuccess.Text = "Error!";
+                    valid.Text = employeeInput + " is not a timekeeper!";
+                    lblEmpName.Visible = false;
+                    lblDataEmpName.Visible = false;
+                    GridView1.Visible = false;
+                }
+
+
+
                 //return;
             }
             else
